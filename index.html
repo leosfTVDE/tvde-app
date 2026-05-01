@@ -7,14 +7,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Finance Drive">
 <title>Finance Drive</title>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L8KNNFQ1T0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-L8KNNFQ1T0');
-</script>
 <link rel="apple-touch-icon" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -35,8 +27,8 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .hdr-logo-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0}
 .hdr-logo-txt{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hdr-right{text-align:right}
-.hdr-date{font-size:11px;color:var(--muted)}
-.hdr-week{font-size:12px;color:var(--sub);margin-top:1px}
+.hdr-date{font-size:10px;color:var(--muted)}
+.hdr-week{font-size:11px;color:var(--sub);margin-top:1px}
 .ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;height:56px;background:var(--surface);font-size:11px;color:var(--cyan);gap:7px;transform:translateY(-56px);transition:transform .25s ease;z-index:300;border-bottom:1px solid var(--border)}
 .ptr.visible{transform:translateY(0)}
 .ptr-spin{font-size:18px;display:inline-block}
@@ -44,9 +36,9 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(72px + var(--safe-bot));position:relative}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:var(--safe-bot);z-index:200}
-.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer}
 .nb.on{color:var(--cyan)}
-.nb-ic{font-size:19px;line-height:1}
+.nb-ic{font-size:26px;line-height:1}
 .pg{display:none}
 .pg.on{display:block;animation:fi .18s ease}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -58,10 +50,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .ct-green{background:linear-gradient(90deg,var(--green),var(--green2))}
 .ct-amber{background:linear-gradient(90deg,var(--amber),#d97706)}
 .ct-orange{background:linear-gradient(90deg,var(--orange),#ea580c)}
-.stit{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 9px}
-.sub-h{font-size:13px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.07em;margin:13px 0 7px;display:flex;align-items:center;gap:5px}
+.stit{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 9px}
+.sub-h{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.07em;margin:13px 0 7px;display:flex;align-items:center;gap:5px}
 .fld{margin-bottom:9px}
-.fld-lbl{font-size:12px;color:var(--sub);margin-bottom:4px}
+.fld-lbl{font-size:10px;color:var(--sub);margin-bottom:4px}
 .iw{display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .15s}
 .iw:focus-within{border-color:var(--cyan)}
 .ipfx{padding:0 11px;font-size:14px;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;border-right:1px solid var(--border);height:44px;display:flex;align-items:center;background:var(--card);flex-shrink:0;white-space:nowrap}
@@ -72,12 +64,12 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
 /* Energia elétrico */
 .energia-box{background:var(--surface);border:1.5px solid rgba(167,139,250,.25);border-radius:12px;padding:12px;margin-bottom:9px}
-.energia-box-title{font-size:12px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.energia-box-title{font-size:10px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .energia-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .energia-sep{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);margin:6px 0;gap:8px}
 .energia-sep::before,.energia-sep::after{content:'';flex:1;height:1px;background:var(--border)}
 .energia-total{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:8px;margin-top:8px}
-.energia-total-lbl{font-size:12px;color:var(--muted)}
+.energia-total-lbl{font-size:10px;color:var(--muted)}
 .energia-total-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--violet)}
 
 /* Combustão box */
@@ -86,14 +78,14 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
 /* Horas box */
 .horas-box{background:var(--surface);border:1.5px solid rgba(34,211,238,.2);border-radius:12px;padding:12px;margin-bottom:9px}
-.horas-box-title{font-size:12px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.horas-box-title{font-size:10px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .horas-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .horas-total{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);border-radius:8px;margin-top:8px}
-.horas-total-lbl{font-size:12px;color:var(--muted)}
+.horas-total-lbl{font-size:10px;color:var(--muted)}
 .horas-total-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--cyan)}
 
 .g-total{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.22);border-radius:9px;margin:9px 0 3px}
-.g-total-lbl{font-size:12px;color:var(--sub)}
+.g-total-lbl{font-size:10px;color:var(--sub)}
 .g-total-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--cyan)}
 .btn{width:100%;padding:14px;border:none;border-radius:11px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.04em;transition:opacity .15s,transform .1s;margin-top:4px}
 .btn:active{opacity:.8;transform:scale(.98)}
@@ -111,11 +103,11 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 /* Meta bar */
 .meta-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:12px}
 .meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.meta-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.meta-vals{font-family:'Syne',sans-serif;font-size:12px;font-weight:700}
+.meta-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.meta-vals{font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
 .meta-bar{height:6px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:3px}
 .meta-bar-fill{height:100%;border-radius:10px;transition:width .5s ease}
-.meta-pct{font-size:11px;color:var(--muted);text-align:right}
+.meta-pct{font-size:10px;color:var(--muted);text-align:right}
 
 /* Performance cards */
 .perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
@@ -138,12 +130,12 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .plat-ic{font-size:13px;margin-bottom:3px}
 .plat-nm{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
 .plat-vl{font-family:'Syne',sans-serif;font-size:13px;font-weight:800}
-.rl{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.rl{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
 .rl:last-child{border-bottom:none}
 .rl .lb{color:var(--sub);display:flex;align-items:center;gap:4px}
 .rl .vl{font-family:'Syne',sans-serif;font-weight:600}
 .rl.tot{padding-top:10px;margin-top:3px;border-top:1px solid var(--border);border-bottom:none}
-.rl.sub{padding:5px 0 5px 13px;font-size:12px}
+.rl.sub{padding:5px 0 5px 13px;font-size:11px}
 .rl.sub .lb{color:var(--muted)}
 .div{height:1px;background:var(--border);margin:10px 0}
 .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
@@ -170,14 +162,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .hi-dot{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px}
 .hi-dot.p{background:rgba(74,222,128,.12)}.hi-dot.n{background:rgba(244,63,94,.12)}
 .hi-inf{flex:1;min-width:0}
-.hi-dt{font-size:11px;color:var(--muted)}
-.hi-g{font-size:13px;color:var(--text);font-weight:500;margin-top:1px}
-.hi-pl{font-size:11px;color:var(--muted);margin-top:1px}
+.hi-dt{font-size:10px;color:var(--muted)}
+.hi-g{font-size:12px;color:var(--text);font-weight:500;margin-top:1px}
+.hi-pl{font-size:10px;color:var(--muted);margin-top:1px}
 .hi-r{text-align:right;flex-shrink:0}
 .hi-sl{font-family:'Syne',sans-serif;font-size:13px;font-weight:800}
 .hi-sl.p{color:var(--green)}.hi-sl.n{color:var(--red)}
-.hi-edit{font-size:11px;color:var(--cyan);margin-top:3px}
-.hi-gph{font-size:11px;color:var(--amber);margin-top:2px;font-weight:600}
+.hi-edit{font-size:10px;color:var(--cyan);margin-top:3px}
 .filtros{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
 .filtro-btn{padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--sub);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
 .filtro-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
@@ -197,6 +188,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .moeda-simbolo{font-size:18px;font-weight:800;font-family:'Syne',sans-serif}
 .moeda-nome{font-size:9px;text-transform:uppercase;letter-spacing:.06em}
 
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.lang-btn{padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.lang-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
+.lang-flag{font-size:22px}
 /* Tipo veículo */
 .tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .tipo-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -229,14 +224,25 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .nov-item-txt strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px}
 .nov-item-txt span{font-size:11px;color:var(--muted);line-height:1.5}
 
+.onboard-overlay{position:fixed;inset:0;background:var(--bg);z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .3s}
+.onboard-overlay.show{opacity:1;pointer-events:all}
+.onboard-modal{background:var(--surface);border-radius:28px 28px 0 0;padding:28px 22px calc(28px + var(--safe-bot));width:100%;max-width:500px;text-align:center}
+.onboard-ic{font-size:56px;margin-bottom:12px;line-height:1}
+.onboard-titulo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
+.onboard-sub{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:22px}
+.onboard-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;text-align:left}
+.onboard-step{display:flex;gap:12px;align-items:flex-start;padding:11px;background:var(--card);border-radius:11px;border:1px solid var(--border)}
+.onboard-step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.onboard-step-txt strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px}
+.onboard-step-txt span{font-size:11px;color:var(--muted)}
 .toast{position:fixed;top:calc(var(--safe-top) + 70px);left:50%;transform:translateX(-50%) translateY(-15px);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap}
 .toast.ok{background:var(--green2);color:#fff}
 .toast.er{background:var(--red);color:#fff}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:36px 16px;color:var(--muted);font-size:12px;line-height:1.7}
 .empty-ic{font-size:38px;margin-bottom:10px}
-.chip{display:inline-flex;align-items:center;gap:4px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--violet)}
-.import-info{font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:11px}
+.chip{display:inline-flex;align-items:center;gap:4px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--violet)}
+.import-info{font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:11px}
 .import-info strong{color:var(--amber)}
 .feedback-email{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .feedback-email-icon{font-size:18px;flex-shrink:0}
@@ -244,7 +250,8 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .feedback-email-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--cyan)}
 
 /* Veiculo card no header */
-.veiculo-badge{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:10px;color:var(--sub);margin-bottom:12px}
+.hdr-veiculo{display:none;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:10px;color:var(--sub);margin-left:8px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.hdr-veiculo.show{display:flex}
 </style>
 </head>
 <body>
@@ -257,6 +264,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="hdr-left">
       <img class="hdr-logo-img" src="icon.png" alt="Finance Drive" onerror="this.style.display='none'">
       <span class="hdr-logo-txt">Finance Drive</span>
+      <div class="hdr-veiculo" id="hdrVeiculo"></div>
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
@@ -400,6 +408,19 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <button class="btn btn-cyan" id="btnCfg">Guardar configuração</button>
       </div>
 
+
+      <!-- IDIOMA -->
+      <div class="stit">🌍 Idioma / Language</div>
+      <div class="card">
+        <div class="lang-grid">
+          <button class="lang-btn on" id="lang-PT" onclick="selecionarIdioma('PT')">
+            <span class="lang-flag">🇵🇹</span><span>Português</span>
+          </button>
+          <button class="lang-btn" id="lang-EN" onclick="selecionarIdioma('EN')">
+            <span class="lang-flag">🇬🇧</span><span>English</span>
+          </button>
+        </div>
+      </div>
       <!-- MOEDA -->
       <div class="stit">💱 Moeda</div>
       <div class="card">
@@ -451,12 +472,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <p class="import-info" style="margin-bottom:12px">Define o teu objetivo de saldo líquido diário e semanal.</p>
         <div class="fld">
           <div class="fld-lbl">🎯 Meta diária</div>
-          <div class="iw"><div class="ipfx" id="pfxMetaDia">€</div><input type="number" inputmode="decimal" id="iMetaDia" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="iw"><div class="ipfx" id="pfxMetaDia">€</div><input type="number" inputmode="decimal" id="iMetaDia" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('dia')"></div>
         </div>
         <div class="fld" style="margin-top:10px">
           <div class="fld-lbl">🎯 Meta semanal</div>
-          <div class="iw"><div class="ipfx" id="pfxMetaSem">€</div><input type="number" inputmode="decimal" id="iMetaSem" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="iw"><div class="ipfx" id="pfxMetaSem">€</div><input type="number" inputmode="decimal" id="iMetaSem" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('sem')"></div>
         </div>
+        <div style="font-size:10px;color:var(--muted);margin:6px 0 4px;line-height:1.5;font-style:italic">💡 Alterar uma meta sincroniza a outra automaticamente</div>
         <button class="btn btn-green" id="btnMetas" style="margin-top:10px">💾 Guardar metas</button>
       </div>
 
@@ -503,7 +525,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.2 · <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.3 · <span style="color:var(--violet)">Beta</span></div>
     </div>
   </div>
 
@@ -558,21 +580,35 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">🚀</div>
       <div class="nov-titulo">O que há de novo</div>
-      <div class="nov-versao">Finance Drive v3.2</div>
+      <div class="nov-versao">Finance Drive v3.3</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
-        <div class="nov-item-ic">⏱️</div>
+        <div class="nov-item-ic">🚗</div>
         <div class="nov-item-txt">
-          <strong>Ganho/hora no histórico</strong>
-          <span>O ganho por hora aparece agora em cada dia do histórico — vê rapidamente qual foi o teu melhor dia.</span>
+          <strong>Cadastro do veículo</strong>
+          <span>Regista o teu carro (elétrico ou combustão) e a app adapta-se automaticamente.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">🔤</div>
+        <div class="nov-item-ic">⏱️</div>
         <div class="nov-item-txt">
-          <strong>Letras maiores</strong>
-          <span>Labels, subtítulos e textos foram aumentados para melhor leitura no telemóvel.</span>
+          <strong>Horas trabalhadas</strong>
+          <span>Regista hora de início e fim. A app calcula o ganho por hora automaticamente.</span>
+        </div>
+      </div>
+      <div class="nov-item">
+        <div class="nov-item-ic">📍</div>
+        <div class="nov-item-txt">
+          <strong>KMs rodados + eficiência</strong>
+          <span>Regista os km do dia e vê kWh/100km (elétrico) ou L/100km (combustão).</span>
+        </div>
+      </div>
+      <div class="nov-item">
+        <div class="nov-item-ic">📊</div>
+        <div class="nov-item-txt">
+          <strong>Análise de consumo no histórico</strong>
+          <span>Vê em quais dias gastaste mais energia com gráfico visual por dia.</span>
         </div>
       </div>
     </div>
@@ -580,11 +616,29 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
   </div>
 </div>
 
+
+<!-- Onboarding -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-modal">
+    <div class="onboard-ic">🚗💰</div>
+    <div class="onboard-titulo">Bem-vindo ao Finance Drive!</div>
+    <div class="onboard-sub">O app feito por motoristas TVDE,<br>para motoristas TVDE. Gratuito!</div>
+    <div class="onboard-steps">
+      <div class="onboard-step"><div class="onboard-step-num">1</div><div class="onboard-step-txt"><strong>Configura o teu veículo</strong><span>Elétrico ou combustão — o app adapta-se</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">2</div><div class="onboard-step-txt"><strong>Define o aluguer semanal</strong><span>Descontado automaticamente todos os dias</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">3</div><div class="onboard-step-txt"><strong>Define as tuas metas</strong><span>Quanto queres ganhar por dia e semana?</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">4</div><div class="onboard-step-txt"><strong>Regista o teu dia!</strong><span>Uber, Bolt, energia, horas — tudo num só lugar</span></div></div>
+    </div>
+    <button class="btn btn-cyan" id="btnOnboard" style="margin-bottom:8px">⚙️ Ir para Configurações</button>
+    <button class="btn btn-outline" id="btnOnboardSkip" style="margin-top:8px">Já sei, entrar na app</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.2';
-var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',metaDia:0,metaSem:0,veiculo:{modelo:'',ano:'',tipo:'eletrico'}},editingISO='';
+var APP_VERSION='3.3';
+var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',metaDia:0,metaSem:0,idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'}},editingISO='';
 
 (function(){
   try{var s=localStorage.getItem('tvde_v3');if(s)DB=JSON.parse(s);}catch(e){}
@@ -594,15 +648,29 @@ var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',metaDia:0,metaSem:0,veiculo
   if(!CFG.metaDia)CFG.metaDia=0;
   if(!CFG.metaSem)CFG.metaSem=0;
   if(!CFG.veiculo)CFG.veiculo={modelo:'',ano:'',tipo:'eletrico'};
-  var versaoVista=localStorage.getItem('fd_version_seen');
-  if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); }
+  if(!CFG.idioma)CFG.idioma='PT';
+  var primeiraVez=!localStorage.getItem('fd_version_seen');
+  if(primeiraVez){ setTimeout(function(){ mostrarOnboarding(); },600); }
+  else { var versaoVista=localStorage.getItem('fd_version_seen'); if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); } }
 })();
 
+function sincMetas(origem){
+  var dia=document.getElementById('iMetaDia'),sem=document.getElementById('iMetaSem');
+  if(!dia||!sem)return;
+  if(origem==='dia'&&dia.value){ var v=parseFloat(dia.value)||0; if(v>0)sem.value=(v*7).toFixed(2); }
+  if(origem==='sem'&&sem.value){ var v2=parseFloat(sem.value)||0; if(v2>0)dia.value=(v2/7).toFixed(2); }
+}
 function salvarLocal(){ try{localStorage.setItem('tvde_v3',JSON.stringify(DB));localStorage.setItem('tvde_cfg',JSON.stringify(CFG));}catch(e){} }
 
 // ── Moedas ────────────────────────────────────────────────────────────
 var MOEDAS={EUR:{simbolo:'€',nome:'Euro (€)',kwh:'€/kWh'},USD:{simbolo:'$',nome:'Dólar ($)',kwh:'$/kWh'},BRL:{simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh'}};
 function sim(){ return MOEDAS[CFG.moeda].simbolo; }
+function selecionarIdioma(l){
+  CFG.idioma=l; salvarLocal();
+  ['PT','EN'].forEach(function(x){ document.getElementById('lang-'+x).classList.remove('on'); });
+  document.getElementById('lang-'+l).classList.add('on');
+  toast(l==='EN'?'🇬🇧 English selected':'🇵🇹 Português selecionado','ok');
+}
 function selecionarMoeda(m){ CFG.moeda=m; salvarLocal(); ['EUR','USD','BRL'].forEach(function(x){ document.getElementById('moeda-'+x).classList.remove('on'); }); document.getElementById('moeda-'+m).classList.add('on'); document.getElementById('moedaAtual').textContent=MOEDAS[m].nome; atualizarPrefixos(); renderHoje(); }
 function atualizarPrefixos(){
   var s=sim();
@@ -741,23 +809,31 @@ var pages=['hoje','semana','hist','cfg'];
 function navTo(p){ pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
 
 // Header
+function atualizarBadgeVeiculo(){
+  var el=document.getElementById('hdrVeiculo'); if(!el)return;
+  if(CFG.veiculo&&CFG.veiculo.modelo){
+    var ic=isEletrico()?'🔋':'⛽';
+    el.textContent=ic+' '+CFG.veiculo.modelo;
+    el.classList.add('show');
+  } else { el.classList.remove('show'); el.textContent=''; }
+}
 function renderHeader(){
   var now=new Date();
   document.getElementById('hdrDate').textContent=DIAS_FULL[now.getDay()]+', '+now.getDate()+' '+MESES_S[now.getMonth()];
   document.getElementById('hdrWeek').textContent=now.getFullYear();
   document.getElementById('chipAl').textContent=sim()+alDia().toFixed(2)+'/dia';
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
-  atualizarPrefixos();
+  atualizarPrefixos(); atualizarBadgeVeiculo();
 }
 
 // Meta bar
-function renderBarraMeta(containerId,label,atual,meta){
+function renderBarraMeta(containerId,label,atual,meta,nota){
   var el=document.getElementById(containerId); if(!el)return;
   if(!meta||meta<=0){ el.innerHTML=''; return; }
   var pct=Math.min(100,Math.round((atual/meta)*100));
   var atingiu=atual>=meta;
   var cor=atingiu?'var(--green)':pct>=70?'var(--amber)':'var(--cyan)';
-  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div></div>';
+  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
 }
 
 // KPIs
@@ -865,7 +941,7 @@ function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSec
 // Semana
 function renderSemana(){
   var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
-  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(sl>=0?'p':'n')+'">'+(sl>=0?'+':'')+sl.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
+  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(sl>=0?'p':'n')+'">'+(sl>=0?'+':'')+sl.toFixed(0)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
   document.getElementById('weekRow').innerHTML=wHTML;
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
@@ -903,10 +979,9 @@ function renderSemana(){
   document.getElementById('perfGrid').innerHTML=perfHTML;
 
   var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0),tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0),tal=CFG.aluguel,gas=te+tc+tou+tal,sl2=tg-gas,pos2=sl2>=0;
-  // Meta semanal: soma dos saldos diários reais (cada dia já tem aluguer diário descontado)
-  var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]); },0);
-  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanal,CFG.metaSem);
-  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🍔 Alimentação',moeda(tc))+rl('💳 Outros gastos',moeda(tou))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>');
+  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanal,CFG.metaSem,'📌 Saldo dos dias trabalhados (aluguer proporcional).');
+  var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">ℹ️ Saldo calculado com aluguer semanal completo (€'+CFG.aluguel.toFixed(0)+') descontado — o que sobra se parares agora</div>';
+  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🍔 Alimentação',moeda(tc))+rl('💳 Outros gastos',moeda(tou))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+notaSemana);
 }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
 
@@ -988,10 +1063,9 @@ function renderHist(){
     var r=DB[iso],sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
     if(r.uber)parts.push('🖤 '+moeda(r.uber)); if(r.bolt)parts.push('⚡ '+moeda(r.bolt)); if(r.outroG)parts.push('🚘 '+moeda(r.outroG));
     var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim):0;
-    var extra='';var gph=horas&&horas>0?g/horas:0;
+    var extra='';
     if(horas>0)extra+=' · ⏱️ '+fmtHoras(horas);
     if(r.kms>0)extra+=' · 📍 '+r.kms+'km';
-    html+=gph>0?'<div class="hi-gph">⏱️ '+moeda(gph)+'/hora</div>':'';
     html+='<div class="hi" onclick="abrirModal(\''+iso+'\')"><div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'🏆':'⚠️')+'</div><div class="hi-inf"><div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div><div class="hi-g">Ganhos: '+moeda(g)+' · Energia: '+moeda(eT)+'</div>'+(parts.length||extra?'<div class="hi-pl">'+(parts.join(' · '))+extra+'</div>':'')+' </div><div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div><div class="hi-edit">✏️ editar</div></div></div>';
   });
   document.getElementById('histList').innerHTML=html;
@@ -1012,6 +1086,8 @@ function renderCfg(){
   ['EUR','USD','BRL'].forEach(function(x){ document.getElementById('moeda-'+x).classList.remove('on'); });
   document.getElementById('moeda-'+CFG.moeda).classList.add('on');
   document.getElementById('moedaAtual').textContent=MOEDAS[CFG.moeda].nome;
+  ['PT','EN'].forEach(function(x){ var el=document.getElementById('lang-'+x); if(el)el.classList.remove('on'); });
+  var langEl=document.getElementById('lang-'+CFG.idioma); if(langEl)langEl.classList.add('on');
   atualizarPrefixos();
 }
 function salvarCfg(){
@@ -1030,10 +1106,12 @@ function salvarVeiculo(){
   CFG.veiculo.ano=document.getElementById('iVeiculoAno').value;
   CFG.veiculo.tipo=document.getElementById('tipo-eletrico').classList.contains('on-eletrico')?'eletrico':'combustao';
   if(!isEletrico()){ var ce=document.getElementById('iConsEsp'); if(ce)CFG.veiculo.consumoEsperado=parseFloat(ce.value)||0; }
-  salvarLocal(); renderEnergiaSection(); renderMEnergiaSection();
+  salvarLocal(); renderEnergiaSection(); renderMEnergiaSection(); atualizarBadgeVeiculo();
   var kwhRow=document.getElementById('kwh-cfg-row'),kwhHint=document.getElementById('kwh-hint');
   if(kwhRow)kwhRow.style.display=isEletrico()?'':'none';
   if(kwhHint)kwhHint.style.display=isEletrico()?'':'none';
+  document.getElementById('iVeiculoModelo').value='';
+  document.getElementById('iVeiculoAno').value='';
   toast('✅ Veículo guardado!','ok');
 }
 function exportCSV(){
@@ -1067,6 +1145,8 @@ function importCSV(e){
 }
 function registarDiaManual(){ var iso=document.getElementById('iDataManual').value; if(!iso){ toast('Escolhe uma data!','er'); return; } abrirModal(iso); }
 function limpar(){ if(confirm('Apagar TODOS os registos?')){ DB={}; try{ localStorage.removeItem('tvde_v3'); }catch(e){} toast('🗑️ Apagado!','ok'); renderHoje(); } }
+function mostrarOnboarding(){ document.getElementById('onboardOverlay').classList.add('show'); }
+function fecharOnboarding(irConfig){ document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem('fd_version_seen',APP_VERSION); if(irConfig)navTo('cfg'); }
 function mostrarNovidades(){ document.getElementById('novidadesOverlay').classList.add('show'); }
 function fecharNovidades(){ document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem('fd_version_seen',APP_VERSION); }
 
@@ -1102,6 +1182,8 @@ document.getElementById('btnModalSave').addEventListener('click',salvarModal);
 document.getElementById('btnModalDel').addEventListener('click',apagarDiaModal);
 document.getElementById('btnFecharNovidades').addEventListener('click',fecharNovidades);
 document.getElementById('novidadesOverlay').addEventListener('click',function(e){ if(e.target===this)fecharNovidades(); });
+document.getElementById('btnOnboard').addEventListener('click',function(){ fecharOnboarding(true); });
+document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
 
 renderHoje();
 </script>
