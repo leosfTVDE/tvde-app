@@ -250,8 +250,29 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .feedback-email-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--cyan)}
 
 /* Veiculo card no header */
-.hdr-veiculo{display:none;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:10px;color:var(--sub);margin-left:8px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
-.hdr-veiculo.show{display:flex}
+/* hdr-veiculo movido para veiculo-bar */
+
+/* Badge país no header */
+.hdr-pais{display:none;align-items:center;font-size:20px;margin-left:6px}
+.hdr-pais.show{display:flex}
+/* Badge veículo — linha abaixo do header */
+.veiculo-bar{display:none;align-items:center;justify-content:center;gap:6px;background:var(--surface);border-bottom:1px solid var(--border);padding:5px 18px;font-size:11px;color:var(--sub);flex-shrink:0}
+.veiculo-bar.show{display:flex}
+.veiculo-bar-txt{font-family:'Syne',sans-serif;font-weight:700;color:var(--sub)}
+/* Checkbox almoço */
+.almoco-check{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:10px;margin-top:8px;cursor:pointer}
+.almoco-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
+.almoco-check-lbl{font-size:12px;color:var(--sub);line-height:1.4}
+.almoco-check-lbl span{color:var(--amber);font-weight:700}
+/* País grid */
+.pais-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.pais-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pais-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
+.pais-flag{font-size:28px}
+/* Rodapé */
+.footer-credits{text-align:center;padding:18px 18px 6px;font-size:10px;color:var(--muted)}
+.footer-ig{display:flex;justify-content:center;gap:16px;padding:4px 0 22px;font-size:11px}
+.footer-ig a{color:var(--cyan);text-decoration:none}
 </style>
 </head>
 <body>
@@ -264,13 +285,15 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="hdr-left">
       <img class="hdr-logo-img" src="icon.png" alt="Finance Drive" onerror="this.style.display='none'">
       <span class="hdr-logo-txt">Finance Drive</span>
-      <div class="hdr-veiculo" id="hdrVeiculo"></div>
+      <div class="hdr-pais" id="hdrPais"></div>
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
       <div class="hdr-week" id="hdrWeek"></div>
     </div>
   </div>
+  <!-- Badge veículo abaixo do header -->
+  <div class="veiculo-bar" id="veiculoBar"><span id="veiculoBarTxt" class="veiculo-bar-txt"></span></div>
   <div class="content" id="mainContent">
 
     <!-- HOJE -->
@@ -294,6 +317,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
               <div class="iw"><div class="ipfx">🕐</div><input type="time" id="iHoraFim"></div>
             </div>
           </div>
+          <label class="almoco-check">
+            <input type="checkbox" id="iAlmoco" onchange="atualizarHorasTotal()">
+            <span class="almoco-check-lbl">🍔 Fiz pausa para almoço <span>(desconta 1h)</span></span>
+          </label>
           <div class="horas-total">
             <span class="horas-total-lbl">⏱️ Total trabalhado</span>
             <span class="horas-total-val" id="horasTotal">-- h --min</span>
@@ -421,22 +448,21 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </button>
         </div>
       </div>
-      <!-- MOEDA -->
-      <div class="stit">💱 Moeda</div>
+      <!-- PAÍS -->
+      <div class="stit">🌍 País de atuação</div>
       <div class="card">
-        <div class="moeda-grid">
-          <button class="moeda-btn on" id="moeda-EUR" onclick="selecionarMoeda('EUR')">
-            <span class="moeda-simbolo">€</span><span class="moeda-nome">Euro</span>
+        <div class="card-top ct-cyan"></div>
+        <p class="import-info" style="margin-bottom:12px">O país define a moeda automaticamente.</p>
+        <div class="pais-grid">
+          <button class="pais-btn on" id="pais-PT" onclick="selecionarPais('PT')">
+            <span class="pais-flag">🇵🇹</span><span>Portugal</span>
           </button>
-          <button class="moeda-btn" id="moeda-USD" onclick="selecionarMoeda('USD')">
-            <span class="moeda-simbolo">$</span><span class="moeda-nome">Dólar</span>
-          </button>
-          <button class="moeda-btn" id="moeda-BRL" onclick="selecionarMoeda('BRL')">
-            <span class="moeda-simbolo">R$</span><span class="moeda-nome">Real</span>
+          <button class="pais-btn" id="pais-BR" onclick="selecionarPais('BR')">
+            <span class="pais-flag">🇧🇷</span><span>Brasil</span>
           </button>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center">
-          Moeda selecionada: <span style="color:var(--cyan)" id="moedaAtual">Euro (€)</span>
+          Moeda: <span style="color:var(--cyan)" id="moedaAtual">Euro (€)</span>
         </div>
       </div>
 
@@ -525,7 +551,11 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.3 · <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.4 · <span style="color:var(--violet)">Beta</span></div>
+      <div class="footer-ig">
+        <a href="https://instagram.com/driv.efinance" target="_blank">📸 @driv.efinance</a>
+        <a href="https://instagram.com/_spinasseleonardo" target="_blank">👤 @_spinasseleonardo</a>
+      </div>
     </div>
   </div>
 
@@ -563,6 +593,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div class="iw"><div class="ipfx">🕐</div><input type="time" id="mHoraFim"></div>
       </div>
     </div>
+    <label class="almoco-check" style="margin-bottom:9px">
+      <input type="checkbox" id="mAlmoco">
+      <span class="almoco-check-lbl">🍔 Pausa para almoço <span>(desconta 1h)</span></span>
+    </label>
     <div class="sub-h"><span>🍔</span> Alimentação</div>
     <div class="fld"><div class="iw"><div class="ipfx" id="mpfxComida">€</div><input type="number" inputmode="decimal" id="mComida" placeholder="0.00" min="0" step="0.01"></div></div>
     <div class="sub-h"><span>💳</span> Outros gastos</div>
@@ -580,35 +614,35 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">🚀</div>
       <div class="nov-titulo">O que há de novo</div>
-      <div class="nov-versao">Finance Drive v3.3</div>
+      <div class="nov-versao">Finance Drive v3.4</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
-        <div class="nov-item-ic">🚗</div>
+        <div class="nov-item-ic">🌍</div>
         <div class="nov-item-txt">
-          <strong>Cadastro do veículo</strong>
-          <span>Regista o teu carro (elétrico ou combustão) e a app adapta-se automaticamente.</span>
+          <strong>Seleção de país</strong>
+          <span>Escolhe Portugal 🇵🇹 ou Brasil 🇧🇷 — a moeda é definida automaticamente e a bandeira aparece no header.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">⏱️</div>
+        <div class="nov-item-ic">🚘</div>
         <div class="nov-item-txt">
-          <strong>Horas trabalhadas</strong>
-          <span>Regista hora de início e fim. A app calcula o ganho por hora automaticamente.</span>
+          <strong>Badge do veículo</strong>
+          <span>O teu veículo aparece agora numa linha discreta abaixo do header.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">📍</div>
+        <div class="nov-item-ic">🍔</div>
         <div class="nov-item-txt">
-          <strong>KMs rodados + eficiência</strong>
-          <span>Regista os km do dia e vê kWh/100km (elétrico) ou L/100km (combustão).</span>
+          <strong>Pausa para almoço</strong>
+          <span>Marca se fizeste pausa para almoço — a app desconta 1h das horas trabalhadas.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">📊</div>
+        <div class="nov-item-ic">🐛</div>
         <div class="nov-item-txt">
-          <strong>Análise de consumo no histórico</strong>
-          <span>Vê em quais dias gastaste mais energia com gráfico visual por dia.</span>
+          <strong>Bug CSV corrigido</strong>
+          <span>O saldo líquido agora é exportado com decimais corretos.</span>
         </div>
       </div>
     </div>
@@ -624,10 +658,11 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="onboard-titulo">Bem-vindo ao Finance Drive!</div>
     <div class="onboard-sub">O app feito por motoristas TVDE,<br>para motoristas TVDE. Gratuito!</div>
     <div class="onboard-steps">
-      <div class="onboard-step"><div class="onboard-step-num">1</div><div class="onboard-step-txt"><strong>Configura o teu veículo</strong><span>Elétrico ou combustão — o app adapta-se</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">2</div><div class="onboard-step-txt"><strong>Define o aluguer semanal</strong><span>Descontado automaticamente todos os dias</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">3</div><div class="onboard-step-txt"><strong>Define as tuas metas</strong><span>Quanto queres ganhar por dia e semana?</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">4</div><div class="onboard-step-txt"><strong>Regista o teu dia!</strong><span>Uber, Bolt, energia, horas — tudo num só lugar</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">1</div><div class="onboard-step-txt"><strong>Escolhe o teu país</strong><span>Portugal 🇵🇹 ou Brasil 🇧🇷 — moeda automática</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">2</div><div class="onboard-step-txt"><strong>Configura o teu veículo</strong><span>Elétrico ou combustão — o app adapta-se</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">3</div><div class="onboard-step-txt"><strong>Define o aluguer semanal</strong><span>Descontado automaticamente todos os dias</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">4</div><div class="onboard-step-txt"><strong>Define as tuas metas</strong><span>Quanto queres ganhar por dia e semana?</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">5</div><div class="onboard-step-txt"><strong>Regista o teu dia!</strong><span>Uber, Bolt, energia, horas — tudo num só lugar</span></div></div>
     </div>
     <button class="btn btn-cyan" id="btnOnboard" style="margin-bottom:8px">⚙️ Ir para Configurações</button>
     <button class="btn btn-outline" id="btnOnboardSkip" style="margin-top:8px">Já sei, entrar na app</button>
@@ -637,8 +672,8 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.3';
-var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',metaDia:0,metaSem:0,idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'}},editingISO='';
+var APP_VERSION='3.4';
+var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'}},editingISO='';
 
 (function(){
   try{var s=localStorage.getItem('tvde_v3');if(s)DB=JSON.parse(s);}catch(e){}
@@ -649,6 +684,8 @@ var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',metaDia:0,metaSem:0,idioma:
   if(!CFG.metaSem)CFG.metaSem=0;
   if(!CFG.veiculo)CFG.veiculo={modelo:'',ano:'',tipo:'eletrico'};
   if(!CFG.idioma)CFG.idioma='PT';
+  if(!CFG.pais)CFG.pais='PT';
+  if(CFG.pais==='BR')CFG.moeda='BRL'; else CFG.moeda='EUR';
   var primeiraVez=!localStorage.getItem('fd_version_seen');
   if(primeiraVez){ setTimeout(function(){ mostrarOnboarding(); },600); }
   else { var versaoVista=localStorage.getItem('fd_version_seen'); if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); } }
@@ -662,20 +699,35 @@ function sincMetas(origem){
 }
 function salvarLocal(){ try{localStorage.setItem('tvde_v3',JSON.stringify(DB));localStorage.setItem('tvde_cfg',JSON.stringify(CFG));}catch(e){} }
 
-// ── Moedas ────────────────────────────────────────────────────────────
-var MOEDAS={EUR:{simbolo:'€',nome:'Euro (€)',kwh:'€/kWh'},USD:{simbolo:'$',nome:'Dólar ($)',kwh:'$/kWh'},BRL:{simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh'}};
-function sim(){ return MOEDAS[CFG.moeda].simbolo; }
+// ── País e Moeda ──────────────────────────────────────────────────────
+var PAISES={
+  PT:{moeda:'EUR',simbolo:'€',nome:'Euro (€)',kwh:'€/kWh',bandeira:'🇵🇹'},
+  BR:{moeda:'BRL',simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh',bandeira:'🇧🇷'}
+};
+function sim(){ return PAISES[CFG.pais||'PT'].simbolo; }
+function selecionarPais(p){
+  CFG.pais=p; CFG.moeda=PAISES[p].moeda; salvarLocal();
+  ['PT','BR'].forEach(function(x){ document.getElementById('pais-'+x).classList.remove('on'); });
+  document.getElementById('pais-'+p).classList.add('on');
+  var me=document.getElementById('moedaAtual'); if(me)me.textContent=PAISES[p].nome;
+  atualizarPrefixos(); atualizarBadgePais(); renderEnergiaSection(); renderMEnergiaSection(); renderHoje();
+  toast(p==='PT'?'🇵🇹 Portugal — Moeda: €':'🇧🇷 Brasil — Moeda: R$','ok');
+}
+function atualizarBadgePais(){
+  var el=document.getElementById('hdrPais'); if(!el)return;
+  el.textContent=PAISES[CFG.pais||'PT'].bandeira;
+  el.classList.add('show');
+}
 function selecionarIdioma(l){
   CFG.idioma=l; salvarLocal();
   ['PT','EN'].forEach(function(x){ document.getElementById('lang-'+x).classList.remove('on'); });
   document.getElementById('lang-'+l).classList.add('on');
   toast(l==='EN'?'🇬🇧 English selected':'🇵🇹 Português selecionado','ok');
 }
-function selecionarMoeda(m){ CFG.moeda=m; salvarLocal(); ['EUR','USD','BRL'].forEach(function(x){ document.getElementById('moeda-'+x).classList.remove('on'); }); document.getElementById('moeda-'+m).classList.add('on'); document.getElementById('moedaAtual').textContent=MOEDAS[m].nome; atualizarPrefixos(); renderHoje(); }
 function atualizarPrefixos(){
   var s=sim();
   ['pfxUber','pfxBolt','pfxOutroG','pfxComida','pfxOutroG2','pfxAluguer','pfxMetaDia','pfxMetaSem','mpfxUber','mpfxBolt','mpfxOutroG','mpfxComida','mpfxOutroG2'].forEach(function(id){ var el=document.getElementById(id); if(el)el.textContent=s; });
-  var pk=document.getElementById('pfxKwh'); if(pk)pk.textContent=MOEDAS[CFG.moeda].kwh;
+  var pk=document.getElementById('pfxKwh'); if(pk)pk.textContent=PAISES[CFG.pais||'PT'].kwh;
 }
 
 // ── Veículo ───────────────────────────────────────────────────────────
@@ -786,14 +838,15 @@ function segunda(iso){ var d=new Date(iso+'T12:00:00'),wd=d.getDay(),diff=wd===0
 function diasSemana(seg){ var arr=[],d=new Date(seg+'T12:00:00'); for(var i=0;i<7;i++){ arr.push(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())); d.setDate(d.getDate()+1); } return arr; }
 function toast(msg,tipo){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+(tipo||'ok'); setTimeout(function(){ t.classList.add('show'); },10); setTimeout(function(){ t.classList.remove('show'); },2500); }
 
-// Calcular horas
-function calcHoras(inicio,fim){
+// Calcular horas (com opção almoço)
+function calcHoras(inicio,fim,almoco){
   if(!inicio||!fim)return null;
   var p1=inicio.split(':'),p2=fim.split(':');
   var m1=parseInt(p1[0])*60+parseInt(p1[1]),m2=parseInt(p2[0])*60+parseInt(p2[1]);
-  if(m2<m1)m2+=24*60; // passou meia noite
+  if(m2<m1)m2+=24*60;
   var diff=m2-m1;
-  return diff/60; // horas decimais
+  if(almoco)diff=Math.max(0,diff-60);
+  return diff/60;
 }
 function fmtHoras(h){ if(!h&&h!==0)return'-- h --min'; var hh=Math.floor(h),mm=Math.round((h-hh)*60); return hh+'h '+pad(mm)+'min'; }
 
@@ -810,12 +863,13 @@ function navTo(p){ pages.forEach(function(x){ document.getElementById('pg-'+x).c
 
 // Header
 function atualizarBadgeVeiculo(){
-  var el=document.getElementById('hdrVeiculo'); if(!el)return;
+  var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
+  if(!bar||!txt)return;
   if(CFG.veiculo&&CFG.veiculo.modelo){
     var ic=isEletrico()?'🔋':'⛽';
-    el.textContent=ic+' '+CFG.veiculo.modelo;
-    el.classList.add('show');
-  } else { el.classList.remove('show'); el.textContent=''; }
+    txt.textContent='🚘 '+CFG.veiculo.modelo+' '+ic;
+    bar.classList.add('show');
+  } else { bar.classList.remove('show'); txt.textContent=''; }
 }
 function renderHeader(){
   var now=new Date();
@@ -823,7 +877,7 @@ function renderHeader(){
   document.getElementById('hdrWeek').textContent=now.getFullYear();
   document.getElementById('chipAl').textContent=sim()+alDia().toFixed(2)+'/dia';
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
-  atualizarPrefixos(); atualizarBadgeVeiculo();
+  atualizarPrefixos(); atualizarBadgeVeiculo(); atualizarBadgePais();
 }
 
 // Meta bar
@@ -843,7 +897,7 @@ function renderKPIs(){
   var tg=ds.reduce(function(a,d){ return a+ganhos(DB[d]||{}); },0);
   var nd=ds.filter(function(d){ return !!DB[d]; }).length;
   // Ganho/hora
-  var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim):0;
+  var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var gph=horas&&horas>0?g/horas:0;
   document.getElementById('kpiGrid').innerHTML=
     kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
@@ -856,15 +910,15 @@ function kpi(ic,lb,vl,st){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
 
 function atualizarHorasTotal(){
-  var ini=document.getElementById('iHoraInicio'),fim=document.getElementById('iHoraFim');
+  var ini=document.getElementById('iHoraInicio'),fim=document.getElementById('iHoraFim'),alm=document.getElementById('iAlmoco');
   if(!ini||!fim)return;
-  var h=calcHoras(ini.value,fim.value);
+  var h=calcHoras(ini.value,fim.value,alm&&alm.checked);
   document.getElementById('horasTotal').textContent=fmtHoras(h);
 }
 
 function renderResumoDia(){
   var h=hoje(),r=DB[h]||{},g=ganhos(r),eT=energiaGastos(r),sl=saldo(r),al=alDia(),pos=sl>=0;
-  var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim):0;
+  var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var gph=horas&&horas>0?g/horas:0;
   var kms=r.kms||0;
   var html=rl('💰 Total ganhos',moeda(g),'color:var(--cyan)')+
@@ -903,8 +957,8 @@ function atualizarTotal(){
 }
 function limparCampos(){
   ['iUber','iBolt','iOutroG','iComida','iOutroG2','iKms'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
-  var ini=document.getElementById('iHoraInicio'),fim=document.getElementById('iHoraFim');
-  if(ini)ini.value=''; if(fim)fim.value='';
+  var ini=document.getElementById('iHoraInicio'),fim=document.getElementById('iHoraFim'),alm=document.getElementById('iAlmoco');
+  if(ini)ini.value=''; if(fim)fim.value=''; if(alm)alm.checked=false;
   document.getElementById('gTotal').textContent=moeda(0);
   document.getElementById('horasTotal').textContent='-- h --min';
   if(isEletrico()){
@@ -920,7 +974,8 @@ function limparCampos(){
 function guardar(){
   var u=parseFloat(document.getElementById('iUber').value)||0,b=parseFloat(document.getElementById('iBolt').value)||0,og=parseFloat(document.getElementById('iOutroG').value)||0,c=parseFloat(document.getElementById('iComida').value)||0,o2=parseFloat(document.getElementById('iOutroG2').value)||0,kms=parseFloat(document.getElementById('iKms').value)||0;
   var ini=document.getElementById('iHoraInicio').value,fim=document.getElementById('iHoraFim').value;
-  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim};
+  var alm=document.getElementById('iAlmoco'); var almoco=alm?alm.checked:false;
+  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco};
   if(isEletrico()){
     var e=parseFloat(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0)||0;
     var ek=parseFloat(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0)||0;
@@ -941,7 +996,7 @@ function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSec
 // Semana
 function renderSemana(){
   var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
-  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(sl>=0?'p':'n')+'">'+(sl>=0?'+':'')+sl.toFixed(0)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
+  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(sl>=0?'p':'n')+'">'+(sl>=0?'+':'')+sl.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
   document.getElementById('weekRow').innerHTML=wHTML;
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
@@ -954,7 +1009,7 @@ function renderSemana(){
 
   // Performance
   var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
-  var totalHoras=reais.reduce(function(a,d){ var r=DB[d]; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim):0; return a+(h2||0); },0);
+  var totalHoras=reais.reduce(function(a,d){ var r=DB[d]; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
   var tg=tu+tb+to;
   var te=reais.reduce(function(a,d){ return a+energiaGastos(DB[d]); },0);
   var gph=totalHoras>0?tg/totalHoras:0;
@@ -992,6 +1047,7 @@ function abrirModal(iso){
   document.getElementById('modalDate').textContent=DIAS_FULL[new Date(iso+'T12:00:00').getDay()]+', '+fmtData(iso);
   document.getElementById('mUber').value=r.uber||''; document.getElementById('mBolt').value=r.bolt||''; document.getElementById('mOutroG').value=r.outroG||'';
   document.getElementById('mKms').value=r.kms||''; document.getElementById('mHoraInicio').value=r.horaInicio||''; document.getElementById('mHoraFim').value=r.horaFim||'';
+  var mAlm=document.getElementById('mAlmoco'); if(mAlm)mAlm.checked=r.almoco||false;
   document.getElementById('mComida').value=r.comida||''; document.getElementById('mOutroG2').value=r.outroG2||'';
   renderMEnergiaSection();
   setTimeout(function(){
@@ -1005,7 +1061,8 @@ function salvarModal(){
   if(!editingISO)return;
   var u=parseFloat(document.getElementById('mUber').value)||0,b=parseFloat(document.getElementById('mBolt').value)||0,og=parseFloat(document.getElementById('mOutroG').value)||0,c=parseFloat(document.getElementById('mComida').value)||0,o2=parseFloat(document.getElementById('mOutroG2').value)||0,kms=parseFloat(document.getElementById('mKms').value)||0;
   var ini=document.getElementById('mHoraInicio').value,fim=document.getElementById('mHoraFim').value;
-  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim};
+  var mAlm2=document.getElementById('mAlmoco'); var almoco2=mAlm2?mAlm2.checked:false;
+  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco2};
   if(isEletrico()){ var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh'); rec.energia=parseFloat(me?me.value:0)||0; rec.energiaKwh=parseFloat(mk?mk.value:0)||0; }
   else { var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel'); rec.litros=parseFloat(ml?ml.value:0)||0; rec.combustivel=parseFloat(mc?mc.value:0)||0; }
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ toast('Insere pelo menos um valor!','er'); return; }
@@ -1063,7 +1120,7 @@ function renderHist(){
   chaves.slice().reverse().forEach(function(iso){
     var r=DB[iso],sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
     if(r.uber)parts.push('🖤 '+moeda(r.uber)); if(r.bolt)parts.push('⚡ '+moeda(r.bolt)); if(r.outroG)parts.push('🚘 '+moeda(r.outroG));
-    var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim):0;
+    var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
     var extra='';
     if(horas>0)extra+=' · ⏱️ '+fmtHoras(horas);
     if(r.kms>0)extra+=' · 📍 '+r.kms+'km';
@@ -1084,9 +1141,9 @@ function renderCfg(){
   var hoje2=hoje();
   document.getElementById('iDataManual').value=hoje2;
   document.getElementById('iDataManual').max=hoje2;
-  ['EUR','USD','BRL'].forEach(function(x){ document.getElementById('moeda-'+x).classList.remove('on'); });
-  document.getElementById('moeda-'+CFG.moeda).classList.add('on');
-  document.getElementById('moedaAtual').textContent=MOEDAS[CFG.moeda].nome;
+  ['PT','BR'].forEach(function(x){ document.getElementById('pais-'+x).classList.remove('on'); });
+  document.getElementById('pais-'+(CFG.pais||'PT')).classList.add('on');
+  var moedaEl=document.getElementById('moedaAtual'); if(moedaEl)moedaEl.textContent=PAISES[CFG.pais||'PT'].nome;
   ['PT','EN'].forEach(function(x){ var el=document.getElementById('lang-'+x); if(el)el.classList.remove('on'); });
   var langEl=document.getElementById('lang-'+CFG.idioma); if(langEl)langEl.classList.add('on');
   atualizarPrefixos();
@@ -1117,8 +1174,8 @@ function salvarVeiculo(){
 }
 function exportCSV(){
   var keys=Object.keys(DB).sort(); if(!keys.length){ toast('Sem dados!','er'); return; }
-  var csv='Data,Dia,Uber,Bolt,Particular,Total_Ganhos,Energia_Moeda,Energia_kWh,Litros,Combustivel,Energia_Total,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Aluguer_Dia,Total_Gastos,Saldo\n';
-  keys.forEach(function(iso){ var r=DB[iso],al=alDia(),g=ganhos(r),eT=energiaGastos(r),gas=eT+(r.comida||0)+(r.outroG2||0)+al,sl2=g-gas; csv+=fmtData(iso)+','+diaNome(iso)+','+(r.uber||0).toFixed(2)+','+(r.bolt||0).toFixed(2)+','+(r.outroG||0).toFixed(2)+','+g.toFixed(2)+','+(r.energia||0).toFixed(2)+','+(r.energiaKwh||0).toFixed(2)+','+(r.litros||0).toFixed(2)+','+(r.combustivel||0).toFixed(2)+','+eT.toFixed(2)+','+(r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+(r.horaInicio||'')+','+(r.horaFim||'')+','+al.toFixed(2)+','+gas.toFixed(2)+','+sl2.toFixed(2)+'\n'; });
+  var csv='Data,Dia,Uber,Bolt,Particular,Total_Ganhos,Energia_Moeda,Energia_kWh,Litros,Combustivel,Energia_Total,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Total_Gastos,Saldo\n';
+  keys.forEach(function(iso){ var r=DB[iso],al=alDia(),g=ganhos(r),eT=energiaGastos(r),gas=eT+(r.comida||0)+(r.outroG2||0)+al,sl2=g-gas; csv+=fmtData(iso)+','+diaNome(iso)+','+(r.uber||0).toFixed(2)+','+(r.bolt||0).toFixed(2)+','+(r.outroG||0).toFixed(2)+','+g.toFixed(2)+','+(r.energia||0).toFixed(2)+','+(r.energiaKwh||0).toFixed(2)+','+(r.litros||0).toFixed(2)+','+(r.combustivel||0).toFixed(2)+','+eT.toFixed(2)+','+(r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+(r.horaInicio||'')+','+(r.horaFim||'')+','+(r.almoco?'1':'0')+','+al.toFixed(2)+','+gas.toFixed(2)+','+sl2.toFixed(2)+'\n'; });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   toast('📥 CSV exportado!','ok');
