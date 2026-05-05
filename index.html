@@ -551,7 +551,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.4 · <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.5 · <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/driv.efinance" target="_blank">📸 @driv.efinance</a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">👤 @_spinasseleonardo</a>
@@ -614,35 +614,28 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">🚀</div>
       <div class="nov-titulo">O que há de novo</div>
-      <div class="nov-versao">Finance Drive v3.4</div>
+      <div class="nov-versao">Finance Drive v3.5</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
         <div class="nov-item-ic">🌍</div>
         <div class="nov-item-txt">
-          <strong>Seleção de país</strong>
-          <span>Escolhe Portugal 🇵🇹 ou Brasil 🇧🇷 — a moeda é definida automaticamente e a bandeira aparece no header.</span>
+          <strong>App em Inglês</strong>
+          <span>Seleciona English em Config e toda a app muda de idioma automaticamente.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">🚘</div>
+        <div class="nov-item-ic">⏱️</div>
         <div class="nov-item-txt">
-          <strong>Badge do veículo</strong>
-          <span>O teu veículo aparece agora numa linha discreta abaixo do header.</span>
+          <strong>Ganho/hora no Histórico</strong>
+          <span>Vê o teu ganho por hora médio em qualquer período — semana, mês ou ano passado.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">🍔</div>
+        <div class="nov-item-ic">💰</div>
         <div class="nov-item-txt">
-          <strong>Pausa para almoço</strong>
-          <span>Marca se fizeste pausa para almoço — a app desconta 1h das horas trabalhadas.</span>
-        </div>
-      </div>
-      <div class="nov-item">
-        <div class="nov-item-ic">🐛</div>
-        <div class="nov-item-txt">
-          <strong>Bug CSV corrigido</strong>
-          <span>O saldo líquido agora é exportado com decimais corretos.</span>
+          <strong>Ganho por km</strong>
+          <span>Novo card na Performance semanal — descobre quanto ganhas por cada km rodado.</span>
         </div>
       </div>
     </div>
@@ -672,7 +665,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.4';
+var APP_VERSION='3.5';
 var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'}},editingISO='';
 
 (function(){
@@ -1018,18 +1011,22 @@ function renderSemana(){
     var totalKwh=reais.reduce(function(a,d){ return a+(DB[d].energiaKwh||0); },0);
     var efic=totalKms>0&&totalKwh>0?(totalKwh/totalKms*100):0;
     var custoKm=totalKms>0?te/totalKms:0;
+    var ganhoKm=totalKms>0?tg/totalKms:0;
     perfHTML+=perf('⚡','kWh/100km',efic>0?efic.toFixed(1)+' kWh':'-','color:var(--violet)')+
                perf('📍','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+
                perf('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-               perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)');
+               perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('💰','Ganho/km',ganhoKm>0?moeda(ganhoKm):'-','color:var(--green)');
   } else {
     var totalLitros=reais.reduce(function(a,d){ return a+(DB[d].litros||0); },0);
     var eficL=totalKms>0&&totalLitros>0?(totalLitros/totalKms*100):0;
     var custoKmC=totalKms>0?te/totalKms:0;
+    var ganhoKmC=totalKms>0?tg/totalKms:0;
     perfHTML+=perf('⛽','L/100km',eficL>0?eficL.toFixed(1)+' L':'-','color:var(--amber)')+
                perf('📍','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+
                perf('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-               perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)');
+               perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('💰','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
   }
   document.getElementById('perfGrid').innerHTML=perfHTML;
 
@@ -1115,7 +1112,11 @@ function renderHist(){
     document.getElementById('resumoPeriodo').innerHTML='<div style="padding:8px;text-align:center;color:var(--muted);font-size:12px">Sem dados</div>';
     document.getElementById('histList').innerHTML=semDados; return;
   }
-  document.getElementById('resumoPeriodo').innerHTML='<div class="rp-grid"><div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div><div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'⚠️')+' Saldo</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div><div class="rp-item"><div class="rp-lbl">📤 Gastos</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div><div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">⚡ <strong style="color:#34d186">'+moeda(tb)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span></div>';
+  var totalHorasHist=chaves.reduce(function(a,d){ var r=DB[d]; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
+  var gphHist=totalHorasHist>0?tg/totalHorasHist:0;
+  var totalKmsHist=chaves.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
+  var ganhoKmHist=totalKmsHist>0?tg/totalKmsHist:0;
+  document.getElementById('resumoPeriodo').innerHTML='<div class="rp-grid"><div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div><div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'⚠️')+' Saldo</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div><div class="rp-item"><div class="rp-lbl">📤 Gastos</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div><div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+(gphHist>0?'<div class="rp-item"><div class="rp-lbl">⏱️ Ganho/hora médio</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+(ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">⚡ <strong style="color:#34d186">'+moeda(tb)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span></div>';
   var html='';
   chaves.slice().reverse().forEach(function(iso){
     var r=DB[iso],sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
@@ -1244,6 +1245,7 @@ document.getElementById('btnOnboard').addEventListener('click',function(){ fecha
 document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
 
 renderHoje();
+
 </script>
 </body>
 </html>
