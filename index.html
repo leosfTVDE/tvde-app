@@ -929,6 +929,7 @@ function toggleImpostos(){
   if(tog)tog.className='toggle'+(CFG.impostos.ativo?' on':'');
   if(det)det.style.display=CFG.impostos.ativo?'':'none';
   renderHoje();
+  renderSemana();
 }
 function salvarImpostosCfg(){
   var v=document.getElementById('iIrsManual');
@@ -1145,7 +1146,7 @@ function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSec
 function renderSemana(){
   renderComparativo();
   var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
-  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(sl>=0?'p':'n')+'">'+(sl>=0?'+':'')+sl.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
+  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,sl=r?saldo(r):null,slW=r?(CFG.impostos&&CFG.impostos.ativo?saldoReal(r):saldo(r)):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(slW>=0?'p':'n')+'">'+(slW>=0?'+':'')+slW.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
   document.getElementById('weekRow').innerHTML=wHTML;
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
