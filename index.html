@@ -888,14 +888,12 @@ function fmtHoras(h){ if(!h&&h!==0)return'-- h --min'; var hh=Math.floor(h),mm=M
 function escaloesIRS(){ return [{ate:7703,taxa:13},{ate:11623,taxa:18},{ate:16472,taxa:23},{ate:21321,taxa:26},{ate:27146,taxa:32.75},{ate:39791,taxa:37},{ate:51997,taxa:43.5},{ate:81199,taxa:45},{ate:Infinity,taxa:48}]; }
 function calcEscalaoIRS(rend){ var e=escaloesIRS(); for(var i=0;i<e.length;i++){ if(rend<=e[i].ate)return e[i].taxa; } return 48; }
 function projetarRendimentoAnual(){
-  var keys=Object.keys(DB); if(!keys.length)return 0;
-  keys.sort();
-  var p1=keys[0].split('-'),p2=hoje().split('-');
-  var d1=new Date(parseInt(p1[0]),parseInt(p1[1])-1,parseInt(p1[2]));
-  var d2=new Date(parseInt(p2[0]),parseInt(p2[1])-1,parseInt(p2[2]));
-  var meses=Math.max(0.5,Math.round((d2-d1)/(1000*60*60*24))/30.44);
+  // Usa apenas o que ja foi ganho no ano corrente (nao faz projecao futura)
+  var anoAtual=new Date().getFullYear();
+  var keys=Object.keys(DB).filter(function(k){ return k.startsWith(anoAtual+'-'); });
+  if(!keys.length)return 0;
   var total=keys.reduce(function(a,k){ return a+saldo(DB[k]); },0);
-  return total<=0?0:(total/meses)*12;
+  return total<=0?0:total;
 }
 function calcImpostos(sl){
   if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT'||sl<=0)return null;
@@ -916,7 +914,7 @@ function htmlImpostos(imp){
     '<div class="impostos-row"><span class="impostos-lbl">IRS ('+imp.taxaIRS.toFixed(1)+'%'+(CFG.impostos.irsManual?'':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">IVA (6%)</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>'+
     '<div class="impostos-total"><span class="impostos-total-lbl">Saldo real</span><span class="impostos-total-val">'+moeda(imp.real)+'</span></div>'+
-    '<div class="impostos-nota">Projecao anual: '+moeda(proj)+' -> Escalao IRS auto: '+auto+'%'+(CFG.impostos.irsManual?' (taxa manual)':'')+'. Estimativa - consulta o teu contabilista.</div>'+
+    '<div class="impostos-nota">Ganhos acumulados '+new Date().getFullYear()+': '+moeda(proj)+' -> Escalao IRS: '+auto+'%'+(CFG.impostos.irsManual?' (taxa manual)':'')+'. Estimativa - consulta o teu contabilista.</div>'+
   '</div>';
 }
 function toggleImpostos(){
