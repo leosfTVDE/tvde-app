@@ -866,6 +866,11 @@ var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
 function ganhos(r){ return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
 function saldo(r){ return ganhos(r)-energiaGastos(r)-(r.comida||0)-(r.outroG2||0)-alDia(); }
+function saldoReal(r){
+  var sl=saldo(r);
+  var imp=calcImpostos(sl);
+  return imp?imp.real:sl;
+}
 function segunda(iso){ var d=new Date(iso+'T12:00:00'),wd=d.getDay(),diff=wd===0?-6:1-wd; d.setDate(d.getDate()+diff); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function diasSemana(seg){ var arr=[],d=new Date(seg+'T12:00:00'); for(var i=0;i<7;i++){ arr.push(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())); d.setDate(d.getDate()+1); } return arr; }
 function toast(msg,tipo){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+(tipo||'ok'); setTimeout(function(){ t.classList.add('show'); },10); setTimeout(function(){ t.classList.remove('show'); },2500); }
@@ -1038,12 +1043,14 @@ function renderKPIs(){
   // Ganho/hora
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var gph=horas&&horas>0?g/horas:0;
+  var slMeta=CFG.impostos&&CFG.impostos.ativo?saldoReal(r):sl;
+  var slLbl=CFG.impostos&&CFG.impostos.ativo?'Saldo real':'Saldo hoje';
   document.getElementById('kpiGrid').innerHTML=
     kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
-    kpi(sl>=0?'🏆':'⚠️','Saldo hoje',moeda(sl),'color:var(--'+(sl>=0?'green':'red')+')')+
+    kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')')+
     kpi('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',sl,CFG.metaDia);
+  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,CFG.metaDia);
 }
 function kpi(ic,lb,vl,st){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div></div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -1181,7 +1188,8 @@ function renderSemana(){
 
   var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0),tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0),tal=CFG.aluguel,gas=te+tc+tou+tal,sl2=tg-gas,pos2=sl2>=0;
   var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]); },0);
-  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanal,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
+  var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]); },0):slSemanal;
+  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
   var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">ℹ️ Saldo calculado com aluguer semanal completo (€'+CFG.aluguel.toFixed(0)+') descontado — o que sobra se parares agora</div>';
   var impSemHtml=htmlImpostos(calcImpostos(sl2));
   document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🍔 Alimentação',moeda(tc))+rl('💳 Outros gastos',moeda(tou))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+notaSemana+impSemHtml);
