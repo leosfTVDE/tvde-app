@@ -774,7 +774,7 @@ function moeda(v){ var neg=v<0,s=Math.abs(v).toFixed(2).replace('.',','); return
 function alDia(){ return CFG.aluguel/7; }
 function kwhParaEuro(kwh){ return kwh*CFG.precoKwh; }
 function calcEnergia(eE,eK){ return (eE||0)+kwhParaEuro(eK||0); }
-// v3.7 item 6: só kWh frota (cartão) desconta do saldo; energia paga em dinheiro próprio NÃO desconta
+// v3.7: só kWh frota desconta (cartão TVDE). Energia em dinheiro próprio NÃO desconta.
 function energiaGastos(r){ return isEletrico()?kwhParaEuro(r.energiaKwh||0):(r.combustivel||0); }
 var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 var DIAS_FULL=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
@@ -782,9 +782,10 @@ var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto
 var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
 function ganhos(r){ return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
-// v3.7 item 2: alimentação NÃO desconta do saldo (é dinheiro do bolso do motorista)
-function saldo(r){ return ganhos(r)-energiaGastos(r)-(r.outroG2||0)-alDia(); }
-// v3.7 item 3: base fiscal exclui outroG (Particular — sem recibo verde)
+// v3.7: saldo = ganhos - energia(kWh frota) - aluguer
+// comida e outros gastos pessoais NÃO descontam do saldo
+function saldo(r){ return ganhos(r)-energiaGastos(r)-alDia(); }
+// baseFiscal = saldo sem Particular (sem recibo verde)
 function baseFiscal(r){ return Math.max(0, saldo(r)-(r.outroG||0)); }
 function saldoReal(r){
   var imp=calcImpostos(r);
@@ -810,11 +811,11 @@ function projetarRendimentoAnual(){
   var anoAtual=new Date().getFullYear();
   var keys=Object.keys(DB).filter(function(k){ return k.startsWith(anoAtual+'-'); });
   if(!keys.length)return 0;
-  // v3.7: usa baseFiscal acumulada (exclui Particular)
+  // v3.7: acumula baseFiscal (exclui Particular)
   var total=keys.reduce(function(a,k){ var bf=baseFiscal(DB[k]); return a+(bf>0?bf:0); },0);
   return total;
 }
-// v3.7 item 3: recebe registo completo, usa baseFiscal(r) — exclui Particular e alimentação
+// v3.7: recebe registo completo, base = baseFiscal(r) (exclui Particular)
 function calcImpostos(r){
   if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT')return null;
   var bf=baseFiscal(r);
@@ -826,7 +827,7 @@ function calcImpostos(r){
   var total=ss+irs+iva;
   return{ss:ss,irs:irs,iva:iva,total:total,real:saldo(r)-total,taxaIRS:taxa,base:bf};
 }
-// Para semana/histórico com sl e bf separados
+// Para semana/histórico: sl=saldo total, bf=base fiscal
 function calcImpostosValores(sl,bf){
   if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT'||bf<=0)return null;
   var ss=bf*0.15;
@@ -981,7 +982,10 @@ function renderResumoDia(){
   } else {
     html+=rl('⛽ Combustível',moeda(eT),'color:var(--amber)')+(r.litros>0?rl('🔢 Litros',r.litros.toFixed(2)+'L','',true):'');
   }
-  html+=rl('🍔 Alimentação',moeda(r.comida||0))+rl('💳 Outros gastos',moeda(r.outroG2||0))+rl('🏠 Aluguer (dia)',moeda(al),'color:var(--violet)');
+  // v3.7: comida e outros gastos pessoais aparecem como info, não descontam do saldo
+  if((r.comida||0)>0)html+=rl('🍔 Alimentação (info)',moeda(r.comida||0),'color:var(--muted)');
+  if((r.outroG2||0)>0)html+=rl('💳 Outros gastos (info)',moeda(r.outroG2||0),'color:var(--muted)');
+  html+=rl('🏠 Aluguer (dia)',moeda(al),'color:var(--violet)');
   if(horas>0) html+='<div class="div"></div>'+rl('⏱️ Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('💰 Ganho/hora',moeda(gph),'color:var(--amber)');
   if(kms>0){
     html+='<div class="div"></div>'+rl('📍 KMs rodados',kms+'km','color:var(--sub)');
@@ -1054,7 +1058,8 @@ function renderSemana(){
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
   document.getElementById('platGrid').innerHTML='<div class="plat-c"><div class="plat-ic">🖤</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+'<div class="plat-c"><div class="plat-ic" style="color:#34d186">⚡</div><div class="plat-nm">Bolt</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+'<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
-  var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaGastos(r)+(r.comida||0)+(r.outroG2||0)+alDia()}; });
+  // v3.7: gastos no gráfico = só energia kWh frota + aluguer
+  var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaGastos(r)+alDia()}; });
   var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs); }).concat([1]));
   var bHTML='';
   ds.forEach(function(d,i){ var v=vals[i],gh=Math.round((v.g/mx)*88),gsh=Math.round((v.gs/mx)*88); bHTML+='<div class="bc-col"><div class="bc-grp"><div class="bar g" style="height:'+gh+'px"></div><div class="bar gs" style="height:'+gsh+'px"></div></div><div class="bc-lbl">'+diaNome(d)+'</div></div>'; });
@@ -1079,15 +1084,20 @@ function renderSemana(){
     perfHTML+=perf('⛽','L/100km',eficL>0?eficL.toFixed(1)+' L':'-','color:var(--amber)')+perf('📍','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+perf('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+perf('💰','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
   }
   document.getElementById('perfGrid').innerHTML=perfHTML;
-  var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0),tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0),tal=CFG.aluguel,gas=te+tc+tou+tal,sl2=tg-gas,pos2=sl2>=0;
+  var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0);
+  var tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0);
+  var tal=CFG.aluguel;
+  // v3.7: gastos = só energia kWh frota + aluguer
+  var gas=te+tal,sl2=tg-gas,pos2=sl2>=0;
+  // base fiscal semanal sem Particular
+  var bfSem=Math.max(0,sl2-(reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0)));
+  var impSemHtml=htmlImpostos(calcImpostosValores(sl2,bfSem));
   var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]); },0);
   var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]); },0):slSemanal;
   renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
   var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">ℹ️ Saldo calculado com aluguer semanal completo (€'+CFG.aluguel.toFixed(0)+') descontado — o que sobra se parares agora</div>';
-  // v3.7: base fiscal semanal sem Particular
-  var bfSem=Math.max(0,sl2-to);
-  var impSemHtml=htmlImpostos(calcImpostosValores(sl2,bfSem));
-  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🍔 Alimentação',moeda(tc))+rl('💳 Outros gastos',moeda(tou))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+notaSemana+impSemHtml);
+
+  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(tc>0?rl('🍔 Alimentação (info)',moeda(tc),'color:var(--muted)'):'')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+notaSemana+impSemHtml);
 }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
 
@@ -1150,7 +1160,11 @@ function renderHist(){
   renderAnaliseConsumo(chaves);
   var tg=chaves.reduce(function(a,d){ return a+ganhos(DB[d]); },0),tu=chaves.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=chaves.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=chaves.reduce(function(a,d){ return a+(DB[d].outroG||0); },0),te=chaves.reduce(function(a,d){ return a+energiaGastos(DB[d]); },0),tc=chaves.reduce(function(a,d){ return a+(DB[d].comida||0); },0),tou=chaves.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0),nDias=chaves.length;
   var alTotal=histFiltro==='dia'?alDia():histFiltro==='semana'?CFG.aluguel:(CFG.aluguel/7)*nDias;
-  var gastos=te+tc+tou+alTotal,slTotal=tg-gastos,pos=slTotal>=0;
+  // v3.7: gastos = só energia kWh frota + aluguer
+  var gastos=te+alTotal,slTotal=tg-gastos,pos=slTotal>=0;
+  // base fiscal sem Particular
+  var toHist=chaves.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
+  var bfHist=Math.max(0,slTotal-toHist);
   if(!chaves.length){
     var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📭</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">➕ Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📭</div>Sem dados neste período</div>';
     document.getElementById('resumoPeriodo').innerHTML='<div style="padding:8px;text-align:center;color:var(--muted);font-size:12px">Sem dados</div>';
@@ -1160,7 +1174,7 @@ function renderHist(){
   var gphHist=totalHorasHist>0?tg/totalHorasHist:0;
   var totalKmsHist=chaves.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
   var ganhoKmHist=totalKmsHist>0?tg/totalKmsHist:0;
-  document.getElementById('resumoPeriodo').innerHTML='<div class="rp-grid"><div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div><div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'⚠️')+' Saldo</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div><div class="rp-item"><div class="rp-lbl">📤 Gastos</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div><div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+(gphHist>0?'<div class="rp-item"><div class="rp-lbl">⏱️ Ganho/hora médio</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+(ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+htmlImpostos(calcImpostosValores(slTotal,Math.max(0,slTotal-to)))+'</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">⚡ <strong style="color:#34d186">'+moeda(tb)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span></div>';
+  document.getElementById('resumoPeriodo').innerHTML='<div class="rp-grid"><div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div><div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'⚠️')+' Saldo</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div><div class="rp-item"><div class="rp-lbl">📤 Gastos</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div><div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+(gphHist>0?'<div class="rp-item"><div class="rp-lbl">⏱️ Ganho/hora médio</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+(ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+htmlImpostos(calcImpostosValores(slTotal,bfHist))+'</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">⚡ <strong style="color:#34d186">'+moeda(tb)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span></div>';
   var html='';
   chaves.slice().reverse().forEach(function(iso){ var r=DB[iso],sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[]; if(r.uber)parts.push('🖤 '+moeda(r.uber)); if(r.bolt)parts.push('⚡ '+moeda(r.bolt)); if(r.outroG)parts.push('🚘 '+moeda(r.outroG)); var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; var extra=''; if(horas>0)extra+=' · ⏱️ '+fmtHoras(horas); if(r.kms>0)extra+=' · 📍 '+r.kms+'km'; html+='<div class="hi" onclick="abrirModal(\''+iso+'\')"><div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'🏆':'⚠️')+'</div><div class="hi-inf"><div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div><div class="hi-g">Ganhos: '+moeda(g)+' · Energia: '+moeda(eT)+'</div>'+(parts.length||extra?'<div class="hi-pl">'+(parts.join(' · '))+extra+'</div>':'')+' </div><div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div><div class="hi-edit">✏️ editar</div></div></div>'; });
   document.getElementById('histList').innerHTML=html;
