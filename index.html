@@ -448,7 +448,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
           <div style="font-size:10px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
             SS = 15% fixo &bull; IRS = escal&atilde;o autom&aacute;tico por acumulado anual &bull; IVA = 6%<br>
-            <strong style="color:var(--amber)">N&atilde;o incluem:</strong> alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Particular
+            <strong style="color:var(--amber)">N&atilde;o incluem:</strong> energia em &euro; (bolso), alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Particular
           </div>
         </div>
       </div>
@@ -792,23 +792,19 @@ function calcEnergia(eE,eK){ return (eE||0)+kwhParaEuro(eK||0); }
 // kWh autom\u00e1tico: se s\u00f3 h\u00e1 valor em \u20ac e nenhum kWh direto, calcula kWh = \u20ac / pre\u00e7o
 function kwhEfetivo(r){
   if(!r)return 0;
-  var kDireto=r.energiaKwh||0;
-  if(kDireto>0)return kDireto;
-  var eE=r.energia||0;
-  return (eE>0&&CFG.precoKwh>0)?eE/CFG.precoKwh:0;
+  return r.energiaKwh||0;
 }
-// energiaGastos: usa kWh efetivo (frota = valor em \u20ac OU kWh direto, s\u00f3 frota desconta)
-function energiaGastos(r){
+// Frota (kWh cartão TVDE): desconta saldo + entra fiscal
+function energiaFrota(r){
   if(!r)return 0;
-  if(isEletrico()){
-    // usa o valor em \u20ac diretamente se foi inserido (mais preciso), sen\u00e3o converte kWh
-    var eE=r.energia||0;
-    var eK=r.energiaKwh||0;
-    return calcEnergia(eE,eK);
-  }
-  return r.combustivel||0;
+  return isEletrico()?kwhParaEuro(r.energiaKwh||0):(r.combustivel||0);
 }
-
+// Dinheiro (€ bolso): só informativo, NÃO entra fiscal
+function energiaDinheiro(r){
+  if(!r||!isEletrico())return 0;
+  return r.energia||0;
+}
+function energiaGastos(r){ return energiaFrota(r); }
 var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 var DIAS_FULL=['Domingo','Segunda','Ter\u00e7a','Quarta','Quinta','Sexta','S\u00e1bado'];
 var MESES=['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -820,7 +816,7 @@ function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0)
 // Alimenta\u00e7\u00e3o e outros gastos pessoais N\u00c3O entram
 function saldo(r){
   if(!r)return 0;
-  return ganhos(r)-energiaGastos(r)-alDia();
+  return ganhos(r)-energiaFrota(r)-alDia();
 }
 // base fiscal = saldo sem Particular (sem recibo verde, n\u00e3o tribut\u00e1vel)
 function baseFiscal(r){
@@ -1037,20 +1033,22 @@ function renderResumoDia(){
     rl('\u26a1 Bolt',moeda(r.bolt||0),'color:#34d186',true)+
     rl('🚘 Particular/Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
     '<div class="div"></div>';
+  html+='<div style="margin:8px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>';
   if(isEletrico()){
-    var eE=r.energia||0,eKd=r.energiaKwh||0;
-    var kwhMostrar=eK;
-    html+=rl('\u26a1 Energia',moeda(eT),'color:var(--violet)');
-    if(eE>0)html+=rl('\u20ac Valor pago',moeda(eE),'',true);
-    if(eKd>0)html+=rl('\u26a1 kWh direto',eKd.toFixed(2)+' kWh','',true);
-    else if(eE>0&&kwhMostrar>0)html+=rl('\u26a1 kWh auto',kwhMostrar.toFixed(2)+' kWh','color:var(--muted)',true);
+    var eKd=r.energiaKwh||0;
+    html+=rl('\u26a1 Energia kWh frota',moeda(eT),'color:var(--violet)');
+    if(eKd>0)html+=rl('\u26a1 '+eKd.toFixed(2)+' kWh x '+sim()+CFG.precoKwh,moeda(eT),'',true);
   } else {
     html+=rl('\u26fd Combust\u00edvel',moeda(eT),'color:var(--amber)')+(r.litros>0?rl('Litros',r.litros.toFixed(2)+'L','',true):'');
   }
-  html+=rl('🏠 Aluguer (dia)',moeda(al),'color:var(--violet)');
-  // alimenta\u00e7\u00e3o e outros: registo pessoal, n\u00e3o entram no saldo operacional
-  if((r.comida||0)>0)html+=rl('🍔 Alimenta\u00e7\u00e3o (pessoal)',moeda(r.comida||0),'color:var(--muted)');
-  if((r.outroG2||0)>0)html+=rl('💳 Outros gastos (pessoal)',moeda(r.outroG2||0),'color:var(--muted)');
+  html+=rl('Aluguer (dia)',moeda(al),'color:var(--violet)');
+  var eDin=energiaDinheiro(r);
+  if(eDin>0||(r.comida||0)>0||(r.outroG2||0)>0){
+    html+='<div style="margin:8px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>';
+    if(eDin>0)html+=rl('\u26a1 Energia (bolso)',moeda(eDin),'color:var(--amber)');
+    if((r.comida||0)>0)html+=rl('Alimenta\u00e7\u00e3o',moeda(r.comida||0),'color:var(--muted)');
+    if((r.outroG2||0)>0)html+=rl('Outros gastos',moeda(r.outroG2||0),'color:var(--muted)');
+  }
   if(horas>0)html+='<div class="div"></div>'+rl('\u23f1\ufe0f Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('💰 Lucro/hora',moeda(gph),'color:var(--amber)')+(imp?rl('(ap\u00f3s impostos)','','color:var(--muted)',true):'');
   if(kms>0){
     html+='<div class="div"></div>'+rl('📍 KMs rodados',kms+'km','color:var(--sub)');
@@ -1182,6 +1180,7 @@ function renderSemana(){
 
   var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0);
   var tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0);
+  var teDinheiro=reais.reduce(function(a,d){ return a+energiaDinheiro(DB[d]||{}); },0);
   var tal=CFG.aluguel;
   // gastos operacionais = energia + aluguer
   var gas=te+tal, sl2=tg-gas, pos2=sl2>=0;
@@ -1202,12 +1201,17 @@ function renderSemana(){
     rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
     rl('🖤 Uber',moeda(tu),'',true)+rl('\u26a1 Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+
     '<div class="div"></div>'+
-    rl(isEletrico()?'\u26a1 Energia':'\u26fd Combust\u00edvel',moeda(te))+
-    rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+
+    '<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
+    rl(isEletrico()?'\u26a1 Energia kWh frota':'\u26fd Combust\u00edvel',moeda(te))+
+    rl('Aluguer semanal',moeda(tal),'color:var(--violet)')+
+    (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
+    (teDinheiro>0?rl('\u26a1 Energia (bolso)',moeda(teDinheiro),'color:var(--amber)'):'')+
+    (tc>0?rl('Alimenta\u00e7\u00e3o',moeda(tc),'color:var(--muted)'):'')+
+    (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
     (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
-    rl('🛣\ufe0f KMs totais',totalKms>0?totalKms+'km':'-')+
-    '<div class="rl tot"><span class="lb">'+(pos2?'🏆':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+
-    notaSemana+infosPessoais+impSemHtml);
+    rl('KMs totais',totalKms>0?totalKms+'km':'-')+
+    '<div class="rl tot"><span class="lb">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo OP Frota</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+ moeda(sl2)+'</span></div>'+
+    notaSemana+impSemHtml);
 }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
 
@@ -1299,7 +1303,8 @@ function renderHist(){
   var tu=chaves.reduce(function(a,d){ return a+(r0(d).uber||0); },0);
   var tb=chaves.reduce(function(a,d){ return a+(r0(d).bolt||0); },0);
   var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0); },0);
-  var te=chaves.reduce(function(a,d){ return a+energiaGastos(r0(d)); },0);
+  var te=chaves.reduce(function(a,d){ return a+energiaFrota(r0(d)); },0);
+  var teDinheiro=chaves.reduce(function(a,d){ return a+energiaDinheiro(r0(d)); },0);
   var tc=chaves.reduce(function(a,d){ return a+(r0(d).comida||0); },0);
   var tou=chaves.reduce(function(a,d){ return a+(r0(d).outroG2||0); },0);
   var nDias=chaves.length;
@@ -1324,7 +1329,7 @@ function renderHist(){
     '<div class="rp-grid">'+
     '<div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
     '<div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
-    '<div class="rp-item"><div class="rp-lbl">📤 Gastos (op.)</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">&#9889; Gasto OP Frota</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+(teDinheiro>0?'<div class="rp-item"><div class="rp-lbl">&#128181; Gasto Dinheiro</div><div class="rp-val" style="color:var(--amber)">'+moeda(teDinheiro)+'</div></div>':'')+
     '<div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
     (gphHist>0?'<div class="rp-item"><div class="rp-lbl">\u23f1\ufe0f Lucro/hora</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+
     (ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+
@@ -1341,7 +1346,7 @@ function renderHist(){
 
   var html='';
   chaves.slice().reverse().forEach(function(iso){
-    var r=DB[iso]||{}; var sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
+    var r=DB[iso]||{}; var sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaFrota(r),eDin=energiaDinheiro(r),parts=[];
     if(r.uber)parts.push('🖤 '+moeda(r.uber));
     if(r.bolt)parts.push('\u26a1 '+moeda(r.bolt));
     if(r.outroG)parts.push('🚘 '+moeda(r.outroG));
@@ -1353,7 +1358,7 @@ function renderHist(){
       '<div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'🏆':'\u26a0\ufe0f')+'</div>'+
       '<div class="hi-inf">'+
         '<div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div>'+
-        '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Energia: '+moeda(eT)+'</div>'+
+        '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Frota: '+moeda(eT)+(eDin>0?' \u00b7 Bolso: '+moeda(eDin):'')+'</div>'+
         (parts.length||extra?'<div class="hi-pl">'+parts.join(' \u00b7 ')+extra+'</div>':'')+
       '</div>'+
       '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div><div class="hi-edit">\u270f\ufe0f editar</div></div>'+
