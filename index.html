@@ -680,8 +680,8 @@ function sincMetas(origem){
 }
 
 var PAISES={
-  PT:{moeda:'EUR',simbolo:'\u20ac',nome:'Euro (\u20ac)',kwh:'\u20ac/kWh',bandeira:'\U0001F1F5\U0001F1F9'},
-  BR:{moeda:'BRL',simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh',bandeira:'\U0001F1E7\U0001F1F7'}
+  PT:{moeda:'EUR',simbolo:'\u20ac',nome:'Euro (\u20ac)',kwh:'\u20ac/kWh',bandeira:'🇵🇹'},
+  BR:{moeda:'BRL',simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh',bandeira:'🇧🇷'}
 };
 function sim(){ return PAISES[CFG.pais||'PT'].simbolo; }
 function selecionarPais(p){
@@ -690,7 +690,7 @@ function selecionarPais(p){
   document.getElementById('pais-'+p).classList.add('on');
   var me=document.getElementById('moedaAtual'); if(me)me.textContent=PAISES[p].nome;
   atualizarPrefixos(); atualizarBadgePais(); renderEnergiaSection(); renderMEnergiaSection(); mostrarImpostosCfg(); renderHoje();
-  toast(p==='PT'?'\U0001F1F5\U0001F1F9 Portugal \u2014 Moeda: \u20ac':'\U0001F1E7\U0001F1F7 Brasil \u2014 Moeda: R$','ok');
+  toast(p==='PT'?'🇵🇹 Portugal \u2014 Moeda: \u20ac':'🇧🇷 Brasil \u2014 Moeda: R$','ok');
 }
 function atualizarBadgePais(){
   var el=document.getElementById('hdrPais'); if(!el)return;
@@ -809,7 +809,7 @@ function energiaGastos(r){
   return r.combustivel||0;
 }
 
-var DIAS=['\u0044\u006f\u006d','\u0053\u0065\u0067','\u0054\u0065\u0072','\u0051\u0075\u0061','\u0051\u0075\u0069','\u0053\u0065\u0078','S\u00e1b'];
+var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 var DIAS_FULL=['Domingo','Segunda','Ter\u00e7a','Quarta','Quinta','Sexta','S\u00e1bado'];
 var MESES=['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -977,7 +977,7 @@ function navTo(p){ pages.forEach(function(x){ document.getElementById('pg-'+x).c
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
   if(!bar||!txt)return;
-  if(CFG.veiculo&&CFG.veiculo.modelo){ var ic=isEletrico()?'\U0001F50B':'\u26fd'; txt.textContent='\U0001F698 '+CFG.veiculo.modelo+' '+ic; bar.classList.add('show'); }
+  if(CFG.veiculo&&CFG.veiculo.modelo){ var ic=isEletrico()?'🔋':'\u26fd'; txt.textContent='🚘 '+CFG.veiculo.modelo+' '+ic; bar.classList.add('show'); }
   else { bar.classList.remove('show'); txt.textContent=''; }
 }
 function renderHeader(){
@@ -993,7 +993,7 @@ function renderBarraMeta(containerId,label,atual,meta,nota){
   if(!meta||meta<=0){ el.innerHTML=''; return; }
   var pct=Math.min(100,Math.round((atual/meta)*100)); var atingiu=atual>=meta;
   var cor=atingiu?'var(--green)':pct>=70?'var(--amber)':'var(--cyan)';
-  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">\U0001F3AF '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' \U0001F3C6':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
+  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
 }
 
 // ── KPIs / Hoje ───────────────────────────────────────────────────────
@@ -1009,10 +1009,10 @@ function renderKPIs(){
   var lucroRef=imp?imp.real:sl;
   var gph=horas&&horas>0?lucroRef/horas:0;
   document.getElementById('kpiGrid').innerHTML=
-    kpi('\U0001F4B0','Ganhos hoje',moeda(g),'color:var(--cyan)')+
-    kpi(slMeta>=0?'\U0001F3C6':'\u26a0\ufe0f',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')')+
+    kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
+    kpi(slMeta>=0?'🏆':'\u26a0\ufe0f',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')')+
     kpi('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-    kpi('\U0001F4C6','Ganhos semana',moeda(tg),'color:var(--violet)');
+    kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
   renderBarraMeta('metaDiariaBox','Meta di\u00e1ria',slMeta,CFG.metaDia);
 }
 function kpi(ic,lb,vl,st){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div></div>'; }
@@ -1032,10 +1032,10 @@ function renderResumoDia(){
   var gph=horas&&horas>0?lucroRef/horas:0;
   var kms=r.kms||0;
   var eK=kwhEfetivo(r);
-  var html=rl('\U0001F4B0 Total ganhos',moeda(g),'color:var(--cyan)')+
-    rl('\U0001F5A4 Uber',moeda(r.uber||0),'',true)+
+  var html=rl('💰 Total ganhos',moeda(g),'color:var(--cyan)')+
+    rl('🖤 Uber',moeda(r.uber||0),'',true)+
     rl('\u26a1 Bolt',moeda(r.bolt||0),'color:#34d186',true)+
-    rl('\U0001F698 Particular/Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
+    rl('🚘 Particular/Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
     '<div class="div"></div>';
   if(isEletrico()){
     var eE=r.energia||0,eKd=r.energiaKwh||0;
@@ -1047,17 +1047,17 @@ function renderResumoDia(){
   } else {
     html+=rl('\u26fd Combust\u00edvel',moeda(eT),'color:var(--amber)')+(r.litros>0?rl('Litros',r.litros.toFixed(2)+'L','',true):'');
   }
-  html+=rl('\U0001F3E0 Aluguer (dia)',moeda(al),'color:var(--violet)');
+  html+=rl('🏠 Aluguer (dia)',moeda(al),'color:var(--violet)');
   // alimenta\u00e7\u00e3o e outros: registo pessoal, n\u00e3o entram no saldo operacional
-  if((r.comida||0)>0)html+=rl('\U0001F354 Alimenta\u00e7\u00e3o (pessoal)',moeda(r.comida||0),'color:var(--muted)');
-  if((r.outroG2||0)>0)html+=rl('\U0001F4B3 Outros gastos (pessoal)',moeda(r.outroG2||0),'color:var(--muted)');
-  if(horas>0)html+='<div class="div"></div>'+rl('\u23f1\ufe0f Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('\U0001F4B0 Lucro/hora',moeda(gph),'color:var(--amber)')+(imp?rl('(ap\u00f3s impostos)','','color:var(--muted)',true):'');
+  if((r.comida||0)>0)html+=rl('🍔 Alimenta\u00e7\u00e3o (pessoal)',moeda(r.comida||0),'color:var(--muted)');
+  if((r.outroG2||0)>0)html+=rl('💳 Outros gastos (pessoal)',moeda(r.outroG2||0),'color:var(--muted)');
+  if(horas>0)html+='<div class="div"></div>'+rl('\u23f1\ufe0f Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('💰 Lucro/hora',moeda(gph),'color:var(--amber)')+(imp?rl('(ap\u00f3s impostos)','','color:var(--muted)',true):'');
   if(kms>0){
-    html+='<div class="div"></div>'+rl('\U0001F4CD KMs rodados',kms+'km','color:var(--sub)');
-    if(isEletrico()&&eK>0){ var eff=(eK/kms*100); html+=rl('\u26a1 Efici\u00eancia',eff.toFixed(1)+' kWh/100km','color:var(--violet)',true)+rl('\U0001F4CD Custo/km',moeda(eT/kms),'',true); }
-    else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('\U0001F4CD Custo/km',moeda(eT/kms),'',true); }
+    html+='<div class="div"></div>'+rl('📍 KMs rodados',kms+'km','color:var(--sub)');
+    if(isEletrico()&&eK>0){ var eff=(eK/kms*100); html+=rl('\u26a1 Efici\u00eancia',eff.toFixed(1)+' kWh/100km','color:var(--violet)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
+    else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
   }
-  html+='<div class="rl tot"><span class="lb">'+(pos?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
+  html+='<div class="rl tot"><span class="lb">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
   if(imp)html+=htmlImpostos(imp);
   document.getElementById('resumoDia').innerHTML=html;
 }
@@ -1138,9 +1138,9 @@ function renderSemana(){
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
   document.getElementById('platGrid').innerHTML=
-    '<div class="plat-c"><div class="plat-ic">\U0001F5A4</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+
+    '<div class="plat-c"><div class="plat-ic">🖤</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+
     '<div class="plat-c"><div class="plat-ic" style="color:#34d186">\u26a1</div><div class="plat-nm">Bolt</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+
-    '<div class="plat-c"><div class="plat-ic">\U0001F698</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
+    '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
   // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
   var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaGastos(r)+alDia()}; });
   var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs); }).concat([1]));
@@ -1163,20 +1163,20 @@ function renderSemana(){
     var custoKm=totalKms>0?te/totalKms:0;
     var ganhoKm=totalKms>0?tg/totalKms:0;
     perfHTML+=perf('\u26a1','kWh/100km',efic>0?efic.toFixed(1)+' kWh':'-','color:var(--violet)')+
-               perf('\U0001F4CD','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+
+               perf('📍','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+
                perf('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-               perf('\U0001F6E3\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
-               perf('\U0001F4B0','Ganho/km',ganhoKm>0?moeda(ganhoKm):'-','color:var(--green)');
+               perf('🛣\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('💰','Ganho/km',ganhoKm>0?moeda(ganhoKm):'-','color:var(--green)');
   } else {
     var totalLitros=reais.reduce(function(a,d){ return a+(DB[d].litros||0); },0);
     var eficL=totalKms>0&&totalLitros>0?(totalLitros/totalKms*100):0;
     var custoKmC=totalKms>0?te/totalKms:0;
     var ganhoKmC=totalKms>0?tg/totalKms:0;
     perfHTML+=perf('\u26fd','L/100km',eficL>0?eficL.toFixed(1)+' L':'-','color:var(--amber)')+
-               perf('\U0001F4CD','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+
+               perf('📍','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+
                perf('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-               perf('\U0001F6E3\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
-               perf('\U0001F4B0','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
+               perf('🛣\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('💰','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
   }
   document.getElementById('perfGrid').innerHTML=perfHTML;
 
@@ -1191,22 +1191,22 @@ function renderSemana(){
 
   var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{}); },0);
   var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{}); },0):slSemanal;
-  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'\U0001F4CC Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
+  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
 
   var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
-  var infosPessoais=(tc>0||tou>0)?'<div style="font-size:10px;color:var(--muted);margin-top:6px">\U0001F4CC Pessoal (n\u00e3o incluso no saldo): '+(tc>0?'\U0001F354 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'\U0001F4B3 '+moeda(tou):'')+'</div>':'';
+  var infosPessoais=(tc>0||tou>0)?'<div style="font-size:10px;color:var(--muted);margin-top:6px">📌 Pessoal (n\u00e3o incluso no saldo): '+(tc>0?'🍔 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'💳 '+moeda(tou):'')+'</div>':'';
 
   document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+
-    (!reais.length?'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados esta semana</div>':
-    rl('\U0001F4C5 Dias registados',reais.length+'/7')+
-    rl('\U0001F4B0 Ganhos totais',moeda(tg),'color:var(--cyan)')+
-    rl('\U0001F5A4 Uber',moeda(tu),'',true)+rl('\u26a1 Bolt',moeda(tb),'color:#34d186',true)+rl('\U0001F698 Particular',moeda(to),'color:var(--orange)',true)+
+    (!reais.length?'<div class="empty"><div class="empty-ic">📤</div>Sem dados esta semana</div>':
+    rl('📅 Dias registados',reais.length+'/7')+
+    rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
+    rl('🖤 Uber',moeda(tu),'',true)+rl('\u26a1 Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+
     '<div class="div"></div>'+
     rl(isEletrico()?'\u26a1 Energia':'\u26fd Combust\u00edvel',moeda(te))+
-    rl('\U0001F3E0 Aluguer semanal',moeda(tal),'color:var(--violet)')+
+    rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+
     (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
-    rl('\U0001F6E3\ufe0f KMs totais',totalKms>0?totalKms+'km':'-')+
-    '<div class="rl tot"><span class="lb">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+
+    rl('🛣\ufe0f KMs totais',totalKms>0?totalKms+'km':'-')+
+    '<div class="rl tot"><span class="lb">'+(pos2?'🏆':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+
     notaSemana+infosPessoais+impSemHtml);
 }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
@@ -1253,7 +1253,7 @@ function salvarModal(){
 }
 function apagarDiaModal(){
   if(!editingISO)return;
-  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('\U0001F5D1\ufe0f Dia apagado!','ok'); }
+  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑\ufe0f Dia apagado!','ok'); }
 }
 
 // ── Hist\u00f3rico ──────────────────────────────────────────────────────────
@@ -1310,7 +1310,7 @@ function renderHist(){
   var bfHist=Math.max(0,slTotal-to);
 
   if(!chaves.length){
-    var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados neste per\u00edodo</div>';
+    var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste per\u00edodo</div>';
     document.getElementById('resumoPeriodo').innerHTML='<div style="padding:8px;text-align:center;color:var(--muted);font-size:12px">Sem dados</div>';
     document.getElementById('histList').innerHTML=semDados; return;
   }
@@ -1322,35 +1322,35 @@ function renderHist(){
 
   document.getElementById('resumoPeriodo').innerHTML=
     '<div class="rp-grid">'+
-    '<div class="rp-item"><div class="rp-lbl">\U0001F4B0 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
-    '<div class="rp-item"><div class="rp-lbl">'+(pos?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
-    '<div class="rp-item"><div class="rp-lbl">\U0001F4E4 Gastos (op.)</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
-    '<div class="rp-item"><div class="rp-lbl">\U0001F4C5 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">📤 Gastos (op.)</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
     (gphHist>0?'<div class="rp-item"><div class="rp-lbl">\u23f1\ufe0f Lucro/hora</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+
-    (ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">\U0001F4B0 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+
+    (ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+
     htmlImpostos(calcImpostosValores(slTotal,bfHist))+
     '</div>'+
-    (tc>0||tou>0?'<div style="font-size:10px;color:var(--muted);margin-bottom:8px">\U0001F4CC Pessoal (n\u00e3o incluso): '+(tc>0?'\U0001F354 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'\U0001F4B3 '+moeda(tou):'')+'</div>':'')+
+    (tc>0||tou>0?'<div style="font-size:10px;color:var(--muted);margin-bottom:8px">📌 Pessoal (n\u00e3o incluso): '+(tc>0?'🍔 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'💳 '+moeda(tou):'')+'</div>':'')+
     '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-    '<span style="font-size:10px;color:var(--muted)">\U0001F5A4 <strong style="color:#fff">'+moeda(tu)+'</strong></span>'+
+    '<span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span>'+
     '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
     '<span style="font-size:10px;color:var(--muted)">\u26a1 <strong style="color:#34d186">'+moeda(tb)+'</strong></span>'+
     '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
-    '<span style="font-size:10px;color:var(--muted)">\U0001F698 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span>'+
+    '<span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span>'+
     '</div>';
 
   var html='';
   chaves.slice().reverse().forEach(function(iso){
     var r=DB[iso]||{}; var sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
-    if(r.uber)parts.push('\U0001F5A4 '+moeda(r.uber));
+    if(r.uber)parts.push('🖤 '+moeda(r.uber));
     if(r.bolt)parts.push('\u26a1 '+moeda(r.bolt));
-    if(r.outroG)parts.push('\U0001F698 '+moeda(r.outroG));
+    if(r.outroG)parts.push('🚘 '+moeda(r.outroG));
     var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
     var extra='';
     if(horas>0)extra+=' \u00b7 \u23f1\ufe0f '+fmtHoras(horas);
-    if(r.kms>0)extra+=' \u00b7 \U0001F4CD '+r.kms+'km';
+    if(r.kms>0)extra+=' \u00b7 📍 '+r.kms+'km';
     html+='<div class="hi" onclick="abrirModal(\''+iso+'\')">'+
-      '<div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+'</div>'+
+      '<div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'🏆':'\u26a0\ufe0f')+'</div>'+
       '<div class="hi-inf">'+
         '<div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div>'+
         '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Energia: '+moeda(eT)+'</div>'+
@@ -1420,7 +1420,7 @@ function exportCSV(){
   });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_v37_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  toast('\U0001F4E5 CSV exportado!','ok');
+  toast('📥 CSV exportado!','ok');
 }
 function importCSV(e){
   var file=e.target.files[0]; if(!file)return;
@@ -1464,14 +1464,14 @@ function importCSV(e){
       } catch(err){ errors++; }
     }
     salvarLocal(); document.getElementById('fileInput').value='';
-    var msg=count>0?'\u2705 '+count+' dias importados!'+(errors>0?' ('+errors+' linhas ignoradas)'):'Nenhum dado novo'+(errors>0?' \u00b7 '+errors+' erros':'');
+    var msg=count>0?'✅ '+count+' dias importados!'+(errors>0?' ('+errors+' ignoradas)':''):'Sem dados novos'+(errors>0?' · '+errors+' erros':'');
     toast(msg,count>0?'ok':'er');
     if(count>0){ renderHist(); renderKPIs(); renderResumoDia(); }
   };
   reader.readAsText(file);
 }
 function registarDiaManual(){ var iso=document.getElementById('iDataManual').value; if(!iso){ toast('Escolhe uma data!','er'); return; } abrirModal(iso); }
-function limpar(){ if(confirm('Apagar TODOS os registos?')){ clearData(); toast('\U0001F5D1\ufe0f Apagado!','ok'); renderHoje(); } }
+function limpar(){ if(confirm('Apagar TODOS os registos?')){ clearData(); toast('🗑\ufe0f Apagado!','ok'); renderHoje(); } }
 function mostrarOnboarding(){ document.getElementById('onboardOverlay').classList.add('show'); }
 function fecharOnboarding(irConfig){ document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
 function mostrarNovidades(){ document.getElementById('novidadesOverlay').classList.add('show'); }
