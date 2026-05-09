@@ -269,7 +269,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <body>
 <div class="app">
   <div class="ptr" id="ptr">
-    <span class="ptr-spin" id="ptrSpin">↻</span>
+    <span class="ptr-spin" id="ptrSpin">&#8635;</span>
     <span id="ptrText">Puxar para atualizar</span>
   </div>
   <div class="hdr">
@@ -290,110 +290,110 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="pg on" id="pg-hoje">
       <div class="kpi-g" id="kpiGrid"></div>
       <div id="metaDiariaBox"></div>
-      <div class="stit">⏱️ Horas de trabalho</div>
+      <div class="stit">&#9203;&#65039; Horas de trabalho</div>
       <div class="card">
         <div class="card-top ct-cyan"></div>
         <div class="horas-box">
-          <div class="horas-box-title">⏱️ Turno de hoje</div>
+          <div class="horas-box-title">&#9203;&#65039; Turno de hoje</div>
           <div class="horas-row">
             <div class="fld" style="margin-bottom:0">
-              <div class="fld-lbl">🟢 Hora início</div>
-              <div class="iw"><div class="ipfx">🕐</div><input type="time" id="iHoraInicio"></div>
+              <div class="fld-lbl">&#128994; Hora in&iacute;cio</div>
+              <div class="iw"><div class="ipfx">&#128336;</div><input type="time" id="iHoraInicio"></div>
             </div>
             <div class="fld" style="margin-bottom:0">
-              <div class="fld-lbl">🔴 Hora fim</div>
-              <div class="iw"><div class="ipfx">🕐</div><input type="time" id="iHoraFim"></div>
+              <div class="fld-lbl">&#128308; Hora fim</div>
+              <div class="iw"><div class="ipfx">&#128336;</div><input type="time" id="iHoraFim"></div>
             </div>
           </div>
           <label class="almoco-check">
             <input type="checkbox" id="iAlmoco" onchange="atualizarHorasTotal()">
-            <span class="almoco-check-lbl">🍔 Fiz pausa para almoço <span>(desconta 1h)</span></span>
+            <span class="almoco-check-lbl">&#127828; Fiz pausa para almo&ccedil;o <span>(desconta 1h)</span></span>
           </label>
           <div class="horas-total">
-            <span class="horas-total-lbl">⏱️ Total trabalhado</span>
+            <span class="horas-total-lbl">&#9203;&#65039; Total trabalhado</span>
             <span class="horas-total-val" id="horasTotal">-- h --min</span>
           </div>
         </div>
       </div>
-      <div class="stit">💰 Ganhos de hoje</div>
+      <div class="stit">&#128176; Ganhos de hoje</div>
       <div class="card">
         <div class="card-top ct-cyan"></div>
-        <div class="sub-h"><span>🖤</span> Uber</div>
+        <div class="sub-h"><span>&#129095;</span> Uber</div>
         <div class="fld"><div class="fld-lbl">Valor recebido</div>
-          <div class="iw"><div class="ipfx" id="pfxUber">€</div><input type="number" inputmode="decimal" id="iUber" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="iw"><div class="ipfx" id="pfxUber">&euro;</div><input type="number" inputmode="decimal" id="iUber" placeholder="0.00" min="0" step="0.01"></div>
         </div>
-        <div class="sub-h"><span style="color:#34d186">⚡</span> Bolt</div>
+        <div class="sub-h"><span style="color:#34d186">&#9889;</span> Bolt</div>
         <div class="fld"><div class="fld-lbl">Valor recebido</div>
-          <div class="iw"><div class="ipfx" id="pfxBolt">€</div><input type="number" inputmode="decimal" id="iBolt" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="iw"><div class="ipfx" id="pfxBolt">&euro;</div><input type="number" inputmode="decimal" id="iBolt" placeholder="0.00" min="0" step="0.01"></div>
         </div>
-        <div class="sub-h"><span style="color:#fb923c">🚘</span> Particular / Outros</div>
+        <div class="sub-h"><span style="color:#fb923c">&#128664;</span> Particular / Outros</div>
         <div class="fld"><div class="fld-lbl">Corridas particulares e outros ganhos</div>
-          <div class="iw"><div class="ipfx" id="pfxOutroG">€</div><input type="number" inputmode="decimal" id="iOutroG" placeholder="0.00" min="0" step="0.01"></div>
+          <div class="iw"><div class="ipfx" id="pfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="iOutroG" placeholder="0.00" min="0" step="0.01"></div>
         </div>
         <div class="g-total">
-          <span class="g-total-lbl">💰 Total ganhos</span>
-          <span class="g-total-val" id="gTotal">€0,00</span>
+          <span class="g-total-lbl">&#128176; Total ganhos</span>
+          <span class="g-total-val" id="gTotal">&euro;0,00</span>
         </div>
       </div>
-      <div class="stit">📤 Gastos de hoje</div>
+      <div class="stit">&#128228; Gastos de hoje</div>
       <div class="card">
         <div class="card-top ct-red"></div>
         <div id="energiaSection"></div>
-        <div class="sub-h"><span>📍</span> Quilómetros rodados</div>
+        <div class="sub-h"><span>&#128205;</span> Quil&oacute;metros rodados</div>
         <div class="fld">
           <div class="fld-lbl">KMs totais do dia (com e sem corrida)</div>
           <div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="iKms" placeholder="0" min="0" step="1"></div>
         </div>
-        <div class="sub-h"><span>🍔</span> Alimentação</div>
-        <div class="fld"><div class="iw"><div class="ipfx" id="pfxComida">€</div><input type="number" inputmode="decimal" id="iComida" placeholder="0.00" min="0" step="0.01"></div></div>
-        <div class="sub-h"><span>💳</span> Outros gastos</div>
-        <div class="fld"><div class="iw"><div class="ipfx" id="pfxOutroG2">€</div><input type="number" inputmode="decimal" id="iOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
+        <div class="sub-h"><span>&#127828;</span> Alimenta&ccedil;&atilde;o <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(registo pessoal)</span></div>
+        <div class="fld"><div class="iw"><div class="ipfx" id="pfxComida">&euro;</div><input type="number" inputmode="decimal" id="iComida" placeholder="0.00" min="0" step="0.01"></div></div>
+        <div class="sub-h"><span>&#128179;</span> Outros gastos <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(registo pessoal)</span></div>
+        <div class="fld"><div class="iw"><div class="ipfx" id="pfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="iOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0 13px">
-          <span class="chip">🏠 Aluguer: <span id="chipAl"></span>/dia</span>
-          <span style="font-size:10px;color:var(--muted)">automático</span>
+          <span class="chip">&#127968; Aluguer: <span id="chipAl"></span>/dia</span>
+          <span style="font-size:10px;color:var(--muted)">autom&aacute;tico</span>
         </div>
-        <button class="btn btn-cyan" id="btnGuardar">✅ Guardar dia</button>
+        <button class="btn btn-cyan" id="btnGuardar">&#9989; Guardar dia</button>
       </div>
-      <div class="stit">📊 Resumo do dia</div>
+      <div class="stit">&#128202; Resumo do dia</div>
       <div class="card" id="resumoDia"></div>
     </div>
 
     <!-- SEMANA -->
     <div class="pg" id="pg-semana">
-      <div class="stit">📅 Esta semana</div>
+      <div class="stit">&#128197; Esta semana</div>
       <div class="wk" id="weekRow"></div>
       <div id="metaSemanalBox"></div>
-      <div class="stit">🏢 Por plataforma</div>
+      <div class="stit">&#127970; Por plataforma</div>
       <div class="plat-g" id="platGrid"></div>
-      <div class="stit">📈 Ganhos vs Gastos</div>
+      <div class="stit">&#128200; Ganhos vs Gastos</div>
       <div class="card">
         <div class="bc-wrap"><div class="bc" id="barChart"></div></div>
         <div style="display:flex;gap:10px;margin-top:7px">
-          <span style="font-size:10px;color:var(--cyan)">■ Ganhos</span>
-          <span style="font-size:10px;color:var(--red)">■ Gastos</span>
+          <span style="font-size:10px;color:var(--cyan)">&#9632; Ganhos</span>
+          <span style="font-size:10px;color:var(--red)">&#9632; Gastos (energia+aluguer)</span>
         </div>
       </div>
-      <div class="stit" id="perfTit">⚡ Performance semanal</div>
+      <div class="stit" id="perfTit">&#9889; Performance semanal</div>
       <div class="perf-grid" id="perfGrid"></div>
       <div class="stit" id="compStit" style="display:none">Comparativo vs semana anterior</div>
       <div id="comparativoBox"></div>
-      <div class="stit">💰 Totais da semana</div>
+      <div class="stit">&#128176; Totais da semana</div>
       <div class="card" id="resumoSemana"><div class="card-top ct-violet"></div></div>
     </div>
 
-    <!-- HISTÓRICO -->
+    <!-- HIST&Oacute;RICO -->
     <div class="pg" id="pg-hist">
-      <div class="stit">🗂️ Histórico</div>
+      <div class="stit">&#128194; Hist&oacute;rico</div>
       <div class="filtros">
-        <button class="filtro-btn on" id="fb-dia">📅 Dia</button>
-        <button class="filtro-btn" id="fb-semana">📆 Semana</button>
-        <button class="filtro-btn" id="fb-mes">🗓️ Mês</button>
-        <button class="filtro-btn" id="fb-ano">📊 Ano</button>
+        <button class="filtro-btn on" id="fb-dia">&#128197; Dia</button>
+        <button class="filtro-btn" id="fb-semana">&#128198; Semana</button>
+        <button class="filtro-btn" id="fb-mes">&#128467;&#65039; M&ecirc;s</button>
+        <button class="filtro-btn" id="fb-ano">&#128202; Ano</button>
       </div>
       <div class="periodo-sel">
-        <button class="periodo-arr" id="btnPrev">‹</button>
+        <button class="periodo-arr" id="btnPrev">&#8249;</button>
         <div class="periodo-label" id="periodoLabel"></div>
-        <button class="periodo-arr" id="btnNext">›</button>
+        <button class="periodo-arr" id="btnNext">&#8250;</button>
       </div>
       <div class="resumo-periodo" id="resumoPeriodo"></div>
       <div id="analiseConsumoBox"></div>
@@ -402,34 +402,34 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
     <!-- CONFIG -->
     <div class="pg" id="pg-cfg">
-      <div class="stit">⚙️ Configurações gerais</div>
+      <div class="stit">&#9881;&#65039; Configura&ccedil;&otilde;es gerais</div>
       <div class="card">
-        <div class="fld"><div class="fld-lbl">🏠 Aluguer semanal</div>
-          <div class="iw"><div class="ipfx" id="pfxAluguer">€</div><input type="number" inputmode="decimal" id="iAluguer" placeholder="280.00" step="0.01"></div>
+        <div class="fld"><div class="fld-lbl">&#127968; Aluguer semanal</div>
+          <div class="iw"><div class="ipfx" id="pfxAluguer">&euro;</div><input type="number" inputmode="decimal" id="iAluguer" placeholder="280.00" step="0.01"></div>
         </div>
         <div class="fld" style="margin-top:12px" id="kwh-cfg-row">
-          <div class="fld-lbl">⚡ Preço por kWh</div>
-          <div class="iw"><div class="ipfx" id="pfxKwh">€/kWh</div><input type="number" inputmode="decimal" id="iPrecoKwh" placeholder="0.75" step="0.01"></div>
+          <div class="fld-lbl">&#9889; Pre&ccedil;o por kWh</div>
+          <div class="iw"><div class="ipfx" id="pfxKwh">&euro;/kWh</div><input type="number" inputmode="decimal" id="iPrecoKwh" placeholder="0.75" step="0.01"></div>
         </div>
         <div style="font-size:10px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="kwh-hint">
-          Média calculada dos teus carregamentos: <span style="color:var(--violet)">€0,75/kWh</span>
+          Pre&ccedil;o usado para converter kWh em &euro;. Exemplo: 15&euro; &divide; 0,75 = 20 kWh autom&aacute;tico.
         </div>
-        <button class="btn btn-cyan" id="btnCfg">Guardar configuração</button>
+        <button class="btn btn-cyan" id="btnCfg">Guardar configura&ccedil;&atilde;o</button>
       </div>
-      <div class="stit">🌍 País de atuação</div>
+      <div class="stit">&#127758; Pa&iacute;s de atua&ccedil;&atilde;o</div>
       <div class="card">
         <div class="card-top ct-cyan"></div>
-        <p class="import-info" style="margin-bottom:12px">O país define a moeda automaticamente.</p>
+        <p class="import-info" style="margin-bottom:12px">O pa&iacute;s define a moeda automaticamente.</p>
         <div class="pais-grid">
           <button class="pais-btn on" id="pais-PT" onclick="selecionarPais('PT')">
-            <span class="pais-flag">🇵🇹</span><span>Portugal</span>
+            <span class="pais-flag">&#127477;&#127481;</span><span>Portugal</span>
           </button>
           <button class="pais-btn" id="pais-BR" onclick="selecionarPais('BR')">
-            <span class="pais-flag">🇧🇷</span><span>Brasil</span>
+            <span class="pais-flag">&#127463;&#127479;</span><span>Brasil</span>
           </button>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center">
-          Moeda: <span style="color:var(--cyan)" id="moedaAtual">Euro (€)</span>
+          Moeda: <span style="color:var(--cyan)" id="moedaAtual">Euro (&euro;)</span>
         </div>
       </div>
       <div class="stit" id="impostosStit" style="display:none">Impostos (Portugal)</div>
@@ -440,104 +440,105 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           <button class="toggle" id="toggleImp"></button>
         </div>
         <div id="impostosDetalhes" style="display:none">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo liquido (valor do recibo verde).</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional (ganhos - energia - aluguer), excluindo Particular sem recibo verde.</div>
           <div class="fld">
             <div class="fld-lbl">IRS taxa manual (opcional)</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Deixa em branco para calculo automatico por escalao</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Deixa em branco para c&aacute;lculo autom&aacute;tico por escal&atilde;o</div>
             <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iIrsManual" placeholder="automatico" min="0" max="53" step="0.1" oninput="salvarImpostosCfg()"></div>
           </div>
           <div style="font-size:10px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
-            SS = 15% fixo (70% x 21,4%)<br>IRS = escalao automatico por projecao anual<br>IVA = 6% (a entregar ao Estado)
+            SS = 15% fixo &bull; IRS = escal&atilde;o autom&aacute;tico por acumulado anual &bull; IVA = 6%<br>
+            <strong style="color:var(--amber)">N&atilde;o incluem:</strong> alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Particular
           </div>
         </div>
       </div>
-      <div class="stit">🚗 O meu veículo</div>
+      <div class="stit">&#128663; O meu ve&iacute;culo</div>
       <div class="card">
         <div class="card-top ct-orange"></div>
-        <div class="fld"><div class="fld-lbl">🚗 Marca e modelo</div>
-          <div class="iw"><div class="ipfx">🚗</div><input type="text" id="iVeiculoModelo" placeholder="Ex: Tesla Model 3" style="font-size:14px"></div>
+        <div class="fld"><div class="fld-lbl">&#128663; Marca e modelo</div>
+          <div class="iw"><div class="ipfx">&#128663;</div><input type="text" id="iVeiculoModelo" placeholder="Ex: Tesla Model 3" style="font-size:14px"></div>
         </div>
-        <div class="fld" style="margin-top:10px"><div class="fld-lbl">📅 Ano</div>
-          <div class="iw"><div class="ipfx">📅</div><input type="number" inputmode="numeric" id="iVeiculoAno" placeholder="Ex: 2022" min="2000" max="2030" style="font-size:14px"></div>
+        <div class="fld" style="margin-top:10px"><div class="fld-lbl">&#128197; Ano</div>
+          <div class="iw"><div class="ipfx">&#128197;</div><input type="number" inputmode="numeric" id="iVeiculoAno" placeholder="Ex: 2022" min="2000" max="2030" style="font-size:14px"></div>
         </div>
-        <div class="fld-lbl" style="margin:12px 0 8px">🔋 Tipo de motorização</div>
+        <div class="fld-lbl" style="margin:12px 0 8px">&#128267; Tipo de motoriza&ccedil;&atilde;o</div>
         <div class="tipo-grid">
           <button class="tipo-btn on-eletrico" id="tipo-eletrico" onclick="selecionarTipo('eletrico')">
-            <span class="tipo-ic">🔋</span><span>Elétrico</span>
+            <span class="tipo-ic">&#128267;</span><span>El&eacute;trico</span>
           </button>
           <button class="tipo-btn" id="tipo-combustao" onclick="selecionarTipo('combustao')">
-            <span class="tipo-ic">⛽</span><span>Combustão</span>
+            <span class="tipo-ic">&#9981;</span><span>Combust&atilde;o</span>
           </button>
         </div>
         <div id="veiculo-extra-cfg"></div>
-        <button class="btn btn-green" id="btnVeiculo" style="margin-top:10px">💾 Guardar veículo</button>
+        <button class="btn btn-green" id="btnVeiculo" style="margin-top:10px">&#128190; Guardar ve&iacute;culo</button>
       </div>
-      <div class="stit">🎯 Metas de ganho líquido</div>
+      <div class="stit">&#127919; Metas de lucro l&iacute;quido real</div>
       <div class="card">
         <div class="card-top ct-green"></div>
-        <p class="import-info" style="margin-bottom:12px">Define o teu objetivo de saldo líquido diário e semanal.</p>
+        <p class="import-info" style="margin-bottom:12px">Define o teu objetivo de lucro l&iacute;quido real (ap&oacute;s energia e aluguer).</p>
         <div class="fld">
-          <div class="fld-lbl">🎯 Meta diária</div>
-          <div class="iw"><div class="ipfx" id="pfxMetaDia">€</div><input type="number" inputmode="decimal" id="iMetaDia" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('dia')"></div>
+          <div class="fld-lbl">&#127919; Meta di&aacute;ria</div>
+          <div class="iw"><div class="ipfx" id="pfxMetaDia">&euro;</div><input type="number" inputmode="decimal" id="iMetaDia" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('dia')"></div>
         </div>
         <div class="fld" style="margin-top:10px">
-          <div class="fld-lbl">🎯 Meta semanal</div>
-          <div class="iw"><div class="ipfx" id="pfxMetaSem">€</div><input type="number" inputmode="decimal" id="iMetaSem" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('sem')"></div>
+          <div class="fld-lbl">&#127919; Meta semanal</div>
+          <div class="iw"><div class="ipfx" id="pfxMetaSem">&euro;</div><input type="number" inputmode="decimal" id="iMetaSem" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('sem')"></div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin:6px 0 4px;line-height:1.5;font-style:italic">💡 Alterar uma meta sincroniza a outra automaticamente</div>
-        <button class="btn btn-green" id="btnMetas" style="margin-top:10px">💾 Guardar metas</button>
+        <div style="font-size:10px;color:var(--muted);margin:6px 0 4px;line-height:1.5;font-style:italic">&#128161; Alterar uma meta sincroniza a outra automaticamente (x7 dias)</div>
+        <button class="btn btn-green" id="btnMetas" style="margin-top:10px">&#128190; Guardar metas</button>
       </div>
-      <div class="stit">📤 Exportar dados</div>
+      <div class="stit">&#128228; Exportar dados</div>
       <div class="card">
         <p class="import-info">Exporta todos os registos em CSV para restaurar mais tarde.</p>
-        <button class="btn btn-green" id="btnExport">📥 Exportar CSV</button>
+        <button class="btn btn-green" id="btnExport">&#128229; Exportar CSV</button>
       </div>
-      <div class="stit">📂 Importar / Restaurar dados</div>
+      <div class="stit">&#128194; Importar / Restaurar dados</div>
       <div class="card">
         <div class="card-top ct-amber"></div>
         <p class="import-info">Importa um CSV exportado anteriormente para <strong>restaurar os teus dados</strong>.</p>
-        <button class="btn btn-amber" id="btnImport">📂 Importar CSV</button>
+        <button class="btn btn-amber" id="btnImport">&#128194; Importar CSV</button>
         <input type="file" id="fileInput" accept=".csv" style="display:none">
       </div>
-      <div class="stit">✏️ Registar dia anterior</div>
+      <div class="stit">&#9999;&#65039; Registar dia anterior</div>
       <div class="card">
         <p class="import-info">Esqueceste de registar um dia? Escolhe a data e adiciona os valores.</p>
-        <div class="fld"><div class="fld-lbl">📅 Data</div>
+        <div class="fld"><div class="fld-lbl">&#128197; Data</div>
           <div class="iw"><input type="date" id="iDataManual" style="padding:10px 12px;font-size:14px"></div>
         </div>
         <button class="btn btn-outline" id="btnRegistarDia" style="margin-top:8px">Registar este dia</button>
       </div>
-      <div class="stit">🗑️ Apagar dados</div>
+      <div class="stit">&#128465;&#65039; Apagar dados</div>
       <div class="card">
-        <p class="import-info">Apaga todos os registos. Esta ação não pode ser desfeita.</p>
+        <p class="import-info">Apaga todos os registos. Esta a&ccedil;&atilde;o n&atilde;o pode ser desfeita.</p>
         <button class="btn btn-red" id="btnLimpar">Apagar todos os dados</button>
       </div>
-      <div class="stit" style="margin-top:28px">💬 Feedback & Suporte</div>
+      <div class="stit" style="margin-top:28px">&#128172; Feedback &amp; Suporte</div>
       <div class="card">
         <div class="card-top ct-violet"></div>
-        <p class="import-info" style="margin-bottom:11px">A tua opinião é muito importante! Ajuda-nos a melhorar a <strong style="color:var(--text)">Finance Drive</strong>.</p>
-        <button class="btn btn-cyan" id="btnFeedback">💬 Dar Feedback & Sugestões</button>
+        <p class="import-info" style="margin-bottom:11px">A tua opini&atilde;o &eacute; muito importante! Ajuda-nos a melhorar a <strong style="color:var(--text)">Finance Drive</strong>.</p>
+        <button class="btn btn-cyan" id="btnFeedback">&#128172; Dar Feedback &amp; Sugest&otilde;es</button>
         <div class="feedback-email">
-          <span class="feedback-email-icon">✉️</span>
+          <span class="feedback-email-icon">&#9993;&#65039;</span>
           <div>
             <div class="feedback-email-lbl">Suporte direto</div>
             <div class="feedback-email-val">help.financedrive@proton.me</div>
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.7 · <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.7 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
-        <a href="https://instagram.com/driv.efinance" target="_blank">📸 @driv.efinance</a>
-        <a href="https://instagram.com/_spinasseleonardo" target="_blank">👤 @_spinasseleonardo</a>
+        <a href="https://instagram.com/driv.efinance" target="_blank">&#128248; @driv.efinance</a>
+        <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
       </div>
     </div>
   </div>
 
   <nav class="nav">
-    <button class="nb on" id="nb-hoje"><span class="nb-ic">🏠</span>Hoje</button>
-    <button class="nb" id="nb-semana"><span class="nb-ic">📆</span>Semana</button>
-    <button class="nb" id="nb-hist"><span class="nb-ic">🗂️</span>Histórico</button>
-    <button class="nb" id="nb-cfg"><span class="nb-ic">⚙️</span>Config</button>
+    <button class="nb on" id="nb-hoje"><span class="nb-ic">&#127968;</span>Hoje</button>
+    <button class="nb" id="nb-semana"><span class="nb-ic">&#128198;</span>Semana</button>
+    <button class="nb" id="nb-hist"><span class="nb-ic">&#128194;</span>Hist&oacute;rico</button>
+    <button class="nb" id="nb-cfg"><span class="nb-ic">&#9881;&#65039;</span>Config</button>
   </nav>
 </div>
 
@@ -545,39 +546,39 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-hdr">
-      <div class="modal-title">✏️ Editar dia</div>
-      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-title">&#9999;&#65039; Editar dia</div>
+      <button class="modal-close" id="modalClose">&#10005;</button>
     </div>
     <div class="modal-date" id="modalDate"></div>
-    <div class="sub-h"><span>🖤</span> Uber</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxUber">€</div><input type="number" inputmode="decimal" id="mUber" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span style="color:#34d186">⚡</span> Bolt</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxBolt">€</div><input type="number" inputmode="decimal" id="mBolt" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span style="color:#fb923c">🚘</span> Particular / Outros</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG">€</div><input type="number" inputmode="decimal" id="mOutroG" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="sub-h"><span>&#129095;</span> Uber</div>
+    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxUber">&euro;</div><input type="number" inputmode="decimal" id="mUber" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="sub-h"><span style="color:#34d186">&#9889;</span> Bolt</div>
+    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxBolt">&euro;</div><input type="number" inputmode="decimal" id="mBolt" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="sub-h"><span style="color:#fb923c">&#128664;</span> Particular / Outros</div>
+    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="mOutroG" placeholder="0.00" min="0" step="0.01"></div></div>
     <div id="mEnergiaSection"></div>
-    <div class="sub-h"><span>📍</span> KMs rodados</div>
+    <div class="sub-h"><span>&#128205;</span> KMs rodados</div>
     <div class="fld"><div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="mKms" placeholder="0" min="0" step="1"></div></div>
-    <div class="sub-h"><span>⏱️</span> Horas de trabalho</div>
+    <div class="sub-h"><span>&#9203;&#65039;</span> Horas de trabalho</div>
     <div class="horas-row" style="gap:8px;display:grid;grid-template-columns:1fr 1fr;margin-bottom:9px">
-      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">🟢 Início</div>
-        <div class="iw"><div class="ipfx">🕐</div><input type="time" id="mHoraInicio"></div>
+      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128994; In&iacute;cio</div>
+        <div class="iw"><div class="ipfx">&#128336;</div><input type="time" id="mHoraInicio"></div>
       </div>
-      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">🔴 Fim</div>
-        <div class="iw"><div class="ipfx">🕐</div><input type="time" id="mHoraFim"></div>
+      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128308; Fim</div>
+        <div class="iw"><div class="ipfx">&#128336;</div><input type="time" id="mHoraFim"></div>
       </div>
     </div>
     <label class="almoco-check" style="margin-bottom:9px">
       <input type="checkbox" id="mAlmoco">
-      <span class="almoco-check-lbl">🍔 Pausa para almoço <span>(desconta 1h)</span></span>
+      <span class="almoco-check-lbl">&#127828; Pausa para almo&ccedil;o <span>(desconta 1h)</span></span>
     </label>
-    <div class="sub-h"><span>🍔</span> Alimentação</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxComida">€</div><input type="number" inputmode="decimal" id="mComida" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span>💳</span> Outros gastos</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG2">€</div><input type="number" inputmode="decimal" id="mOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="sub-h"><span>&#127828;</span> Alimenta&ccedil;&atilde;o <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none">(pessoal)</span></div>
+    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxComida">&euro;</div><input type="number" inputmode="decimal" id="mComida" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="sub-h"><span>&#128179;</span> Outros gastos <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none">(pessoal)</span></div>
+    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="mOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
     <div style="display:flex;gap:10px;margin-top:14px">
-      <button class="btn btn-red" id="btnModalDel" style="flex:1;margin-top:0">🗑️ Apagar</button>
-      <button class="btn btn-cyan" id="btnModalSave" style="flex:2;margin-top:0">✅ Guardar</button>
+      <button class="btn btn-red" id="btnModalDel" style="flex:1;margin-top:0">&#128465;&#65039; Apagar</button>
+      <button class="btn btn-cyan" id="btnModalSave" style="flex:2;margin-top:0">&#9989; Guardar</button>
     </div>
   </div>
 </div>
@@ -586,52 +587,59 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="novidades-overlay" id="novidadesOverlay">
   <div class="novidades-modal">
     <div class="nov-header">
-      <div class="nov-icon">🚀</div>
-      <div class="nov-titulo">O que há de novo</div>
-      <div class="nov-versao">Finance Drive v3.6</div>
+      <div class="nov-icon">&#128640;</div>
+      <div class="nov-titulo">O que h&aacute; de novo</div>
+      <div class="nov-versao">Finance Drive v3.7</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
-        <div class="nov-item-ic">📊</div>
+        <div class="nov-item-ic">&#128176;</div>
         <div class="nov-item-txt">
-          <strong>Comparativo semanal</strong>
-          <span>Vê como esta semana compara com a anterior — ganhos, saldo, ganho/hora e KMs com % de variação.</span>
+          <strong>L&oacute;gica financeira correta</strong>
+          <span>Saldo = ganhos &minus; energia (kWh frota) &minus; aluguer. Alimenta&ccedil;&atilde;o e gastos pessoais n&atilde;o entram no c&aacute;lculo operacional.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">📋</div>
+        <div class="nov-item-ic">&#9203;&#65039;</div>
         <div class="nov-item-txt">
-          <strong>Estimativa fiscal PT</strong>
-          <span>Ativa em Config para ver SS, IRS e IVA estimados. IRS ajusta automaticamente conforme os teus ganhos crescem.</span>
+          <strong>Ganho/hora real</strong>
+          <span>Calculado sobre o lucro l&iacute;quido real (ap&oacute;s impostos quando ativos), n&atilde;o sobre ganhos brutos.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">🗑️</div>
+        <div class="nov-item-ic">&#9889;</div>
         <div class="nov-item-txt">
-          <strong>Interface mais limpa</strong>
-          <span>Secção de idioma removida do Config.</span>
+          <strong>kWh autom&aacute;tico</strong>
+          <span>Inseres o valor em &euro; e o kWh calcula-se automaticamente (ex: 15&euro; &divide; 0,75 = 20 kWh) em todos os ecr&atilde;s.</span>
+        </div>
+      </div>
+      <div class="nov-item">
+        <div class="nov-item-ic">&#128203;</div>
+        <div class="nov-item-txt">
+          <strong>Fiscal PT mais preciso</strong>
+          <span>Base fiscal exclui Particular (sem recibo verde). Estima&ccedil;&atilde;o mais justa e real.</span>
         </div>
       </div>
     </div>
-    <button class="btn btn-cyan" id="btnFecharNovidades">Continuar para a app ✨</button>
+    <button class="btn btn-cyan" id="btnFecharNovidades">Continuar para a app &#10024;</button>
   </div>
 </div>
 
 <!-- Onboarding -->
 <div class="onboard-overlay" id="onboardOverlay">
   <div class="onboard-modal">
-    <div class="onboard-ic">🚗💰</div>
+    <div class="onboard-ic">&#128663;&#128176;</div>
     <div class="onboard-titulo">Bem-vindo ao Finance Drive!</div>
-    <div class="onboard-sub">O app feito por motoristas TVDE,<br>para motoristas TVDE. Gratuito!</div>
+    <div class="onboard-sub">A ferramenta profissional de gest&atilde;o TVDE.<br>Gratuita e feita por motoristas.</div>
     <div class="onboard-steps">
-      <div class="onboard-step"><div class="onboard-step-num">1</div><div class="onboard-step-txt"><strong>Escolhe o teu país</strong><span>Portugal 🇵🇹 ou Brasil 🇧🇷 — moeda automática</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">2</div><div class="onboard-step-txt"><strong>Configura o teu veículo</strong><span>Elétrico ou combustão — o app adapta-se</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">1</div><div class="onboard-step-txt"><strong>Escolhe o teu pa&iacute;s</strong><span>Portugal &#127477;&#127481; ou Brasil &#127463;&#127479; &mdash; moeda autom&aacute;tica</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">2</div><div class="onboard-step-txt"><strong>Configura o teu ve&iacute;culo</strong><span>El&eacute;trico ou combust&atilde;o &mdash; o app adapta-se</span></div></div>
       <div class="onboard-step"><div class="onboard-step-num">3</div><div class="onboard-step-txt"><strong>Define o aluguer semanal</strong><span>Descontado automaticamente todos os dias</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">4</div><div class="onboard-step-txt"><strong>Define as tuas metas</strong><span>Quanto queres ganhar por dia e semana?</span></div></div>
-      <div class="onboard-step"><div class="onboard-step-num">5</div><div class="onboard-step-txt"><strong>Regista o teu dia!</strong><span>Uber, Bolt, energia, horas — tudo num só lugar</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">4</div><div class="onboard-step-txt"><strong>Define as tuas metas</strong><span>Lucro real que queres atingir por dia e semana</span></div></div>
+      <div class="onboard-step"><div class="onboard-step-num">5</div><div class="onboard-step-txt"><strong>Regista o teu dia!</strong><span>Uber, Bolt, energia, horas &mdash; tudo num s&oacute; lugar</span></div></div>
     </div>
-    <button class="btn btn-cyan" id="btnOnboard" style="margin-bottom:8px">⚙️ Ir para Configurações</button>
-    <button class="btn btn-outline" id="btnOnboardSkip" style="margin-top:8px">Já sei, entrar na app</button>
+    <button class="btn btn-cyan" id="btnOnboard" style="margin-bottom:8px">&#9881;&#65039; Ir para Configura&ccedil;&otilde;es</button>
+    <button class="btn btn-outline" id="btnOnboardSkip" style="margin-top:8px">J&aacute; sei, entrar na app</button>
   </div>
 </div>
 
@@ -639,11 +647,17 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
 <script>
 var APP_VERSION='3.7';
+// ── Storage centralizado ──────────────────────────────────────────────
+var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
+function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
+function loadData(){ try{var s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){DB={};} try{var c=localStorage.getItem(CFG_KEY);if(c){var cc=JSON.parse(c);CFG=Object.assign(CFG,cc);}}catch(e){} }
+function clearData(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} DB={}; }
+function salvarLocal(){ saveData(); }
+// ─────────────────────────────────────────────────────────────────────
 var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null}},editingISO='';
 
 (function(){
-  try{var s=localStorage.getItem('tvde_v3');if(s)DB=JSON.parse(s);}catch(e){}
-  try{var c=localStorage.getItem('tvde_cfg');if(c){var cc=JSON.parse(c);CFG=Object.assign(CFG,cc);}}catch(e){}
+  loadData();
   if(!CFG.precoKwh)CFG.precoKwh=0.75;
   if(!CFG.moeda)CFG.moeda='EUR';
   if(!CFG.metaDia)CFG.metaDia=0;
@@ -653,9 +667,9 @@ var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem
   if(!CFG.pais)CFG.pais='PT';
   if(!CFG.impostos)CFG.impostos={ativo:false,irsManual:null};
   if(CFG.pais==='BR')CFG.moeda='BRL'; else CFG.moeda='EUR';
-  var primeiraVez=!localStorage.getItem('fd_version_seen');
+  var primeiraVez=!localStorage.getItem(VER_KEY);
   if(primeiraVez){ setTimeout(function(){ mostrarOnboarding(); },600); }
-  else { var versaoVista=localStorage.getItem('fd_version_seen'); if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); } }
+  else { var versaoVista=localStorage.getItem(VER_KEY); if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); } }
 })();
 
 function sincMetas(origem){
@@ -664,11 +678,10 @@ function sincMetas(origem){
   if(origem==='dia'&&dia.value){ var v=parseFloat(dia.value)||0; if(v>0)sem.value=(v*7).toFixed(2); }
   if(origem==='sem'&&sem.value){ var v2=parseFloat(sem.value)||0; if(v2>0)dia.value=(v2/7).toFixed(2); }
 }
-function salvarLocal(){ try{localStorage.setItem('tvde_v3',JSON.stringify(DB));localStorage.setItem('tvde_cfg',JSON.stringify(CFG));}catch(e){} }
 
 var PAISES={
-  PT:{moeda:'EUR',simbolo:'€',nome:'Euro (€)',kwh:'€/kWh',bandeira:'🇵🇹'},
-  BR:{moeda:'BRL',simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh',bandeira:'🇧🇷'}
+  PT:{moeda:'EUR',simbolo:'\u20ac',nome:'Euro (\u20ac)',kwh:'\u20ac/kWh',bandeira:'\U0001F1F5\U0001F1F9'},
+  BR:{moeda:'BRL',simbolo:'R$',nome:'Real (R$)',kwh:'R$/kWh',bandeira:'\U0001F1E7\U0001F1F7'}
 };
 function sim(){ return PAISES[CFG.pais||'PT'].simbolo; }
 function selecionarPais(p){
@@ -677,7 +690,7 @@ function selecionarPais(p){
   document.getElementById('pais-'+p).classList.add('on');
   var me=document.getElementById('moedaAtual'); if(me)me.textContent=PAISES[p].nome;
   atualizarPrefixos(); atualizarBadgePais(); renderEnergiaSection(); renderMEnergiaSection(); mostrarImpostosCfg(); renderHoje();
-  toast(p==='PT'?'🇵🇹 Portugal — Moeda: €':'🇧🇷 Brasil — Moeda: R$','ok');
+  toast(p==='PT'?'\U0001F1F5\U0001F1F9 Portugal \u2014 Moeda: \u20ac':'\U0001F1E7\U0001F1F7 Brasil \u2014 Moeda: R$','ok');
 }
 function atualizarBadgePais(){
   var el=document.getElementById('hdrPais'); if(!el)return;
@@ -688,7 +701,6 @@ function selecionarIdioma(l){
   CFG.idioma=l; salvarLocal();
   ['PT','EN'].forEach(function(x){ document.getElementById('lang-'+x).classList.remove('on'); });
   document.getElementById('lang-'+l).classList.add('on');
-  toast(l==='EN'?'🇬🇧 English selected':'🇵🇹 Português selecionado','ok');
 }
 function atualizarPrefixos(){
   var s=sim();
@@ -705,37 +717,37 @@ function selecionarTipo(t){
   var kwhRow=document.getElementById('kwh-cfg-row'); var kwhHint=document.getElementById('kwh-hint');
   if(kwhRow) kwhRow.style.display=t==='eletrico'?'':'none';
   if(kwhHint) kwhHint.style.display=t==='eletrico'?'':'none';
-  var pt=document.getElementById('perfTit'); if(pt) pt.textContent=t==='eletrico'?'⚡ Performance semanal':'⛽ Performance semanal';
+  var pt=document.getElementById('perfTit'); if(pt) pt.textContent=t==='eletrico'?'\u26a1 Performance semanal':'\u26fd Performance semanal';
 }
 function renderVeiculoExtraCfg(){
   var el=document.getElementById('veiculo-extra-cfg'); if(!el)return;
   if(isEletrico()){ el.innerHTML=''; }
-  else { el.innerHTML='<div class="fld" style="margin-top:10px"><div class="fld-lbl">⛽ Consumo esperado (L/100km)</div><div class="iw"><div class="ipfx">L/100</div><input type="number" inputmode="decimal" id="iConsEsp" placeholder="Ex: 6.5" min="0" step="0.1" value="'+(CFG.veiculo.consumoEsperado||'')+'"></div></div>'; }
+  else { el.innerHTML='<div class="fld" style="margin-top:10px"><div class="fld-lbl">\u26fd Consumo esperado (L/100km)</div><div class="iw"><div class="ipfx">L/100</div><input type="number" inputmode="decimal" id="iConsEsp" placeholder="Ex: 6.5" min="0" step="0.1" value="'+(CFG.veiculo.consumoEsperado||'')+'"></div></div>'; }
 }
 function renderEnergiaSection(){
   var el=document.getElementById('energiaSection'); if(!el)return;
   if(isEletrico()){
-    el.innerHTML='<div class="sub-h"><span>⚡</span> Energia / Carregamento</div>'+
+    el.innerHTML='<div class="sub-h"><span>\u26a1</span> Energia / Carregamento</div>'+
     '<div class="energia-box">'+
-      '<div class="energia-box-title">⚡ Como queres registar?</div>'+
+      '<div class="energia-box-title">\u26a1 Registar energia</div>'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">💶 Valor em moeda</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor gasto</div>'+
         '<div class="iw"><div class="ipfx" id="pfxEnergia">'+sim()+'</div><input type="number" inputmode="decimal" id="iEnergia" placeholder="0.00" min="0" step="0.01" oninput="atualizarEnergiaTotal()"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">⚡ Ou em kWh</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 Ou kWh direto</div>'+
         '<div class="iw"><div class="ipfx">kWh</div><input type="number" inputmode="decimal" id="iEnergiaKwh" placeholder="0.00" min="0" step="0.01" oninput="atualizarEnergiaTotal()"></div></div>'+
       '</div>'+
-      '<div class="energia-sep">soma automática</div>'+
-      '<div class="energia-total"><span class="energia-total-lbl">⚡ Total energia</span><span class="energia-total-val" id="energiaTotal">'+sim()+'0,00</span></div>'+
-      '<div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">Preço: <span style="color:var(--violet)" id="precoKwhBadge">'+sim()+CFG.precoKwh.toFixed(2)+'/kWh</span></div>'+
+      '<div class="energia-sep">kWh autom\u00e1tico se s\u00f3 indicares \u20ac</div>'+
+      '<div class="energia-total"><span class="energia-total-lbl">\u26a1 Total energia</span><span class="energia-total-val" id="energiaTotal">'+sim()+'0,00</span></div>'+
+      '<div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">Pre\u00e7o: <span style="color:var(--violet)" id="precoKwhBadge">'+sim()+CFG.precoKwh.toFixed(2)+'/kWh</span> &mdash; <span style="color:var(--violet)" id="kwhAutoLabel">0 kWh</span></div>'+
     '</div>';
   } else {
-    el.innerHTML='<div class="sub-h"><span>⛽</span> Combustível</div>'+
+    el.innerHTML='<div class="sub-h"><span>\u26fd</span> Combust\u00edvel</div>'+
     '<div class="combustao-box">'+
-      '<div class="combustao-box-title">⛽ Abastecimento de hoje</div>'+
+      '<div class="combustao-box-title">\u26fd Abastecimento de hoje</div>'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">🔢 Litros</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">Litros</div>'+
         '<div class="iw"><div class="ipfx">L</div><input type="number" inputmode="decimal" id="iLitros" placeholder="0.00" min="0" step="0.01"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">💶 Valor gasto</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">Valor gasto</div>'+
         '<div class="iw"><div class="ipfx" id="pfxCombustivel">'+sim()+'</div><input type="number" inputmode="decimal" id="iCombustivel" placeholder="0.00" min="0" step="0.01"></div></div>'+
       '</div>'+
     '</div>';
@@ -744,49 +756,77 @@ function renderEnergiaSection(){
 function renderMEnergiaSection(){
   var el=document.getElementById('mEnergiaSection'); if(!el)return;
   if(isEletrico()){
-    el.innerHTML='<div class="sub-h"><span>⚡</span> Energia</div>'+
+    el.innerHTML='<div class="sub-h"><span>\u26a1</span> Energia</div>'+
     '<div class="energia-box">'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">💶 Em moeda</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor</div>'+
         '<div class="iw"><div class="ipfx" id="mpfxEnergia">'+sim()+'</div><input type="number" inputmode="decimal" id="mEnergia" placeholder="0.00" min="0" step="0.01" oninput="atualizarMEnergiaTotal()"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">⚡ Em kWh</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 kWh direto</div>'+
         '<div class="iw"><div class="ipfx">kWh</div><input type="number" inputmode="decimal" id="mEnergiaKwh" placeholder="0.00" min="0" step="0.01" oninput="atualizarMEnergiaTotal()"></div></div>'+
       '</div>'+
-      '<div class="energia-total" style="margin-top:8px"><span class="energia-total-lbl">⚡ Total</span><span class="energia-total-val" id="mEnergiaTotal">'+sim()+'0,00</span></div>'+
+      '<div class="energia-total" style="margin-top:8px"><span class="energia-total-lbl">\u26a1 Total</span><span class="energia-total-val" id="mEnergiaTotal">'+sim()+'0,00</span></div>'+
+      '<div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:center"><span id="mKwhAutoLabel"></span></div>'+
     '</div>';
   } else {
-    el.innerHTML='<div class="sub-h"><span>⛽</span> Combustível</div>'+
+    el.innerHTML='<div class="sub-h"><span>\u26fd</span> Combust\u00edvel</div>'+
     '<div class="combustao-box">'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">🔢 Litros</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">Litros</div>'+
         '<div class="iw"><div class="ipfx">L</div><input type="number" inputmode="decimal" id="mLitros" placeholder="0.00" min="0" step="0.01"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">💶 Valor</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">Valor</div>'+
         '<div class="iw"><div class="ipfx" id="mpfxCombustivel">'+sim()+'</div><input type="number" inputmode="decimal" id="mCombustivel" placeholder="0.00" min="0" step="0.01"></div></div>'+
       '</div>'+
     '</div>';
   }
 }
 
+// ── Helpers financeiros ───────────────────────────────────────────────
 function hoje(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function pad(n){ return n<10?'0'+n:''+n; }
+function pf(v){ var n=parseFloat((v||'').toString().replace(',','.')); return (isNaN(n)||n<0)?0:n; }
 function fmtData(iso){ var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
 function moeda(v){ var neg=v<0,s=Math.abs(v).toFixed(2).replace('.',','); return (neg?'-':'')+sim()+s; }
 function alDia(){ return CFG.aluguel/7; }
-function kwhParaEuro(kwh){ return kwh*CFG.precoKwh; }
+function kwhParaEuro(kwh){ return (kwh||0)*CFG.precoKwh; }
 function calcEnergia(eE,eK){ return (eE||0)+kwhParaEuro(eK||0); }
-// v3.7: só kWh frota desconta (cartão TVDE). Energia em dinheiro próprio NÃO desconta.
-function energiaGastos(r){ return isEletrico()?kwhParaEuro(r.energiaKwh||0):(r.combustivel||0); }
-var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-var DIAS_FULL=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+// kWh autom\u00e1tico: se s\u00f3 h\u00e1 valor em \u20ac e nenhum kWh direto, calcula kWh = \u20ac / pre\u00e7o
+function kwhEfetivo(r){
+  if(!r)return 0;
+  var kDireto=r.energiaKwh||0;
+  if(kDireto>0)return kDireto;
+  var eE=r.energia||0;
+  return (eE>0&&CFG.precoKwh>0)?eE/CFG.precoKwh:0;
+}
+// energiaGastos: usa kWh efetivo (frota = valor em \u20ac OU kWh direto, s\u00f3 frota desconta)
+function energiaGastos(r){
+  if(!r)return 0;
+  if(isEletrico()){
+    // usa o valor em \u20ac diretamente se foi inserido (mais preciso), sen\u00e3o converte kWh
+    var eE=r.energia||0;
+    var eK=r.energiaKwh||0;
+    return calcEnergia(eE,eK);
+  }
+  return r.combustivel||0;
+}
+
+var DIAS=['\u0044\u006f\u006d','\u0053\u0065\u0067','\u0054\u0065\u0072','\u0051\u0075\u0061','\u0051\u0075\u0069','\u0053\u0065\u0078','S\u00e1b'];
+var DIAS_FULL=['Domingo','Segunda','Ter\u00e7a','Quarta','Quinta','Sexta','S\u00e1bado'];
+var MESES=['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
-function ganhos(r){ return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
-// v3.7: saldo = ganhos - energia(kWh frota) - aluguer
-// comida e outros gastos pessoais NÃO descontam do saldo
-function saldo(r){ return ganhos(r)-energiaGastos(r)-alDia(); }
-// baseFiscal = saldo sem Particular (sem recibo verde)
-function baseFiscal(r){ return Math.max(0, saldo(r)-(r.outroG||0)); }
+function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
+
+// v3.7: saldo operacional = ganhos - energia (frota, \u20ac ou kWh) - aluguer
+// Alimenta\u00e7\u00e3o e outros gastos pessoais N\u00c3O entram
+function saldo(r){
+  if(!r)return 0;
+  return ganhos(r)-energiaGastos(r)-alDia();
+}
+// base fiscal = saldo sem Particular (sem recibo verde, n\u00e3o tribut\u00e1vel)
+function baseFiscal(r){
+  if(!r)return 0;
+  return Math.max(0, saldo(r)-(r.outroG||0));
+}
 function saldoReal(r){
   var imp=calcImpostos(r);
   return imp?imp.real:saldo(r);
@@ -805,17 +845,18 @@ function calcHoras(inicio,fim,almoco){
 }
 function fmtHoras(h){ if(!h&&h!==0)return'-- h --min'; var hh=Math.floor(h),mm=Math.round((h-hh)*60); return hh+'h '+pad(mm)+'min'; }
 
+// ── Impostos PT ───────────────────────────────────────────────────────
 function escaloesIRS(){ return [{ate:7703,taxa:13},{ate:11623,taxa:18},{ate:16472,taxa:23},{ate:21321,taxa:26},{ate:27146,taxa:32.75},{ate:39791,taxa:37},{ate:51997,taxa:43.5},{ate:81199,taxa:45},{ate:Infinity,taxa:48}]; }
 function calcEscalaoIRS(rend){ var e=escaloesIRS(); for(var i=0;i<e.length;i++){ if(rend<=e[i].ate)return e[i].taxa; } return 48; }
 function projetarRendimentoAnual(){
   var anoAtual=new Date().getFullYear();
   var keys=Object.keys(DB).filter(function(k){ return k.startsWith(anoAtual+'-'); });
   if(!keys.length)return 0;
-  // v3.7: acumula baseFiscal (exclui Particular)
-  var total=keys.reduce(function(a,k){ var bf=baseFiscal(DB[k]); return a+(bf>0?bf:0); },0);
+  // usa baseFiscal acumulada (exclui Particular)
+  var total=keys.reduce(function(a,k){ var r=DB[k]||{}; var bf=baseFiscal(r); return a+(bf>0?bf:0); },0);
   return total;
 }
-// v3.7: recebe registo completo, base = baseFiscal(r) (exclui Particular)
+// calcImpostos: recebe registo completo, calcula sobre baseFiscal
 function calcImpostos(r){
   if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT')return null;
   var bf=baseFiscal(r);
@@ -825,29 +866,30 @@ function calcImpostos(r){
   var irs=bf*(taxa/100);
   var iva=bf*0.06;
   var total=ss+irs+iva;
-  return{ss:ss,irs:irs,iva:iva,total:total,real:saldo(r)-total,taxaIRS:taxa,base:bf};
+  var sl=saldo(r);
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total,taxaIRS:taxa,base:bf,saldo:sl};
 }
-// Para semana/histórico: sl=saldo total, bf=base fiscal
+// calcImpostosValores: para semana/hist\u00f3rico (sl=saldo acumulado, bf=base fiscal acumulada)
 function calcImpostosValores(sl,bf){
-  if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT'||bf<=0)return null;
+  if(!CFG.impostos||!CFG.impostos.ativo||CFG.pais!=='PT'||bf<=0||sl<=0)return null;
   var ss=bf*0.15;
   var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
   var irs=bf*(taxa/100);
   var iva=bf*0.06;
   var total=ss+irs+iva;
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total,taxaIRS:taxa};
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total,taxaIRS:taxa,base:bf,saldo:sl};
 }
 function htmlImpostos(imp){
   if(!imp)return '';
   var proj=projetarRendimentoAnual();
   var auto=calcEscalaoIRS(proj);
   return '<div class="impostos-box">'+
-    '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:9px;color:var(--muted)">sobre saldo liquido</span></div>'+
+    '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:9px;color:var(--muted)">base fiscal s/ Particular</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">SS (15%)</span><span class="impostos-val">-'+moeda(imp.ss)+'</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">IRS ('+imp.taxaIRS.toFixed(1)+'%'+(CFG.impostos.irsManual?'':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">IVA (6%)</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>'+
     '<div class="impostos-total"><span class="impostos-total-lbl">Saldo real</span><span class="impostos-total-val">'+moeda(imp.real)+'</span></div>'+
-    '<div class="impostos-nota">Ganhos acumulados '+new Date().getFullYear()+': '+moeda(proj)+' -> Escalao IRS: '+auto+'%'+(CFG.impostos.irsManual?' (taxa manual)':'')+'. Estimativa - consulta o teu contabilista.</div>'+
+    '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' \u2192 Escal\u00e3o IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'.\u00a0Estimativa \u2014 consulta o teu contabilista.</div>'+
   '</div>';
 }
 function toggleImpostos(){
@@ -873,6 +915,8 @@ function mostrarImpostosCfg(){
   if(det)det.style.display=(show&&CFG.impostos.ativo)?'':'none';
   if(inp&&CFG.impostos.irsManual)inp.value=CFG.impostos.irsManual;
 }
+
+// ── Comparativo semanal ───────────────────────────────────────────────
 function calcComparativoSemana(){
   var h=hoje(),seg=segunda(h);
   var segAnt=new Date(seg+'T12:00:00'); segAnt.setDate(segAnt.getDate()-7);
@@ -882,15 +926,18 @@ function calcComparativoSemana(){
   var reais=diasSemana(seg).filter(function(d){ return d<=h&&DB[d]; });
   if(!reais.length)return null;
   function soma(arr,fn){ return arr.reduce(function(a,d){ return a+fn(d); },0); }
-  var tgA=soma(reais,function(d){ return ganhos(DB[d]); });
-  var tgB=soma(reaisAnt,function(d){ return ganhos(DB[d]); });
-  var slA=soma(reais,function(d){ return saldo(DB[d]); });
-  var slB=soma(reaisAnt,function(d){ return saldo(DB[d]); });
-  var hA=soma(reais,function(d){ var r=DB[d]; return r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; });
-  var hB=soma(reaisAnt,function(d){ var r=DB[d]; return r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; });
-  var kA=soma(reais,function(d){ return DB[d].kms||0; });
-  var kB=soma(reaisAnt,function(d){ return DB[d].kms||0; });
-  return{ganhos:{a:tgA,b:tgB},saldo:{a:slA,b:slB},gph:{a:hA>0?tgA/hA:0,b:hB>0?tgB/hB:0},kms:{a:kA,b:kB}};
+  var tgA=soma(reais,function(d){ return ganhos(DB[d]||{}); });
+  var tgB=soma(reaisAnt,function(d){ return ganhos(DB[d]||{}); });
+  var slA=soma(reais,function(d){ return saldo(DB[d]||{}); });
+  var slB=soma(reaisAnt,function(d){ return saldo(DB[d]||{}); });
+  var hA=soma(reais,function(d){ var r=DB[d]||{}; return r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; });
+  var hB=soma(reaisAnt,function(d){ var r=DB[d]||{}; return r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; });
+  var kA=soma(reais,function(d){ return (DB[d]||{}).kms||0; });
+  var kB=soma(reaisAnt,function(d){ return (DB[d]||{}).kms||0; });
+  // ganho/hora real (ap\u00f3s impostos)
+  var slRealA=soma(reais,function(d){ return saldoReal(DB[d]||{}); });
+  var slRealB=soma(reaisAnt,function(d){ return saldoReal(DB[d]||{}); });
+  return{ganhos:{a:tgA,b:tgB},saldo:{a:slA,b:slB},gph:{a:hA>0?slRealA/hA:0,b:hB>0?slRealB/hB:0},kms:{a:kA,b:kB}};
 }
 function deltaStr(a,b){
   if(!b||b===0)return '<span class="comp-delta neutral">-</span>';
@@ -908,23 +955,29 @@ function renderComparativo(){
   var c=calcComparativoSemana();
   if(!c){ stit.style.display='none'; box.innerHTML=''; return; }
   stit.style.display='';
-  box.innerHTML='<div class="comp-grid">'+compCard('Ganhos',c.ganhos.a,c.ganhos.b,true)+compCard('Saldo',c.saldo.a,c.saldo.b,true)+(c.gph.b>0?compCard('Ganho/hora',c.gph.a,c.gph.b,true):'')+(c.kms.b>0?compCard('KMs',c.kms.a,c.kms.b,false):'')+
-  '</div><div style="font-size:9px;color:var(--muted);text-align:center;margin-bottom:4px">vs semana anterior</div>';
+  box.innerHTML='<div class="comp-grid">'+
+    compCard('Ganhos',c.ganhos.a,c.ganhos.b,true)+
+    compCard('Saldo',c.saldo.a,c.saldo.b,true)+
+    (c.gph.b>0?compCard('Lucro/hora',c.gph.a,c.gph.b,true):'')+
+    (c.kms.b>0?compCard('KMs',c.kms.a,c.kms.b,false):'')+
+  '</div><div style="font-size:9px;color:var(--muted);text-align:center;margin-bottom:4px">vs semana anterior &mdash; Lucro/hora calculado ap\u00f3s impostos</div>';
 }
 
+// ── Pull to refresh ───────────────────────────────────────────────────
 var ptrStartY=0,ptrDist=0,ptrActive=false;
 var content=document.getElementById('mainContent');
 content.addEventListener('touchstart',function(e){ if(content.scrollTop===0){ ptrStartY=e.touches[0].clientY; ptrActive=true; } },{passive:true});
 content.addEventListener('touchmove',function(e){ if(!ptrActive)return; ptrDist=e.touches[0].clientY-ptrStartY; if(ptrDist>0&&ptrDist<120){ document.getElementById('ptr').classList.add('visible'); document.getElementById('ptrText').textContent=ptrDist>70?'Soltar para atualizar':'Puxar para atualizar'; document.getElementById('ptrSpin').style.transform='rotate('+Math.round(ptrDist*3)+'deg)'; } },{passive:true});
 content.addEventListener('touchend',function(){ if(!ptrActive)return; ptrActive=false; if(ptrDist>70){ document.getElementById('ptrSpin').classList.add('spin'); setTimeout(function(){ location.reload(); },800); } else { document.getElementById('ptr').classList.remove('visible'); } ptrDist=0; });
 
+// ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
 var pages=['hoje','semana','hist','cfg'];
 function navTo(p){ pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
   if(!bar||!txt)return;
-  if(CFG.veiculo&&CFG.veiculo.modelo){ var ic=isEletrico()?'🔋':'⛽'; txt.textContent='🚘 '+CFG.veiculo.modelo+' '+ic; bar.classList.add('show'); }
+  if(CFG.veiculo&&CFG.veiculo.modelo){ var ic=isEletrico()?'\U0001F50B':'\u26fd'; txt.textContent='\U0001F698 '+CFG.veiculo.modelo+' '+ic; bar.classList.add('show'); }
   else { bar.classList.remove('show'); txt.textContent=''; }
 }
 function renderHeader(){
@@ -940,24 +993,27 @@ function renderBarraMeta(containerId,label,atual,meta,nota){
   if(!meta||meta<=0){ el.innerHTML=''; return; }
   var pct=Math.min(100,Math.round((atual/meta)*100)); var atingiu=atual>=meta;
   var cor=atingiu?'var(--green)':pct>=70?'var(--amber)':'var(--cyan)';
-  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
+  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">\U0001F3AF '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div><div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' \U0001F3C6':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
 }
 
+// ── KPIs / Hoje ───────────────────────────────────────────────────────
 function renderKPIs(){
   var h=hoje(),r=DB[h]||{},g=ganhos(r),sl=saldo(r);
   var seg=segunda(h),ds=diasSemana(seg).filter(function(d){ return d<=h; });
   var tg=ds.reduce(function(a,d){ return a+ganhos(DB[d]||{}); },0);
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
-  var gph=horas&&horas>0?g/horas:0;
   var imp=calcImpostos(r);
   var slMeta=imp?imp.real:sl;
   var slLbl=imp?'Saldo real':'Saldo hoje';
+  // v3.7: lucro/hora = saldo real (ap\u00f3s impostos) \u00f7 horas
+  var lucroRef=imp?imp.real:sl;
+  var gph=horas&&horas>0?lucroRef/horas:0;
   document.getElementById('kpiGrid').innerHTML=
-    kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
-    kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')')+
-    kpi('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
-    kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,CFG.metaDia);
+    kpi('\U0001F4B0','Ganhos hoje',moeda(g),'color:var(--cyan)')+
+    kpi(slMeta>=0?'\U0001F3C6':'\u26a0\ufe0f',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')')+
+    kpi('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
+    kpi('\U0001F4C6','Ganhos semana',moeda(tg),'color:var(--violet)');
+  renderBarraMeta('metaDiariaBox','Meta di\u00e1ria',slMeta,CFG.metaDia);
 }
 function kpi(ic,lb,vl,st){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div></div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -971,45 +1027,62 @@ function atualizarHorasTotal(){
 function renderResumoDia(){
   var h=hoje(),r=DB[h]||{},g=ganhos(r),eT=energiaGastos(r),sl=saldo(r),al=alDia(),pos=sl>=0;
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
-  var gph=horas&&horas>0?g/horas:0;
+  var imp=calcImpostos(r);
+  var lucroRef=imp?imp.real:sl;
+  var gph=horas&&horas>0?lucroRef/horas:0;
   var kms=r.kms||0;
-  var html=rl('💰 Total ganhos',moeda(g),'color:var(--cyan)')+
-    rl('🖤 Uber',moeda(r.uber||0),'',true)+rl('⚡ Bolt',moeda(r.bolt||0),'color:#34d186',true)+rl('🚘 Particular/Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
+  var eK=kwhEfetivo(r);
+  var html=rl('\U0001F4B0 Total ganhos',moeda(g),'color:var(--cyan)')+
+    rl('\U0001F5A4 Uber',moeda(r.uber||0),'',true)+
+    rl('\u26a1 Bolt',moeda(r.bolt||0),'color:#34d186',true)+
+    rl('\U0001F698 Particular/Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
     '<div class="div"></div>';
   if(isEletrico()){
-    var eE=r.energia||0,eK=r.energiaKwh||0;
-    html+=rl('⚡ Energia total',moeda(eT),'color:var(--violet)')+(eE>0?rl('💶 Em '+sim(),moeda(eE),'',true):'')+(eK>0?rl('⚡ '+eK.toFixed(2)+'kWh',moeda(kwhParaEuro(eK)),'',true):'');
+    var eE=r.energia||0,eKd=r.energiaKwh||0;
+    var kwhMostrar=eK;
+    html+=rl('\u26a1 Energia',moeda(eT),'color:var(--violet)');
+    if(eE>0)html+=rl('\u20ac Valor pago',moeda(eE),'',true);
+    if(eKd>0)html+=rl('\u26a1 kWh direto',eKd.toFixed(2)+' kWh','',true);
+    else if(eE>0&&kwhMostrar>0)html+=rl('\u26a1 kWh auto',kwhMostrar.toFixed(2)+' kWh','color:var(--muted)',true);
   } else {
-    html+=rl('⛽ Combustível',moeda(eT),'color:var(--amber)')+(r.litros>0?rl('🔢 Litros',r.litros.toFixed(2)+'L','',true):'');
+    html+=rl('\u26fd Combust\u00edvel',moeda(eT),'color:var(--amber)')+(r.litros>0?rl('Litros',r.litros.toFixed(2)+'L','',true):'');
   }
-  // v3.7: comida e outros gastos pessoais aparecem como info, não descontam do saldo
-  if((r.comida||0)>0)html+=rl('🍔 Alimentação (info)',moeda(r.comida||0),'color:var(--muted)');
-  if((r.outroG2||0)>0)html+=rl('💳 Outros gastos (info)',moeda(r.outroG2||0),'color:var(--muted)');
-  html+=rl('🏠 Aluguer (dia)',moeda(al),'color:var(--violet)');
-  if(horas>0) html+='<div class="div"></div>'+rl('⏱️ Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('💰 Ganho/hora',moeda(gph),'color:var(--amber)');
+  html+=rl('\U0001F3E0 Aluguer (dia)',moeda(al),'color:var(--violet)');
+  // alimenta\u00e7\u00e3o e outros: registo pessoal, n\u00e3o entram no saldo operacional
+  if((r.comida||0)>0)html+=rl('\U0001F354 Alimenta\u00e7\u00e3o (pessoal)',moeda(r.comida||0),'color:var(--muted)');
+  if((r.outroG2||0)>0)html+=rl('\U0001F4B3 Outros gastos (pessoal)',moeda(r.outroG2||0),'color:var(--muted)');
+  if(horas>0)html+='<div class="div"></div>'+rl('\u23f1\ufe0f Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('\U0001F4B0 Lucro/hora',moeda(gph),'color:var(--amber)')+(imp?rl('(ap\u00f3s impostos)','','color:var(--muted)',true):'');
   if(kms>0){
-    html+='<div class="div"></div>'+rl('📍 KMs rodados',kms+'km','color:var(--sub)');
-    if(isEletrico()&&(r.energiaKwh||0)>0){ var eff=(r.energiaKwh/kms*100); html+=rl('⚡ Eficiência',eff.toFixed(1)+' kWh/100km','color:var(--violet)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
-    else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('⛽ Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
+    html+='<div class="div"></div>'+rl('\U0001F4CD KMs rodados',kms+'km','color:var(--sub)');
+    if(isEletrico()&&eK>0){ var eff=(eK/kms*100); html+=rl('\u26a1 Efici\u00eancia',eff.toFixed(1)+' kWh/100km','color:var(--violet)',true)+rl('\U0001F4CD Custo/km',moeda(eT/kms),'',true); }
+    else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('\U0001F4CD Custo/km',moeda(eT/kms),'',true); }
   }
-  html+='<div class="rl tot"><span class="lb">'+(pos?'🏆':'⚠️')+' Saldo líquido</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
-  var impDia=calcImpostos(r);
-  if(impDia)html+=htmlImpostos(impDia);
+  html+='<div class="rl tot"><span class="lb">'+(pos?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
+  if(imp)html+=htmlImpostos(imp);
   document.getElementById('resumoDia').innerHTML=html;
 }
 
 function atualizarEnergiaTotal(){
-  var e=parseFloat(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0)||0;
-  var k=parseFloat(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0)||0;
-  var el=document.getElementById('energiaTotal'); if(el)el.textContent=moeda(calcEnergia(e,k));
+  var e=pf(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0);
+  var k=pf(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0);
+  var total=calcEnergia(e,k);
+  var el=document.getElementById('energiaTotal'); if(el)el.textContent=moeda(total);
+  // mostrar kWh autom\u00e1tico
+  var kwhAuto=k>0?k:(e>0&&CFG.precoKwh>0?e/CFG.precoKwh:0);
+  var lbl=document.getElementById('kwhAutoLabel');
+  if(lbl)lbl.textContent=kwhAuto>0?'\u26a1 '+kwhAuto.toFixed(1)+' kWh'+(k>0?' (direto)':' (auto)'):'';
 }
 function atualizarMEnergiaTotal(){
-  var e=parseFloat(document.getElementById('mEnergia')?document.getElementById('mEnergia').value:0)||0;
-  var k=parseFloat(document.getElementById('mEnergiaKwh')?document.getElementById('mEnergiaKwh').value:0)||0;
-  var el=document.getElementById('mEnergiaTotal'); if(el)el.textContent=moeda(calcEnergia(e,k));
+  var e=pf(document.getElementById('mEnergia')?document.getElementById('mEnergia').value:0);
+  var k=pf(document.getElementById('mEnergiaKwh')?document.getElementById('mEnergiaKwh').value:0);
+  var total=calcEnergia(e,k);
+  var el=document.getElementById('mEnergiaTotal'); if(el)el.textContent=moeda(total);
+  var kwhAuto=k>0?k:(e>0&&CFG.precoKwh>0?e/CFG.precoKwh:0);
+  var lbl=document.getElementById('mKwhAutoLabel');
+  if(lbl)lbl.textContent=kwhAuto>0?'\u26a1 '+kwhAuto.toFixed(1)+' kWh'+(k>0?' (direto)':' (auto)'):'';
 }
 function atualizarTotal(){
-  var u=parseFloat(document.getElementById('iUber').value)||0,b=parseFloat(document.getElementById('iBolt').value)||0,o=parseFloat(document.getElementById('iOutroG').value)||0;
+  var u=pf(document.getElementById('iUber').value),b=pf(document.getElementById('iBolt').value),o=pf(document.getElementById('iOutroG').value);
   document.getElementById('gTotal').textContent=moeda(u+b+o);
 }
 function limparCampos(){
@@ -1022,6 +1095,7 @@ function limparCampos(){
     var ie=document.getElementById('iEnergia'),ik=document.getElementById('iEnergiaKwh');
     if(ie)ie.value=''; if(ik)ik.value='';
     var et=document.getElementById('energiaTotal'); if(et)et.textContent=moeda(0);
+    var kl=document.getElementById('kwhAutoLabel'); if(kl)kl.textContent='';
   } else {
     var il=document.getElementById('iLitros'),ic=document.getElementById('iCombustivel');
     if(il)il.value=''; if(ic)ic.value='';
@@ -1029,78 +1103,115 @@ function limparCampos(){
 }
 
 function guardar(){
-  var u=parseFloat(document.getElementById('iUber').value)||0,b=parseFloat(document.getElementById('iBolt').value)||0,og=parseFloat(document.getElementById('iOutroG').value)||0,c=parseFloat(document.getElementById('iComida').value)||0,o2=parseFloat(document.getElementById('iOutroG2').value)||0,kms=parseFloat(document.getElementById('iKms').value)||0;
+  var u=pf(document.getElementById('iUber').value),b=pf(document.getElementById('iBolt').value),og=pf(document.getElementById('iOutroG').value),c=pf(document.getElementById('iComida').value),o2=pf(document.getElementById('iOutroG2').value),kms=pf(document.getElementById('iKms').value);
   var ini=document.getElementById('iHoraInicio').value,fim=document.getElementById('iHoraFim').value;
   var alm=document.getElementById('iAlmoco'); var almoco=alm?alm.checked:false;
   var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco};
   if(isEletrico()){
-    var e=parseFloat(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0)||0;
-    var ek=parseFloat(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0)||0;
+    var e=pf(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0);
+    var ek=pf(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0);
     rec.energia=e; rec.energiaKwh=ek;
   } else {
-    var lit=parseFloat(document.getElementById('iLitros')?document.getElementById('iLitros').value:0)||0;
-    var comb=parseFloat(document.getElementById('iCombustivel')?document.getElementById('iCombustivel').value:0)||0;
+    var lit=pf(document.getElementById('iLitros')?document.getElementById('iLitros').value:0);
+    var comb=pf(document.getElementById('iCombustivel')?document.getElementById('iCombustivel').value:0);
     rec.litros=lit; rec.combustivel=comb;
   }
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ toast('Insere pelo menos um valor!','er'); return; }
   DB[hoje()]=rec;
   salvarLocal(); limparCampos(); renderKPIs(); renderResumoDia(); renderHeader();
-  toast('✅ Dia guardado!','ok');
+  toast('\u2705 Dia guardado!','ok');
   if(document.activeElement)document.activeElement.blur();
 }
 function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSection(); renderKPIs(); limparCampos(); renderResumoDia(); }
 
+// ── Semana ────────────────────────────────────────────────────────────
 function renderSemana(){
   renderComparativo();
   var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
-  ds.forEach(function(d){ var r=DB[d],isTod=d===h,isFut=d>h,slW=r?(CFG.impostos&&CFG.impostos.ativo?saldoReal(r):saldo(r)):null,cls=isFut?'ft':((r?'hd':'')+(isTod?' td':'')); wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(r?'<div class="ds '+(slW>=0?'p':'n')+'">'+(slW>=0?'+':'')+slW.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(r?'h':'e')+'"></div></div>'; });
+  ds.forEach(function(d){
+    var r=DB[d]||{},isTod=d===h,isFut=d>h;
+    var slW=DB[d]?(CFG.impostos&&CFG.impostos.ativo?saldoReal(DB[d]):saldo(DB[d])):null;
+    var cls=isFut?'ft':((DB[d]?'hd':'')+(isTod?' td':''));
+    wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(DB[d]?'<div class="ds '+(slW>=0?'p':'n')+'">'+(slW>=0?'+':'')+slW.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(DB[d]?'h':'e')+'"></div></div>';
+  });
   document.getElementById('weekRow').innerHTML=wHTML;
   var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
   var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
-  document.getElementById('platGrid').innerHTML='<div class="plat-c"><div class="plat-ic">🖤</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+'<div class="plat-c"><div class="plat-ic" style="color:#34d186">⚡</div><div class="plat-nm">Bolt</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+'<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
-  // v3.7: gastos no gráfico = só energia kWh frota + aluguer
+  document.getElementById('platGrid').innerHTML=
+    '<div class="plat-c"><div class="plat-ic">\U0001F5A4</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+
+    '<div class="plat-c"><div class="plat-ic" style="color:#34d186">\u26a1</div><div class="plat-nm">Bolt</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+
+    '<div class="plat-c"><div class="plat-ic">\U0001F698</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
+  // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
   var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaGastos(r)+alDia()}; });
   var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs); }).concat([1]));
   var bHTML='';
   ds.forEach(function(d,i){ var v=vals[i],gh=Math.round((v.g/mx)*88),gsh=Math.round((v.gs/mx)*88); bHTML+='<div class="bc-col"><div class="bc-grp"><div class="bar g" style="height:'+gh+'px"></div><div class="bar gs" style="height:'+gsh+'px"></div></div><div class="bc-lbl">'+diaNome(d)+'</div></div>'; });
   document.getElementById('barChart').innerHTML=bHTML;
+
   var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
-  var totalHoras=reais.reduce(function(a,d){ var r=DB[d]; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
+  var totalHoras=reais.reduce(function(a,d){ var r=DB[d]||{}; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
   var tg=tu+tb+to;
-  var te=reais.reduce(function(a,d){ return a+energiaGastos(DB[d]); },0);
-  var gph=totalHoras>0?tg/totalHoras:0;
+  var te=reais.reduce(function(a,d){ return a+energiaGastos(DB[d]||{}); },0);
+  // v3.7: lucro/hora = saldo real acumulado \u00f7 horas
+  var slRealSem=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{}); },0);
+  var gph=totalHoras>0?slRealSem/totalHoras:0;
+
   var perfHTML='';
   if(isEletrico()){
-    var totalKwh=reais.reduce(function(a,d){ return a+(DB[d].energiaKwh||0); },0);
+    var totalKwh=reais.reduce(function(a,d){ return a+kwhEfetivo(DB[d]||{}); },0);
     var efic=totalKms>0&&totalKwh>0?(totalKwh/totalKms*100):0;
     var custoKm=totalKms>0?te/totalKms:0;
     var ganhoKm=totalKms>0?tg/totalKms:0;
-    perfHTML+=perf('⚡','kWh/100km',efic>0?efic.toFixed(1)+' kWh':'-','color:var(--violet)')+perf('📍','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+perf('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+perf('💰','Ganho/km',ganhoKm>0?moeda(ganhoKm):'-','color:var(--green)');
+    perfHTML+=perf('\u26a1','kWh/100km',efic>0?efic.toFixed(1)+' kWh':'-','color:var(--violet)')+
+               perf('\U0001F4CD','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+
+               perf('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
+               perf('\U0001F6E3\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('\U0001F4B0','Ganho/km',ganhoKm>0?moeda(ganhoKm):'-','color:var(--green)');
   } else {
     var totalLitros=reais.reduce(function(a,d){ return a+(DB[d].litros||0); },0);
     var eficL=totalKms>0&&totalLitros>0?(totalLitros/totalKms*100):0;
     var custoKmC=totalKms>0?te/totalKms:0;
     var ganhoKmC=totalKms>0?tg/totalKms:0;
-    perfHTML+=perf('⛽','L/100km',eficL>0?eficL.toFixed(1)+' L':'-','color:var(--amber)')+perf('📍','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+perf('⏱️','Ganho/hora',gph>0?moeda(gph):'-','color:var(--amber)')+perf('🛣️','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+perf('💰','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
+    perfHTML+=perf('\u26fd','L/100km',eficL>0?eficL.toFixed(1)+' L':'-','color:var(--amber)')+
+               perf('\U0001F4CD','Custo/km',custoKmC>0?moeda(custoKmC):'-','color:var(--cyan)')+
+               perf('\u23f1\ufe0f','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
+               perf('\U0001F6E3\ufe0f','KMs semana',totalKms>0?totalKms+'km':'-','color:var(--green)')+
+               perf('\U0001F4B0','Ganho/km',ganhoKmC>0?moeda(ganhoKmC):'-','color:var(--green)');
   }
   document.getElementById('perfGrid').innerHTML=perfHTML;
+
   var tc=reais.reduce(function(a,d){ return a+(DB[d].comida||0); },0);
   var tou=reais.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0);
   var tal=CFG.aluguel;
-  // v3.7: gastos = só energia kWh frota + aluguer
-  var gas=te+tal,sl2=tg-gas,pos2=sl2>=0;
-  // base fiscal semanal sem Particular
-  var bfSem=Math.max(0,sl2-(reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0)));
+  // gastos operacionais = energia + aluguer
+  var gas=te+tal, sl2=tg-gas, pos2=sl2>=0;
+  // base fiscal sem Particular
+  var bfSem=Math.max(0,sl2-to);
   var impSemHtml=htmlImpostos(calcImpostosValores(sl2,bfSem));
-  var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]); },0);
-  var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]); },0):slSemanal;
-  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
-  var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">ℹ️ Saldo calculado com aluguer semanal completo (€'+CFG.aluguel.toFixed(0)+') descontado — o que sobra se parares agora</div>';
 
-  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+(!reais.length?'<div class="empty"><div class="empty-ic">📭</div>Sem dados esta semana</div>':rl('📅 Dias registados',reais.length+'/7')+rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+rl('🖤 Uber',moeda(tu),'',true)+rl('⚡ Bolt',moeda(tb),'color:#34d186',true)+rl('🚘 Particular',moeda(to),'color:var(--orange)',true)+'<div class="div"></div>'+rl(isEletrico()?'⚡ Energia':'⛽ Combustível',moeda(te))+rl('🏠 Aluguer semanal',moeda(tal),'color:var(--violet)')+(tc>0?rl('🍔 Alimentação (info)',moeda(tc),'color:var(--muted)'):'')+(totalHoras>0?rl('⏱️ Horas totais',fmtHoras(totalHoras)):'')+rl('🛣️ KMs totais',totalKms>0?totalKms+'km':'-')+'<div class="rl tot"><span class="lb">'+(pos2?'🏆':'⚠️')+' Saldo semanal</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+notaSemana+impSemHtml);
+  var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{}); },0);
+  var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{}); },0):slSemanal;
+  renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'\U0001F4CC Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
+
+  var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
+  var infosPessoais=(tc>0||tou>0)?'<div style="font-size:10px;color:var(--muted);margin-top:6px">\U0001F4CC Pessoal (n\u00e3o incluso no saldo): '+(tc>0?'\U0001F354 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'\U0001F4B3 '+moeda(tou):'')+'</div>':'';
+
+  document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+
+    (!reais.length?'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados esta semana</div>':
+    rl('\U0001F4C5 Dias registados',reais.length+'/7')+
+    rl('\U0001F4B0 Ganhos totais',moeda(tg),'color:var(--cyan)')+
+    rl('\U0001F5A4 Uber',moeda(tu),'',true)+rl('\u26a1 Bolt',moeda(tb),'color:#34d186',true)+rl('\U0001F698 Particular',moeda(to),'color:var(--orange)',true)+
+    '<div class="div"></div>'+
+    rl(isEletrico()?'\u26a1 Energia':'\u26fd Combust\u00edvel',moeda(te))+
+    rl('\U0001F3E0 Aluguer semanal',moeda(tal),'color:var(--violet)')+
+    (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
+    rl('\U0001F6E3\ufe0f KMs totais',totalKms>0?totalKms+'km':'-')+
+    '<div class="rl tot"><span class="lb">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+moeda(sl2)+'</span></div>'+
+    notaSemana+infosPessoais+impSemHtml);
 }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
 
+// ── Modal editar ──────────────────────────────────────────────────────
 function abrirModal(iso){
   editingISO=iso; var r=DB[iso]||{};
   document.getElementById('modalDate').textContent=DIAS_FULL[new Date(iso+'T12:00:00').getDay()]+', '+fmtData(iso);
@@ -1110,47 +1221,71 @@ function abrirModal(iso){
   document.getElementById('mComida').value=r.comida||''; document.getElementById('mOutroG2').value=r.outroG2||'';
   renderMEnergiaSection();
   setTimeout(function(){
-    if(isEletrico()){ var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh'); if(me)me.value=r.energia||''; if(mk)mk.value=r.energiaKwh||''; atualizarMEnergiaTotal(); }
-    else { var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel'); if(ml)ml.value=r.litros||''; if(mc)mc.value=r.combustivel||''; }
+    if(isEletrico()){
+      var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh');
+      if(me)me.value=r.energia||''; if(mk)mk.value=r.energiaKwh||'';
+      atualizarMEnergiaTotal();
+    } else {
+      var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel');
+      if(ml)ml.value=r.litros||''; if(mc)mc.value=r.combustivel||'';
+    }
   },50);
   document.getElementById('modalOverlay').classList.add('show');
 }
 function fecharModal(){ document.getElementById('modalOverlay').classList.remove('show'); editingISO=''; }
 function salvarModal(){
   if(!editingISO)return;
-  var u=parseFloat(document.getElementById('mUber').value)||0,b=parseFloat(document.getElementById('mBolt').value)||0,og=parseFloat(document.getElementById('mOutroG').value)||0,c=parseFloat(document.getElementById('mComida').value)||0,o2=parseFloat(document.getElementById('mOutroG2').value)||0,kms=parseFloat(document.getElementById('mKms').value)||0;
+  var u=pf(document.getElementById('mUber').value),b=pf(document.getElementById('mBolt').value),og=pf(document.getElementById('mOutroG').value),c=pf(document.getElementById('mComida').value),o2=pf(document.getElementById('mOutroG2').value),kms=pf(document.getElementById('mKms').value);
   var ini=document.getElementById('mHoraInicio').value,fim=document.getElementById('mHoraFim').value;
   var mAlm2=document.getElementById('mAlmoco'); var almoco2=mAlm2?mAlm2.checked:false;
   var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco2};
-  if(isEletrico()){ var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh'); rec.energia=parseFloat(me?me.value:0)||0; rec.energiaKwh=parseFloat(mk?mk.value:0)||0; }
-  else { var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel'); rec.litros=parseFloat(ml?ml.value:0)||0; rec.combustivel=parseFloat(mc?mc.value:0)||0; }
+  if(isEletrico()){
+    var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh');
+    rec.energia=pf(me?me.value:0); rec.energiaKwh=pf(mk?mk.value:0);
+  } else {
+    var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel');
+    rec.litros=pf(ml?ml.value:0); rec.combustivel=pf(mc?mc.value:0);
+  }
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ toast('Insere pelo menos um valor!','er'); return; }
   DB[editingISO]=rec; salvarLocal(); fecharModal(); renderHist();
   if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); }
-  toast('✅ Dia atualizado!','ok');
+  toast('\u2705 Dia atualizado!','ok');
 }
 function apagarDiaModal(){
   if(!editingISO)return;
-  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑️ Dia apagado!','ok'); }
+  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('\U0001F5D1\ufe0f Dia apagado!','ok'); }
 }
 
+// ── Hist\u00f3rico ──────────────────────────────────────────────────────────
 var histFiltro='dia',histOffset=0;
 function setFiltro(f){ histFiltro=f; histOffset=0; ['dia','semana','mes','ano'].forEach(function(x){ document.getElementById('fb-'+x).classList.remove('on'); }); document.getElementById('fb-'+f).classList.add('on'); renderHist(); }
-function getChavesPeriodo(){ var now=new Date(); if(histFiltro==='dia'){ var d=new Date(now); d.setDate(d.getDate()+histOffset); var iso=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); return{chaves:DB[iso]?[iso]:[],label:diaNome(iso)+', '+fmtData(iso),isoRef:iso}; } if(histFiltro==='semana'){ var ref=new Date(now); ref.setDate(ref.getDate()+(histOffset*7)); var refISO=ref.getFullYear()+'-'+pad(ref.getMonth()+1)+'-'+pad(ref.getDate()); var seg2=segunda(refISO),ds=diasSemana(seg2); var segD=new Date(seg2+'T12:00:00'),domD=new Date(ds[6]+'T12:00:00'); return{chaves:ds.filter(function(d){ return DB[d]; }),label:'Semana '+pad(segD.getDate())+'/'+pad(segD.getMonth()+1)+' – '+pad(domD.getDate())+'/'+pad(domD.getMonth()+1)+'/'+domD.getFullYear()}; } if(histFiltro==='mes'){ var m=new Date(now.getFullYear(),now.getMonth()+histOffset,1); return{chaves:Object.keys(DB).filter(function(k){ var p=k.split('-'); return parseInt(p[0])===m.getFullYear()&&parseInt(p[1])-1===m.getMonth(); }).sort(),label:MESES[m.getMonth()]+' '+m.getFullYear()}; } if(histFiltro==='ano'){ var ano=now.getFullYear()+histOffset; return{chaves:Object.keys(DB).filter(function(k){ return k.startsWith(ano+'-'); }).sort(),label:'Ano '+ano}; } return{chaves:[],label:''}; }
+function getChavesPeriodo(){
+  var now=new Date();
+  if(histFiltro==='dia'){ var d=new Date(now); d.setDate(d.getDate()+histOffset); var iso=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); return{chaves:DB[iso]?[iso]:[],label:diaNome(iso)+', '+fmtData(iso),isoRef:iso}; }
+  if(histFiltro==='semana'){ var ref=new Date(now); ref.setDate(ref.getDate()+(histOffset*7)); var refISO=ref.getFullYear()+'-'+pad(ref.getMonth()+1)+'-'+pad(ref.getDate()); var seg2=segunda(refISO),ds=diasSemana(seg2); var segD=new Date(seg2+'T12:00:00'),domD=new Date(ds[6]+'T12:00:00'); return{chaves:ds.filter(function(d){ return DB[d]; }),label:'Semana '+pad(segD.getDate())+'/'+pad(segD.getMonth()+1)+' \u2013 '+pad(domD.getDate())+'/'+pad(domD.getMonth()+1)+'/'+domD.getFullYear()}; }
+  if(histFiltro==='mes'){ var m=new Date(now.getFullYear(),now.getMonth()+histOffset,1); return{chaves:Object.keys(DB).filter(function(k){ var p=k.split('-'); return parseInt(p[0])===m.getFullYear()&&parseInt(p[1])-1===m.getMonth(); }).sort(),label:MESES[m.getMonth()]+' '+m.getFullYear()}; }
+  if(histFiltro==='ano'){ var ano=now.getFullYear()+histOffset; return{chaves:Object.keys(DB).filter(function(k){ return k.startsWith(ano+'-'); }).sort(),label:'Ano '+ano}; }
+  return{chaves:[],label:''};
+}
 
 function renderAnaliseConsumo(chaves){
   var el=document.getElementById('analiseConsumoBox'); if(!el)return;
   if(chaves.length<2||histFiltro==='dia'){ el.innerHTML=''; return; }
-  var titulo=isEletrico()?'⚡ Consumo de energia por dia':'⛽ Combustível por dia';
+  var titulo=isEletrico()?'\u26a1 Consumo de energia por dia':'\u26fd Combust\u00edvel por dia';
   var cor=isEletrico()?'var(--violet)':'var(--amber)';
-  var dados=chaves.map(function(iso){ var r=DB[iso]; return{dia:diaNome(iso),val:isEletrico()?(r.energiaKwh||0):(r.litros||0),custo:energiaGastos(r)}; });
+  // usa kWh efetivo (auto se s\u00f3 valor em \u20ac)
+  var dados=chaves.map(function(iso){ var r=DB[iso]||{}; return{dia:diaNome(iso),val:isEletrico()?kwhEfetivo(r):(r.litros||0),custo:energiaGastos(r)}; });
   var maxVal=Math.max.apply(null,dados.map(function(d){ return d.val; }).concat([0.1]));
   var totalVal=dados.reduce(function(a,d){ return a+d.val; },0);
   var totalCusto=dados.reduce(function(a,d){ return a+d.custo; },0);
   var mediaVal=dados.length?totalVal/dados.length:0;
   var unidade=isEletrico()?'kWh':'L';
   var barras=dados.map(function(d){ var pct=maxVal>0?Math.round((d.val/maxVal)*72):0; return '<div class="kwh-col">'+(d.val>0?'<div class="kwh-val">'+d.val.toFixed(1)+'</div>':'<div class="kwh-val" style="color:var(--muted)">-</div>')+'<div class="kwh-bar" style="height:'+pct+'px;background:'+cor+';opacity:'+(d.val>0?'0.85':'0.15')+'"></div><div class="kwh-lbl">'+d.dia+'</div></div>'; }).join('');
-  el.innerHTML='<div class="stit">'+titulo+'</div><div class="card"><div class="kwh-chart">'+barras+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">'+'<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+totalVal.toFixed(1)+unidade+'</div></div>'+'<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Média/dia</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+mediaVal.toFixed(1)+unidade+'</div></div>'+'<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Custo total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:var(--red)">'+moeda(totalCusto)+'</div></div>'+'</div></div>';
+  el.innerHTML='<div class="stit">'+titulo+'</div><div class="card"><div class="kwh-chart">'+barras+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+totalVal.toFixed(1)+unidade+'</div></div>'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">M\u00e9dia/dia</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+mediaVal.toFixed(1)+unidade+'</div></div>'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Custo total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:var(--red)">'+moeda(totalCusto)+'</div></div>'+
+  '</div></div>';
 }
 
 function renderHist(){
@@ -1158,28 +1293,76 @@ function renderHist(){
   document.getElementById('periodoLabel').textContent=periodo.label;
   var chaves=periodo.chaves;
   renderAnaliseConsumo(chaves);
-  var tg=chaves.reduce(function(a,d){ return a+ganhos(DB[d]); },0),tu=chaves.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=chaves.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=chaves.reduce(function(a,d){ return a+(DB[d].outroG||0); },0),te=chaves.reduce(function(a,d){ return a+energiaGastos(DB[d]); },0),tc=chaves.reduce(function(a,d){ return a+(DB[d].comida||0); },0),tou=chaves.reduce(function(a,d){ return a+(DB[d].outroG2||0); },0),nDias=chaves.length;
+  // prote\u00e7\u00e3o robusta: r0 garante objeto v\u00e1lido
+  var r0=function(d){ return DB[d]||{}; };
+  var tg=chaves.reduce(function(a,d){ return a+ganhos(r0(d)); },0);
+  var tu=chaves.reduce(function(a,d){ return a+(r0(d).uber||0); },0);
+  var tb=chaves.reduce(function(a,d){ return a+(r0(d).bolt||0); },0);
+  var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0); },0);
+  var te=chaves.reduce(function(a,d){ return a+energiaGastos(r0(d)); },0);
+  var tc=chaves.reduce(function(a,d){ return a+(r0(d).comida||0); },0);
+  var tou=chaves.reduce(function(a,d){ return a+(r0(d).outroG2||0); },0);
+  var nDias=chaves.length;
   var alTotal=histFiltro==='dia'?alDia():histFiltro==='semana'?CFG.aluguel:(CFG.aluguel/7)*nDias;
-  // v3.7: gastos = só energia kWh frota + aluguer
-  var gastos=te+alTotal,slTotal=tg-gastos,pos=slTotal>=0;
+  // gastos operacionais = energia + aluguer
+  var gastos=te+alTotal, slTotal=tg-gastos, pos=slTotal>=0;
   // base fiscal sem Particular
-  var toHist=chaves.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
-  var bfHist=Math.max(0,slTotal-toHist);
+  var bfHist=Math.max(0,slTotal-to);
+
   if(!chaves.length){
-    var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📭</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">➕ Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📭</div>Sem dados neste período</div>';
+    var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">\U0001F4E4</div>Sem dados neste per\u00edodo</div>';
     document.getElementById('resumoPeriodo').innerHTML='<div style="padding:8px;text-align:center;color:var(--muted);font-size:12px">Sem dados</div>';
     document.getElementById('histList').innerHTML=semDados; return;
   }
-  var totalHorasHist=chaves.reduce(function(a,d){ var r=DB[d]; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
-  var gphHist=totalHorasHist>0?tg/totalHorasHist:0;
-  var totalKmsHist=chaves.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
+  var totalHorasHist=chaves.reduce(function(a,d){ var r=r0(d); var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
+  var slRealHist=chaves.reduce(function(a,d){ return a+saldoReal(r0(d)); },0);
+  var gphHist=totalHorasHist>0?slRealHist/totalHorasHist:0;
+  var totalKmsHist=chaves.reduce(function(a,d){ return a+(r0(d).kms||0); },0);
   var ganhoKmHist=totalKmsHist>0?tg/totalKmsHist:0;
-  document.getElementById('resumoPeriodo').innerHTML='<div class="rp-grid"><div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div><div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'⚠️')+' Saldo</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div><div class="rp-item"><div class="rp-lbl">📤 Gastos</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div><div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+(gphHist>0?'<div class="rp-item"><div class="rp-lbl">⏱️ Ganho/hora médio</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+(ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">💰 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+htmlImpostos(calcImpostosValores(slTotal,bfHist))+'</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">⚡ <strong style="color:#34d186">'+moeda(tb)+'</strong></span><span style="font-size:10px;color:var(--muted);margin:0 4px">·</span><span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span></div>';
+
+  document.getElementById('resumoPeriodo').innerHTML=
+    '<div class="rp-grid">'+
+    '<div class="rp-item"><div class="rp-lbl">\U0001F4B0 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">'+(pos?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">\U0001F4E4 Gastos (op.)</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
+    '<div class="rp-item"><div class="rp-lbl">\U0001F4C5 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
+    (gphHist>0?'<div class="rp-item"><div class="rp-lbl">\u23f1\ufe0f Lucro/hora</div><div class="rp-val" style="color:var(--amber)">'+moeda(gphHist)+'</div></div>':'')+
+    (ganhoKmHist>0&&histFiltro!=='dia'?'<div class="rp-item"><div class="rp-lbl">\U0001F4B0 Ganho/km</div><div class="rp-val" style="color:var(--green)">'+moeda(ganhoKmHist)+'</div></div>':'')+
+    htmlImpostos(calcImpostosValores(slTotal,bfHist))+
+    '</div>'+
+    (tc>0||tou>0?'<div style="font-size:10px;color:var(--muted);margin-bottom:8px">\U0001F4CC Pessoal (n\u00e3o incluso): '+(tc>0?'\U0001F354 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'\U0001F4B3 '+moeda(tou):'')+'</div>':'')+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+    '<span style="font-size:10px;color:var(--muted)">\U0001F5A4 <strong style="color:#fff">'+moeda(tu)+'</strong></span>'+
+    '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
+    '<span style="font-size:10px;color:var(--muted)">\u26a1 <strong style="color:#34d186">'+moeda(tb)+'</strong></span>'+
+    '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
+    '<span style="font-size:10px;color:var(--muted)">\U0001F698 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span>'+
+    '</div>';
+
   var html='';
-  chaves.slice().reverse().forEach(function(iso){ var r=DB[iso],sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[]; if(r.uber)parts.push('🖤 '+moeda(r.uber)); if(r.bolt)parts.push('⚡ '+moeda(r.bolt)); if(r.outroG)parts.push('🚘 '+moeda(r.outroG)); var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; var extra=''; if(horas>0)extra+=' · ⏱️ '+fmtHoras(horas); if(r.kms>0)extra+=' · 📍 '+r.kms+'km'; html+='<div class="hi" onclick="abrirModal(\''+iso+'\')"><div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'🏆':'⚠️')+'</div><div class="hi-inf"><div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div><div class="hi-g">Ganhos: '+moeda(g)+' · Energia: '+moeda(eT)+'</div>'+(parts.length||extra?'<div class="hi-pl">'+(parts.join(' · '))+extra+'</div>':'')+' </div><div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div><div class="hi-edit">✏️ editar</div></div></div>'; });
+  chaves.slice().reverse().forEach(function(iso){
+    var r=DB[iso]||{}; var sl2=saldo(r),pos2=sl2>=0,g=ganhos(r),eT=energiaGastos(r),parts=[];
+    if(r.uber)parts.push('\U0001F5A4 '+moeda(r.uber));
+    if(r.bolt)parts.push('\u26a1 '+moeda(r.bolt));
+    if(r.outroG)parts.push('\U0001F698 '+moeda(r.outroG));
+    var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
+    var extra='';
+    if(horas>0)extra+=' \u00b7 \u23f1\ufe0f '+fmtHoras(horas);
+    if(r.kms>0)extra+=' \u00b7 \U0001F4CD '+r.kms+'km';
+    html+='<div class="hi" onclick="abrirModal(\''+iso+'\')">'+
+      '<div class="hi-dot '+(pos2?'p':'n')+'">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+'</div>'+
+      '<div class="hi-inf">'+
+        '<div class="hi-dt">'+diaNome(iso)+', '+fmtData(iso)+'</div>'+
+        '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Energia: '+moeda(eT)+'</div>'+
+        (parts.length||extra?'<div class="hi-pl">'+parts.join(' \u00b7 ')+extra+'</div>':'')+
+      '</div>'+
+      '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div><div class="hi-edit">\u270f\ufe0f editar</div></div>'+
+    '</div>';
+  });
   document.getElementById('histList').innerHTML=html;
 }
 
+// ── Config ────────────────────────────────────────────────────────────
 function renderCfg(){
   document.getElementById('iAluguer').value=CFG.aluguel;
   document.getElementById('iPrecoKwh').value=CFG.precoKwh;
@@ -1200,64 +1383,101 @@ function renderCfg(){
   mostrarImpostosCfg();
 }
 function salvarCfg(){
-  var v=parseFloat(document.getElementById('iAluguer').value),k=parseFloat(document.getElementById('iPrecoKwh').value)||CFG.precoKwh;
-  if(!v||v<=0){ toast('Aluguer inválido!','er'); return; }
+  var v=pf(document.getElementById('iAluguer').value),k=pf(document.getElementById('iPrecoKwh').value)||CFG.precoKwh;
+  if(!v||v<=0){ toast('Aluguer inv\u00e1lido!','er'); return; }
   CFG.aluguel=v; CFG.precoKwh=k;
-  salvarLocal(); renderHeader(); toast('✅ Configuração guardada!','ok');
+  salvarLocal(); renderHeader(); toast('\u2705 Configura\u00e7\u00e3o guardada!','ok');
 }
 function salvarMetas(){
-  CFG.metaDia=parseFloat(document.getElementById('iMetaDia').value)||0;
-  CFG.metaSem=parseFloat(document.getElementById('iMetaSem').value)||0;
-  salvarLocal(); toast('✅ Metas guardadas!','ok'); renderKPIs();
+  CFG.metaDia=pf(document.getElementById('iMetaDia').value);
+  CFG.metaSem=pf(document.getElementById('iMetaSem').value);
+  salvarLocal(); toast('\u2705 Metas guardadas!','ok'); renderKPIs();
 }
 function salvarVeiculo(){
   CFG.veiculo.modelo=document.getElementById('iVeiculoModelo').value;
   CFG.veiculo.ano=document.getElementById('iVeiculoAno').value;
   CFG.veiculo.tipo=document.getElementById('tipo-eletrico').classList.contains('on-eletrico')?'eletrico':'combustao';
-  if(!isEletrico()){ var ce=document.getElementById('iConsEsp'); if(ce)CFG.veiculo.consumoEsperado=parseFloat(ce.value)||0; }
+  if(!isEletrico()){ var ce=document.getElementById('iConsEsp'); if(ce)CFG.veiculo.consumoEsperado=pf(ce.value); }
   salvarLocal(); renderEnergiaSection(); renderMEnergiaSection(); atualizarBadgeVeiculo();
   var kwhRow=document.getElementById('kwh-cfg-row'),kwhHint=document.getElementById('kwh-hint');
   if(kwhRow)kwhRow.style.display=isEletrico()?'':'none';
   if(kwhHint)kwhHint.style.display=isEletrico()?'':'none';
   document.getElementById('iVeiculoModelo').value=''; document.getElementById('iVeiculoAno').value='';
-  toast('✅ Veículo guardado!','ok');
+  toast('\u2705 Ve\u00edculo guardado!','ok');
 }
 function exportCSV(){
   var keys=Object.keys(DB).sort(); if(!keys.length){ toast('Sem dados!','er'); return; }
-  var csv='Data,Dia,Uber,Bolt,Particular,Total_Ganhos,Energia_Moeda,Energia_kWh,Litros,Combustivel,Energia_Total,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Total_Gastos,Saldo\n';
-  keys.forEach(function(iso){ var r=DB[iso],al=alDia(),g=ganhos(r),eT=energiaGastos(r),gas=eT+(r.comida||0)+(r.outroG2||0)+al,sl2=g-gas; csv+=fmtData(iso)+','+diaNome(iso)+','+(r.uber||0).toFixed(2)+','+(r.bolt||0).toFixed(2)+','+(r.outroG||0).toFixed(2)+','+g.toFixed(2)+','+(r.energia||0).toFixed(2)+','+(r.energiaKwh||0).toFixed(2)+','+(r.litros||0).toFixed(2)+','+(r.combustivel||0).toFixed(2)+','+eT.toFixed(2)+','+(r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+(r.horaInicio||'')+','+(r.horaFim||'')+','+(r.almoco?'1':'0')+','+al.toFixed(2)+','+gas.toFixed(2)+','+sl2.toFixed(2)+'\n'; });
+  var csv='Data,Dia,Uber,Bolt,Particular,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional\n';
+  keys.forEach(function(iso){
+    var r=DB[iso]||{},al=alDia(),g=ganhos(r),eT=energiaGastos(r),sl2=saldo(r),kEf=kwhEfetivo(r);
+    csv+=fmtData(iso)+','+diaNome(iso)+','+
+      (r.uber||0).toFixed(2)+','+(r.bolt||0).toFixed(2)+','+(r.outroG||0).toFixed(2)+','+g.toFixed(2)+','+
+      (r.energia||0).toFixed(2)+','+(r.energiaKwh||0).toFixed(2)+','+(r.litros||0).toFixed(2)+','+(r.combustivel||0).toFixed(2)+','+
+      eT.toFixed(2)+','+kEf.toFixed(2)+','+
+      (r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+
+      (r.horaInicio||'')+','+(r.horaFim||'')+','+(r.almoco?'1':'0')+','+
+      al.toFixed(2)+','+sl2.toFixed(2)+'\n';
+  });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url; a.download='financedrive_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  toast('📥 CSV exportado!','ok');
+  a.href=url; a.download='financedrive_v37_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('\U0001F4E5 CSV exportado!','ok');
 }
 function importCSV(e){
   var file=e.target.files[0]; if(!file)return;
   var reader=new FileReader();
   reader.onload=function(ev){
-    var lines=ev.target.result.split('\n'),count=0;
+    // parser robusto: trata v\u00edrgulas em valores e aspas
+    function parseCSVLine(line){
+      var result=[],cur='',inQ=false;
+      for(var i=0;i<line.length;i++){
+        var ch=line[i];
+        if(ch==='"'){ inQ=!inQ; }
+        else if(ch===','&&!inQ){ result.push(cur.trim().replace(/^"|"$/g,'')); cur=''; }
+        else { cur+=ch; }
+      }
+      result.push(cur.trim().replace(/^"|"$/g,''));
+      return result;
+    }
+    function pfc(v){ var n=parseFloat((v||'').replace(',','.')); return (isNaN(n)||n<0)?0:n; }
+    var lines=ev.target.result.split('\n'),count=0,errors=0;
     for(var i=1;i<lines.length;i++){
       var line=lines[i].trim(); if(!line)continue;
-      var cols=line.split(','); if(cols.length<9)continue;
+      var cols=parseCSVLine(line);
+      if(cols.length<6)continue;
       try{
         var dp=cols[0].split('/'); if(dp.length!==3)continue;
         var iso=dp[2]+'-'+pad(parseInt(dp[1]))+'-'+pad(parseInt(dp[0]));
         if(!/^\d{4}-\d{2}-\d{2}$/.test(iso))continue;
-        if(!DB[iso]){ DB[iso]={uber:parseFloat(cols[2])||0,bolt:parseFloat(cols[3])||0,outroG:parseFloat(cols[4])||0,energia:parseFloat(cols[6])||0,energiaKwh:parseFloat(cols[7])||0,litros:parseFloat(cols[8])||0,combustivel:parseFloat(cols[9])||0,comida:parseFloat(cols[11])||0,outroG2:parseFloat(cols[12])||0,kms:parseFloat(cols[13])||0,horaInicio:cols[14]||'',horaFim:cols[15]||''}; count++; }
-      } catch(err){}
+        if(!DB[iso]){
+          DB[iso]={
+            uber:pfc(cols[2]),bolt:pfc(cols[3]),outroG:pfc(cols[4]),
+            energia:pfc(cols[6]),energiaKwh:pfc(cols[7]),
+            litros:pfc(cols[8]),combustivel:pfc(cols[9]),
+            comida:pfc(cols[11])||pfc(cols[12]),
+            outroG2:pfc(cols[12])||pfc(cols[13]),
+            kms:pfc(cols[13])||pfc(cols[14]),
+            horaInicio:(cols[14]||cols[15]||'').trim(),
+            horaFim:(cols[15]||cols[16]||'').trim()
+          };
+          count++;
+        }
+      } catch(err){ errors++; }
     }
     salvarLocal(); document.getElementById('fileInput').value='';
-    toast(count>0?'✅ '+count+' dias importados!':'Nenhum dado novo',count>0?'ok':'er');
+    var msg=count>0?'\u2705 '+count+' dias importados!'+(errors>0?' ('+errors+' linhas ignoradas)'):'Nenhum dado novo'+(errors>0?' \u00b7 '+errors+' erros':'');
+    toast(msg,count>0?'ok':'er');
     if(count>0){ renderHist(); renderKPIs(); renderResumoDia(); }
   };
   reader.readAsText(file);
 }
 function registarDiaManual(){ var iso=document.getElementById('iDataManual').value; if(!iso){ toast('Escolhe uma data!','er'); return; } abrirModal(iso); }
-function limpar(){ if(confirm('Apagar TODOS os registos?')){ DB={}; try{ localStorage.removeItem('tvde_v3'); }catch(e){} toast('🗑️ Apagado!','ok'); renderHoje(); } }
+function limpar(){ if(confirm('Apagar TODOS os registos?')){ clearData(); toast('\U0001F5D1\ufe0f Apagado!','ok'); renderHoje(); } }
 function mostrarOnboarding(){ document.getElementById('onboardOverlay').classList.add('show'); }
-function fecharOnboarding(irConfig){ document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem('fd_version_seen',APP_VERSION); if(irConfig)navTo('cfg'); }
+function fecharOnboarding(irConfig){ document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
 function mostrarNovidades(){ document.getElementById('novidadesOverlay').classList.add('show'); }
-function fecharNovidades(){ document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem('fd_version_seen',APP_VERSION); }
+function fecharNovidades(){ document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
 
+// ── Event listeners ───────────────────────────────────────────────────
 document.getElementById('btnGuardar').addEventListener('click',guardar);
 document.getElementById('btnCfg').addEventListener('click',salvarCfg);
 document.getElementById('btnMetas').addEventListener('click',salvarMetas);
@@ -1293,7 +1513,6 @@ document.getElementById('btnOnboard').addEventListener('click',function(){ fecha
 document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
 
 renderHoje();
-
 </script>
 </body>
 </html>
