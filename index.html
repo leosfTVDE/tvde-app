@@ -140,6 +140,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .bar{border-radius:3px 3px 0 0;flex:1;transition:height .35s ease}
 .bar.g{background:var(--cyan);opacity:.9}
 .bar.gs{background:var(--red);opacity:.9}
+.bar.gd{background:var(--orange);opacity:.9}
 .bc-lbl{font-size:8px;color:var(--muted);margin-top:3px;text-align:center}
 .hi{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;border-radius:8px;margin:0 -4px;padding-left:4px;padding-right:4px}
 .hi:last-child{border-bottom:none}
@@ -371,6 +372,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div style="display:flex;gap:10px;margin-top:7px">
           <span style="font-size:10px;color:var(--cyan)">&#9632; Ganhos</span>
           <span style="font-size:10px;color:var(--red)">&#9632; Gastos (energia+aluguer)</span>
+          <span style="font-size:10px;color:var(--orange)">&#9632; Gasto Dinheiro (bolso)</span>
         </div>
       </div>
       <div class="stit" id="perfTit">&#9889; Performance semanal</div>
@@ -792,7 +794,11 @@ function calcEnergia(eE,eK){ return (eE||0)+kwhParaEuro(eK||0); }
 // kWh autom\u00e1tico: se s\u00f3 h\u00e1 valor em \u20ac e nenhum kWh direto, calcula kWh = \u20ac / pre\u00e7o
 function kwhEfetivo(r){
   if(!r)return 0;
-  return r.energiaKwh||0;
+  // kWh direto (cartao frota) tem prioridade
+  if(r.energiaKwh&&r.energiaKwh>0)return r.energiaKwh;
+  // so energia em euros -> estipula kWh pelo preco configurado (so para grafico)
+  if(r.energia&&r.energia>0&&CFG.precoKwh>0)return r.energia/CFG.precoKwh;
+  return 0;
 }
 // Frota (kWh cartão TVDE): desconta saldo + entra fiscal
 function energiaFrota(r){
@@ -1140,10 +1146,10 @@ function renderSemana(){
     '<div class="plat-c"><div class="plat-ic" style="color:#34d186">\u26a1</div><div class="plat-nm">Bolt</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+
     '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
   // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
-  var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaGastos(r)+alDia()}; });
-  var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs); }).concat([1]));
+  var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0,gd:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaFrota(r)+alDia(),gd:energiaDinheiro(r)+(r.comida||0)+(r.outroG2||0)}; });
+  var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs,v.gd); }).concat([1]));
   var bHTML='';
-  ds.forEach(function(d,i){ var v=vals[i],gh=Math.round((v.g/mx)*88),gsh=Math.round((v.gs/mx)*88); bHTML+='<div class="bc-col"><div class="bc-grp"><div class="bar g" style="height:'+gh+'px"></div><div class="bar gs" style="height:'+gsh+'px"></div></div><div class="bc-lbl">'+diaNome(d)+'</div></div>'; });
+  ds.forEach(function(d,i){ var v=vals[i],gh=Math.round((v.g/mx)*88),gsh=Math.round((v.gs/mx)*88),gdh=Math.round((v.gd/mx)*88); bHTML+='<div class="bc-col"><div class="bc-grp"><div class="bar g" style="height:'+gh+'px"></div><div class="bar gs" style="height:'+gsh+'px"></div>'+(v.gd>0?'<div class="bar gd" style="height:'+gdh+'px"></div>':'')+'</div><div class="bc-lbl">'+diaNome(d)+'</div></div>'; });
   document.getElementById('barChart').innerHTML=bHTML;
 
   var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
