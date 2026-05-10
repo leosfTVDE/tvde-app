@@ -1147,9 +1147,24 @@ function renderSemana(){
     '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Particular</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
   // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
   var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0,gd:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaFrota(r)+alDia(),gd:energiaDinheiro(r)+(r.comida||0)+(r.outroG2||0)}; });
-  var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs,v.gd); }).concat([1]));
+  var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs+v.gd); }).concat([1]));
   var bHTML='';
-  ds.forEach(function(d,i){ var v=vals[i],gh=Math.round((v.g/mx)*88),gsh=Math.round((v.gs/mx)*88),gdh=Math.round((v.gd/mx)*88); bHTML+='<div class="bc-col"><div class="bc-grp"><div class="bar g" style="height:'+gh+'px"></div><div class="bar gs" style="height:'+gsh+'px"></div>'+(v.gd>0?'<div class="bar gd" style="height:'+gdh+'px"></div>':'')+'</div><div class="bc-lbl">'+diaNome(d)+'</div></div>'; });
+  ds.forEach(function(d,i){
+    var v=vals[i];
+    var gh=Math.round((v.g/mx)*88);
+    var gsh=Math.round((v.gs/mx)*88);
+    var gdh=v.gd>0?Math.round((v.gd/mx)*88):0;
+    bHTML+='<div class="bc-col">'+
+      '<div class="bc-grp">'+
+        '<div class="bar g" style="height:'+gh+'px"></div>'+
+        '<div style="display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:0">'+
+          (gdh>0?'<div class="bar gd" style="height:'+gdh+'px;border-radius:3px 3px 0 0"></div>':'')+
+          '<div class="bar gs" style="height:'+gsh+'px;'+(gdh>0?'border-radius:0':'border-radius:3px 3px 0 0')+'"></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="bc-lbl">'+diaNome(d)+'</div>'+
+    '</div>';
+  });
   document.getElementById('barChart').innerHTML=bHTML;
 
   var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
