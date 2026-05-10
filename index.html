@@ -1154,12 +1154,13 @@ function renderSemana(){
     var gh=Math.round((v.g/mx)*88);
     var gsh=Math.round((v.gs/mx)*88);
     var gdh=v.gd>0?Math.round((v.gd/mx)*88):0;
+    var totalH=gsh+gdh;
     bHTML+='<div class="bc-col">'+
       '<div class="bc-grp">'+
         '<div class="bar g" style="height:'+gh+'px"></div>'+
-        '<div style="display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:0">'+
-          (gdh>0?'<div class="bar gd" style="height:'+gdh+'px;border-radius:3px 3px 0 0"></div>':'')+
-          '<div class="bar gs" style="height:'+gsh+'px;'+(gdh>0?'border-radius:0':'border-radius:3px 3px 0 0')+'"></div>'+
+        '<div style="position:relative;flex:1;height:'+totalH+'px;align-self:flex-end">'+
+          '<div style="position:absolute;bottom:0;left:0;right:0;height:'+totalH+'px;background:var(--red);opacity:.9;border-radius:'+(gdh>0?'0':'3px 3px 0 0')+'"></div>'+
+          (gdh>0?'<div style="position:absolute;bottom:'+(gsh)+'px;left:0;right:0;height:'+gdh+'px;background:var(--orange);opacity:.9;border-radius:3px 3px 0 0"></div>':'')+
         '</div>'+
       '</div>'+
       '<div class="bc-lbl">'+diaNome(d)+'</div>'+
