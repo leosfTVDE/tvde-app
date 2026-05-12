@@ -1300,7 +1300,7 @@ function renderAnaliseConsumo(chaves){
   var titulo=isEletrico()?'\u26a1 Consumo de energia por dia':'\u26fd Combust\u00edvel por dia';
   var cor=isEletrico()?'var(--violet)':'var(--amber)';
   // usa kWh efetivo (auto se s\u00f3 valor em \u20ac)
-  var dados=chaves.map(function(iso){ var r=DB[iso]||{}; return{dia:diaNome(iso),val:isEletrico()?kwhEfetivo(r):(r.litros||0),custo:energiaGastos(r)}; });
+  var dados=chaves.map(function(iso){ var r=DB[iso]||{}; return{dia:diaNome(iso),val:isEletrico()?kwhEfetivo(r):(r.litros||0),custo:isEletrico()?kwhParaEuro(kwhEfetivo(r)):(r.combustivel||0)}; });
   var maxVal=Math.max.apply(null,dados.map(function(d){ return d.val; }).concat([0.1]));
   var totalVal=dados.reduce(function(a,d){ return a+d.val; },0);
   var totalCusto=dados.reduce(function(a,d){ return a+d.custo; },0);
