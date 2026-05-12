@@ -1178,9 +1178,13 @@ function renderSemana(){
 
   var perfHTML='';
   if(isEletrico()){
-    var totalKwh=reais.reduce(function(a,d){ return a+kwhEfetivo(DB[d]||{}); },0);
-    var efic=totalKms>0&&totalKwh>0?(totalKwh/totalKms*100):0;
-    var custoKm=totalKms>0?te/totalKms:0;
+    // kWh/100km: só dias com kms > 0 para não distorcer o rácio
+    var totalKwh=reais.reduce(function(a,d){ var r=DB[d]||{}; return a+(r.kms>0?kwhEfetivo(r):0); },0);
+    var totalKmsComKwh=reais.reduce(function(a,d){ var r=DB[d]||{}; return a+(r.kms>0&&kwhEfetivo(r)>0?r.kms:0); },0);
+    var efic=totalKmsComKwh>0&&totalKwh>0?(totalKwh/totalKmsComKwh*100):0;
+    // custo/km = custo total energia (frota kWh + dinheiro €) / kms
+    var totalEnergiaReal=te+reais.reduce(function(a,d){ return a+energiaDinheiro(DB[d]||{}); },0);
+    var custoKm=totalKms>0?totalEnergiaReal/totalKms:0;
     var ganhoKm=totalKms>0?tg/totalKms:0;
     perfHTML+=perf('\u26a1','kWh/100km',efic>0?efic.toFixed(1)+' kWh':'-','color:var(--violet)')+
                perf('📍','Custo/km',custoKm>0?moeda(custoKm):'-','color:var(--cyan)')+
