@@ -273,6 +273,14 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-L8KNNFQ1T0');
+
+  function trackEvent(nome, parametros){
+    try{
+      if(typeof gtag === 'function'){
+        gtag('event', nome, parametros || {});
+      }
+    }catch(e){}
+  }
 </script>
 </head>
 <body>
@@ -698,6 +706,7 @@ function sim(){ return PAISES[CFG.pais||'PT'].simbolo; }
 function plat2(){ return CFG.pais==='BR'?'99':'Bolt'; }
 function selecionarPais(p){
   CFG.pais=p; CFG.moeda=PAISES[p].moeda; salvarLocal();
+  trackEvent('selecionar_pais',{pais:p, moeda:CFG.moeda});
   ['PT','BR'].forEach(function(x){ document.getElementById('pais-'+x).classList.remove('on'); });
   document.getElementById('pais-'+p).classList.add('on');
   var me=document.getElementById('moedaAtual'); if(me)me.textContent=PAISES[p].nome;
@@ -728,6 +737,7 @@ function atualizarPrefixos(){
 function isEletrico(){ return CFG.veiculo.tipo==='eletrico'; }
 function selecionarTipo(t){
   CFG.veiculo.tipo=t;
+  trackEvent('selecionar_tipo_veiculo',{tipo:t});
   document.getElementById('tipo-eletrico').className='tipo-btn'+(t==='eletrico'?' on-eletrico':'');
   document.getElementById('tipo-combustao').className='tipo-btn'+(t==='combustao'?' on-combustao':'');
   renderVeiculoExtraCfg(); renderEnergiaSection(); renderMEnergiaSection();
@@ -911,6 +921,7 @@ function htmlImpostos(imp){
 }
 function toggleImpostos(){
   CFG.impostos.ativo=!CFG.impostos.ativo; salvarLocal();
+  trackEvent('toggle_impostos',{ativo:CFG.impostos.ativo, pais:CFG.pais});
   var tog=document.getElementById('toggleImp'); var det=document.getElementById('impostosDetalhes');
   if(tog)tog.className='toggle'+(CFG.impostos.ativo?' on':'');
   if(det)det.style.display=CFG.impostos.ativo?'':'none';
@@ -989,7 +1000,7 @@ content.addEventListener('touchend',function(){ if(!ptrActive)return; ptrActive=
 
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
 var pages=['hoje','semana','hist','cfg'];
-function navTo(p){ pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
+function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
@@ -1135,9 +1146,21 @@ function guardar(){
     var comb=pf(document.getElementById('iCombustivel')?document.getElementById('iCombustivel').value:0);
     rec.litros=lit; rec.combustivel=comb;
   }
-  if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ toast('Insere pelo menos um valor!','er'); return; }
+  if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
   DB[hoje()]=rec;
-  salvarLocal(); limparCampos(); renderKPIs(); renderResumoDia(); renderHeader();
+  salvarLocal();
+  trackEvent('salvar_dia',{
+    pais:CFG.pais,
+    moeda:CFG.moeda,
+    veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:'',
+    tem_horas:!!(rec.horaInicio&&rec.horaFim),
+    tem_kms:rec.kms>0,
+    tem_particular:rec.outroG>0,
+    impostos_ativos:!!(CFG.impostos&&CFG.impostos.ativo),
+    total_ganhos:Math.round(ganhos(rec)),
+    saldo_operacional:Math.round(saldo(rec))
+  });
+  limparCampos(); renderKPIs(); renderResumoDia(); renderHeader();
   toast('\u2705 Dia guardado!','ok');
   if(document.activeElement)document.activeElement.blur();
 }
@@ -1260,6 +1283,7 @@ function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">
 
 // ── Modal editar ──────────────────────────────────────────────────────
 function abrirModal(iso){
+  trackEvent('abrir_edicao_dia',{origem:'historico', tem_registo:!!DB[iso]});
   editingISO=iso; var r=DB[iso]||{};
   document.getElementById('modalDate').textContent=DIAS_FULL[new Date(iso+'T12:00:00').getDay()]+', '+fmtData(iso);
   document.getElementById('mUber').value=r.uber||''; document.getElementById('mBolt').value=r.bolt||''; document.getElementById('mOutroG').value=r.outroG||'';
@@ -1293,19 +1317,28 @@ function salvarModal(){
     var ml=document.getElementById('mLitros'),mc=document.getElementById('mCombustivel');
     rec.litros=pf(ml?ml.value:0); rec.combustivel=pf(mc?mc.value:0);
   }
-  if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ toast('Insere pelo menos um valor!','er'); return; }
-  DB[editingISO]=rec; salvarLocal(); fecharModal(); renderHist();
+  if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
+  DB[editingISO]=rec; salvarLocal();
+  trackEvent('salvar_edicao_dia',{
+    pais:CFG.pais,
+    veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:'',
+    tem_horas:!!(rec.horaInicio&&rec.horaFim),
+    tem_kms:rec.kms>0,
+    total_ganhos:Math.round(ganhos(rec)),
+    saldo_operacional:Math.round(saldo(rec))
+  });
+  fecharModal(); renderHist();
   if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); }
   toast('\u2705 Dia atualizado!','ok');
 }
 function apagarDiaModal(){
   if(!editingISO)return;
-  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑\ufe0f Dia apagado!','ok'); }
+  if(confirm('Apagar o registo de '+fmtData(editingISO)+'?')){ trackEvent('apagar_dia',{origem:'modal'}); delete DB[editingISO]; salvarLocal(); fecharModal(); renderHist(); if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑\ufe0f Dia apagado!','ok'); }
 }
 
 // ── Hist\u00f3rico ──────────────────────────────────────────────────────────
 var histFiltro='dia',histOffset=0;
-function setFiltro(f){ histFiltro=f; histOffset=0; ['dia','semana','mes','ano'].forEach(function(x){ document.getElementById('fb-'+x).classList.remove('on'); }); document.getElementById('fb-'+f).classList.add('on'); renderHist(); }
+function setFiltro(f){ trackEvent('filtrar_historico',{filtro:f}); histFiltro=f; histOffset=0; ['dia','semana','mes','ano'].forEach(function(x){ document.getElementById('fb-'+x).classList.remove('on'); }); document.getElementById('fb-'+f).classList.add('on'); renderHist(); }
 function getChavesPeriodo(){
   var now=new Date();
   if(histFiltro==='dia'){ var d=new Date(now); d.setDate(d.getDate()+histOffset); var iso=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); return{chaves:DB[iso]?[iso]:[],label:diaNome(iso)+', '+fmtData(iso),isoRef:iso}; }
@@ -1434,19 +1467,19 @@ function salvarCfg(){
   var v=pf(document.getElementById('iAluguer').value),k=pf(document.getElementById('iPrecoKwh').value)||CFG.precoKwh;
   if(!v||v<=0){ toast('Aluguer inv\u00e1lido!','er'); return; }
   CFG.aluguel=v; CFG.precoKwh=k;
-  salvarLocal(); renderHeader(); toast('\u2705 Configura\u00e7\u00e3o guardada!','ok');
+  salvarLocal(); trackEvent('salvar_config',{pais:CFG.pais, moeda:CFG.moeda, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''}); renderHeader(); toast('\u2705 Configura\u00e7\u00e3o guardada!','ok');
 }
 function salvarMetas(){
   CFG.metaDia=pf(document.getElementById('iMetaDia').value);
   CFG.metaSem=pf(document.getElementById('iMetaSem').value);
-  salvarLocal(); toast('\u2705 Metas guardadas!','ok'); renderKPIs();
+  salvarLocal(); trackEvent('salvar_metas',{tem_meta_dia:CFG.metaDia>0, tem_meta_semana:CFG.metaSem>0}); toast('\u2705 Metas guardadas!','ok'); renderKPIs();
 }
 function salvarVeiculo(){
   CFG.veiculo.modelo=document.getElementById('iVeiculoModelo').value;
   CFG.veiculo.ano=document.getElementById('iVeiculoAno').value;
   CFG.veiculo.tipo=document.getElementById('tipo-eletrico').classList.contains('on-eletrico')?'eletrico':'combustao';
   if(!isEletrico()){ var ce=document.getElementById('iConsEsp'); if(ce)CFG.veiculo.consumoEsperado=pf(ce.value); }
-  salvarLocal(); renderEnergiaSection(); renderMEnergiaSection(); atualizarBadgeVeiculo();
+  salvarLocal(); trackEvent('salvar_veiculo',{tipo:CFG.veiculo.tipo||'', tem_modelo:!!CFG.veiculo.modelo, tem_ano:!!CFG.veiculo.ano}); renderEnergiaSection(); renderMEnergiaSection(); atualizarBadgeVeiculo();
   var kwhRow=document.getElementById('kwh-cfg-row'),kwhHint=document.getElementById('kwh-hint');
   if(kwhRow)kwhRow.style.display=isEletrico()?'':'none';
   if(kwhHint)kwhHint.style.display=isEletrico()?'':'none';
@@ -1454,7 +1487,7 @@ function salvarVeiculo(){
   toast('\u2705 Ve\u00edculo guardado!','ok');
 }
 function exportCSV(){
-  var keys=Object.keys(DB).sort(); if(!keys.length){ toast('Sem dados!','er'); return; }
+  var keys=Object.keys(DB).sort(); if(!keys.length){ trackEvent('erro_exportar_csv',{motivo:'sem_dados'}); toast('Sem dados!','er'); return; }
   var csv='Data,Dia,Uber,'+plat2()+',Particular,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional\n';
   keys.forEach(function(iso){
     var r=DB[iso]||{},al=alDia(),g=ganhos(r),eT=energiaGastos(r),sl2=saldo(r),kEf=kwhEfetivo(r);
@@ -1468,6 +1501,7 @@ function exportCSV(){
   });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_v37_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  trackEvent('exportar_csv',{total_dias:keys.length, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
   toast('📥 CSV exportado!','ok');
 }
 function importCSV(e){
@@ -1513,17 +1547,18 @@ function importCSV(e){
     }
     salvarLocal(); document.getElementById('fileInput').value='';
     var msg=count>0?'✅ '+count+' dias importados!'+(errors>0?' ('+errors+' ignoradas)':''):'Sem dados novos'+(errors>0?' · '+errors+' erros':'');
+    trackEvent('importar_csv',{dias_importados:count, erros:errors, resultado:count>0?'ok':'sem_dados'});
     toast(msg,count>0?'ok':'er');
     if(count>0){ renderHist(); renderKPIs(); renderResumoDia(); }
   };
   reader.readAsText(file);
 }
-function registarDiaManual(){ var iso=document.getElementById('iDataManual').value; if(!iso){ toast('Escolhe uma data!','er'); return; } abrirModal(iso); }
-function limpar(){ if(confirm('Apagar TODOS os registos?')){ clearData(); toast('🗑\ufe0f Apagado!','ok'); renderHoje(); } }
-function mostrarOnboarding(){ document.getElementById('onboardOverlay').classList.add('show'); }
-function fecharOnboarding(irConfig){ document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
-function mostrarNovidades(){ document.getElementById('novidadesOverlay').classList.add('show'); }
-function fecharNovidades(){ document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
+function registarDiaManual(){ var iso=document.getElementById('iDataManual').value; if(!iso){ trackEvent('erro_registar_dia_manual',{motivo:'sem_data'}); toast('Escolhe uma data!','er'); return; } trackEvent('registar_dia_manual',{tem_registo:!!DB[iso]}); abrirModal(iso); }
+function limpar(){ if(confirm('Apagar TODOS os registos?')){ trackEvent('apagar_todos_dados',{total_dias:Object.keys(DB).length}); clearData(); toast('🗑\ufe0f Apagado!','ok'); renderHoje(); } }
+function mostrarOnboarding(){ trackEvent('mostrar_onboarding'); document.getElementById('onboardOverlay').classList.add('show'); }
+function fecharOnboarding(irConfig){ trackEvent('fechar_onboarding',{ir_config:!!irConfig}); document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
+function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.add('show'); }
+function fecharNovidades(){ trackEvent('fechar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
 
 // ── Event listeners ───────────────────────────────────────────────────
 document.getElementById('btnGuardar').addEventListener('click',guardar);
@@ -1534,7 +1569,7 @@ document.getElementById('btnExport').addEventListener('click',exportCSV);
 document.getElementById('btnImport').addEventListener('click',function(){ document.getElementById('fileInput').click(); });
 document.getElementById('fileInput').addEventListener('change',importCSV);
 document.getElementById('btnLimpar').addEventListener('click',limpar);
-document.getElementById('btnFeedback').addEventListener('click',function(){ window.open('https://docs.google.com/forms/d/e/1FAIpQLScSafrKKfjjAmvoqdY3x4E59f-6rukhz5R06ZddgfFnzZKXWg/viewform','_blank'); });
+document.getElementById('btnFeedback').addEventListener('click',function(){ trackEvent('clicar_feedback',{origem:'config'}); window.open('https://docs.google.com/forms/d/e/1FAIpQLScSafrKKfjjAmvoqdY3x4E59f-6rukhz5R06ZddgfFnzZKXWg/viewform','_blank'); });
 document.getElementById('btnRegistarDia').addEventListener('click',registarDiaManual);
 document.getElementById('nb-hoje').addEventListener('click',function(){ navTo('hoje'); });
 document.getElementById('nb-semana').addEventListener('click',function(){ navTo('semana'); });
@@ -1560,6 +1595,7 @@ document.getElementById('novidadesOverlay').addEventListener('click',function(e)
 document.getElementById('btnOnboard').addEventListener('click',function(){ fecharOnboarding(true); });
 document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
 
+trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
 </script>
 </body>
