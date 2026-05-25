@@ -835,6 +835,11 @@ function energiaDinheiro(r){
   if(!r||!isEletrico())return 0;
   return r.energia||0;
 }
+// Dinheiro que saiu do bolso e NÃO reduz impostos, mas reduz o lucro real/meta
+function gastoBolsoReal(r){
+  if(!r)return 0;
+  return energiaDinheiro(r);
+}
 function energiaGastos(r){ return energiaFrota(r); }
 var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 var DIAS_FULL=['Domingo','Segunda','Ter\u00e7a','Quarta','Quinta','Sexta','S\u00e1bado'];
@@ -855,8 +860,9 @@ function baseFiscal(r){
   return Math.max(0, saldo(r)-(r.outroG||0));
 }
 function saldoReal(r){
+  if(!r)return 0;
   var imp=calcImpostos(r);
-  return imp?imp.real:saldo(r);
+  return imp?imp.real:(saldo(r)-gastoBolsoReal(r));
 }
 function segunda(iso){ var d=new Date(iso+'T12:00:00'),wd=d.getDay(),diff=wd===0?-6:1-wd; d.setDate(d.getDate()+diff); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function diasSemana(seg){ var arr=[],d=new Date(seg+'T12:00:00'); for(var i=0;i<7;i++){ arr.push(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())); d.setDate(d.getDate()+1); } return arr; }
@@ -894,7 +900,8 @@ function calcImpostos(r){
   var iva=bf*0.06;
   var total=ss+irs+iva;
   var sl=saldo(r);
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total,taxaIRS:taxa,base:bf,saldo:sl};
+  var bolso=gastoBolsoReal(r);
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-bolso,taxaIRS:taxa,base:bf,saldo:sl,bolso:bolso};
 }
 // calcImpostosValores: para semana/hist\u00f3rico (sl=saldo acumulado, bf=base fiscal acumulada)
 function calcImpostosValores(sl,bf){
@@ -915,6 +922,7 @@ function htmlImpostos(imp){
     '<div class="impostos-row"><span class="impostos-lbl">SS (15%)</span><span class="impostos-val">-'+moeda(imp.ss)+'</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">IRS ('+imp.taxaIRS.toFixed(1)+'%'+(CFG.impostos.irsManual?'':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>'+
     '<div class="impostos-row"><span class="impostos-lbl">IVA (6%)</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>'+
+    ((imp.bolso&&imp.bolso>0)?'<div class="impostos-row"><span class="impostos-lbl">Energia bolso</span><span class="impostos-val">-'+moeda(imp.bolso)+'</span></div>':'')+
     '<div class="impostos-total"><span class="impostos-total-lbl">Saldo real</span><span class="impostos-total-val">'+moeda(imp.real)+'</span></div>'+
     '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' \u2192 Escal\u00e3o IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'.\u00a0Estimativa \u2014 consulta o teu contabilista.</div>'+
   '</div>';
@@ -1056,7 +1064,7 @@ function renderResumoDia(){
   var h=hoje(),r=DB[h]||{},g=ganhos(r),eT=energiaGastos(r),sl=saldo(r),al=alDia(),pos=sl>=0;
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var imp=calcImpostos(r);
-  var lucroRef=imp?imp.real:sl;
+  var lucroRef=saldoReal(r);
   var gph=horas&&horas>0?lucroRef/horas:0;
   var kms=r.kms||0;
   var eK=kwhEfetivo(r);
@@ -1088,6 +1096,7 @@ function renderResumoDia(){
     else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
   }
   html+='<div class="rl tot"><span class="lb">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
+  if(!imp&&eDin>0)html+=rl('💸 Saldo real após energia bolso',moeda(saldoReal(r)),'color:var(--green)');
   if(imp)html+=htmlImpostos(imp);
   document.getElementById('resumoDia').innerHTML=html;
 }
@@ -1149,7 +1158,7 @@ function guardar(){
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
   DB[hoje()]=rec;
   salvarLocal();
-  trackEvent('salvar_dia',{
+  var dadosEventoDia={
     pais:CFG.pais,
     moeda:CFG.moeda,
     veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:'',
@@ -1158,8 +1167,13 @@ function guardar(){
     tem_particular:rec.outroG>0,
     impostos_ativos:!!(CFG.impostos&&CFG.impostos.ativo),
     total_ganhos:Math.round(ganhos(rec)),
-    saldo_operacional:Math.round(saldo(rec))
-  });
+    energia_frota:Math.round(energiaFrota(rec)),
+    energia_bolso:Math.round(energiaDinheiro(rec)),
+    saldo_operacional:Math.round(saldo(rec)),
+    saldo_real:Math.round(saldoReal(rec))
+  };
+  trackEvent('salvar_dia',dadosEventoDia);
+  trackEvent('registrar_dia',dadosEventoDia);
   limparCampos(); renderKPIs(); renderResumoDia(); renderHeader();
   toast('\u2705 Dia guardado!','ok');
   if(document.activeElement)document.activeElement.blur();
@@ -1172,7 +1186,7 @@ function renderSemana(){
   var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
   ds.forEach(function(d){
     var r=DB[d]||{},isTod=d===h,isFut=d>h;
-    var slW=DB[d]?(CFG.impostos&&CFG.impostos.ativo?saldoReal(DB[d]):saldo(DB[d])):null;
+    var slW=DB[d]?saldoReal(DB[d]):null;
     var cls=isFut?'ft':((DB[d]?'hd':'')+(isTod?' td':''));
     wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(DB[d]?'<div class="ds '+(slW>=0?'p':'n')+'">'+(slW>=0?'+':'')+slW.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(DB[d]?'h':'e')+'"></div></div>';
   });
@@ -1253,7 +1267,7 @@ function renderSemana(){
   var impSemHtml=htmlImpostos(calcImpostosValores(sl2,bfSem));
 
   var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{}); },0);
-  var slSemanalMeta=CFG.impostos&&CFG.impostos.ativo?reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{}); },0):slSemanal;
+  var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{}); },0);
   renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,CFG.metaSem,'📌 Saldo acumulado dos dias trabalhados (aluguer proporcional por dia).');
 
   var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
@@ -1325,7 +1339,10 @@ function salvarModal(){
     tem_horas:!!(rec.horaInicio&&rec.horaFim),
     tem_kms:rec.kms>0,
     total_ganhos:Math.round(ganhos(rec)),
-    saldo_operacional:Math.round(saldo(rec))
+    energia_frota:Math.round(energiaFrota(rec)),
+    energia_bolso:Math.round(energiaDinheiro(rec)),
+    saldo_operacional:Math.round(saldo(rec)),
+    saldo_real:Math.round(saldoReal(rec))
   });
   fecharModal(); renderHist();
   if(editingISO===hoje()){ renderKPIs(); renderResumoDia(); }
@@ -1488,7 +1505,7 @@ function salvarVeiculo(){
 }
 function exportCSV(){
   var keys=Object.keys(DB).sort(); if(!keys.length){ trackEvent('erro_exportar_csv',{motivo:'sem_dados'}); toast('Sem dados!','er'); return; }
-  var csv='Data,Dia,Uber,'+plat2()+',Particular,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional\n';
+  var csv='Data,Dia,Uber,'+plat2()+',Particular,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional,Saldo_Real\n';
   keys.forEach(function(iso){
     var r=DB[iso]||{},al=alDia(),g=ganhos(r),eT=energiaGastos(r),sl2=saldo(r),kEf=kwhEfetivo(r);
     csv+=fmtData(iso)+','+diaNome(iso)+','+
@@ -1497,7 +1514,7 @@ function exportCSV(){
       eT.toFixed(2)+','+kEf.toFixed(2)+','+
       (r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+
       (r.horaInicio||'')+','+(r.horaFim||'')+','+(r.almoco?'1':'0')+','+
-      al.toFixed(2)+','+sl2.toFixed(2)+'\n';
+      al.toFixed(2)+','+sl2.toFixed(2)+','+saldoReal(r).toFixed(2)+'\n';
   });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_v37_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
