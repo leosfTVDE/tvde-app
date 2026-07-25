@@ -598,7 +598,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.1 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.2 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -661,7 +661,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">&#128640;</div>
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.8.1</div>
+      <div class="nov-versao">Finance Drive v3.8.2</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
@@ -718,7 +718,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.1';
+var APP_VERSION='3.8.2';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -726,7 +726,7 @@ function loadData(){ try{var s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.pa
 function clearData(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} DB={}; }
 function salvarLocal(){ saveData(); }
 // ─────────────────────────────────────────────────────────────────────
-var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
+var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],folgasPorSemana:{},idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
 
 (function(){
   loadData();
@@ -735,6 +735,7 @@ var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem
   if(!CFG.metaDia)CFG.metaDia=0;
   if(!CFG.metaSem)CFG.metaSem=0;
   if(!Array.isArray(CFG.folgasSemana))CFG.folgasSemana=[];
+  if(!CFG.folgasPorSemana||typeof CFG.folgasPorSemana!=='object')CFG.folgasPorSemana={};
   if(!CFG.veiculo)CFG.veiculo={modelo:'',ano:'',tipo:'eletrico'};
   if(!CFG.idioma)CFG.idioma='PT';
   if(!CFG.pais)CFG.pais='PT';
@@ -743,38 +744,86 @@ var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem
   if(typeof CFG.impostos.usarIRS==='undefined')CFG.impostos.usarIRS=true;
   if(typeof CFG.impostos.usarIVA==='undefined')CFG.impostos.usarIVA=true;
   if(CFG.pais==='BR')CFG.moeda='BRL'; else CFG.moeda='EUR';
+  migrarFolgasPorSemana();
+  salvarLocal();
   var primeiraVez=!localStorage.getItem(VER_KEY);
   if(primeiraVez){ setTimeout(function(){ mostrarOnboarding(); },600); }
   else { var versaoVista=localStorage.getItem(VER_KEY); if(versaoVista!==APP_VERSION){ setTimeout(function(){ mostrarNovidades(); },800); } }
 })();
 
-function diasTrabalhoMeta(){
-  var f=Array.isArray(CFG.folgasSemana)?CFG.folgasSemana:[];
-  return Math.max(1,7-f.length);
+function normalizarListaFolgas(lista){
+  if(!Array.isArray(lista))return [];
+  return lista.map(function(d){return Number(d);})
+    .filter(function(d){return Number.isInteger(d)&&d>=0&&d<=6;})
+    .filter(function(d,i,arr){return arr.indexOf(d)===i;})
+    .sort(function(a,b){return a-b;});
 }
-function metaDiariaEfetiva(){
-  if(CFG.metaSem&&CFG.metaSem>0)return CFG.metaSem/diasTrabalhoMeta();
+function chaveSemanaISO(iso){ return segunda(iso||hoje()); }
+function folgasDaSemana(iso){
+  var chave=chaveSemanaISO(iso);
+  if(!CFG.folgasPorSemana||typeof CFG.folgasPorSemana!=='object')CFG.folgasPorSemana={};
+  return normalizarListaFolgas(CFG.folgasPorSemana[chave]||[]);
+}
+function guardarFolgasDaSemana(iso,lista){
+  var chave=chaveSemanaISO(iso);
+  if(!CFG.folgasPorSemana||typeof CFG.folgasPorSemana!=='object')CFG.folgasPorSemana={};
+  var norm=normalizarListaFolgas(lista);
+  if(norm.length)CFG.folgasPorSemana[chave]=norm;
+  else delete CFG.folgasPorSemana[chave];
+  if(chave===chaveSemanaISO(hoje()))CFG.folgasSemana=norm.slice();
+  return norm;
+}
+function migrarFolgasPorSemana(){
+  if(!CFG.folgasPorSemana||typeof CFG.folgasPorSemana!=='object')CFG.folgasPorSemana={};
+  var atual=chaveSemanaISO(hoje());
+  if(!Array.isArray(CFG.folgasPorSemana[atual])){
+    var legado=normalizarListaFolgas(CFG.folgasSemana);
+    if(legado.length)CFG.folgasPorSemana[atual]=legado;
+  }
+  var semanas={};
+  Object.keys(DB).forEach(function(iso){
+    var chave=chaveSemanaISO(iso);
+    if(chave<atual){
+      if(!semanas[chave])semanas[chave]=[];
+      semanas[chave].push(diaSemanaISO(iso));
+    }
+  });
+  Object.keys(semanas).forEach(function(chave){
+    if(Array.isArray(CFG.folgasPorSemana[chave]))return;
+    var registados=normalizarListaFolgas(semanas[chave]);
+    if(registados.length>0&&registados.length<7){
+      var faltantes=[];
+      for(var d=0;d<7;d++)if(registados.indexOf(d)<0)faltantes.push(d);
+      CFG.folgasPorSemana[chave]=faltantes;
+    }
+  });
+  guardarFolgasDaSemana(hoje(),folgasDaSemana(hoje()));
+}
+function diasTrabalhoMeta(iso){
+  return Math.max(1,7-folgasDaSemana(iso||hoje()).length);
+}
+function metaDiariaEfetiva(iso){
+  if(CFG.metaSem&&CFG.metaSem>0)return CFG.metaSem/diasTrabalhoMeta(iso||hoje());
   return CFG.metaDia||0;
 }
-function nomesFolga(){
-  var f=Array.isArray(CFG.folgasSemana)?CFG.folgasSemana.slice():[];
-  return f.sort(function(a,b){return a-b;}).map(function(i){return DIAS_FULL[i];}).join(', ');
+function nomesFolga(iso){
+  return folgasDaSemana(iso||hoje()).map(function(i){return DIAS_FULL[i];}).join(', ');
 }
 function textoMetaFolga(){
-  var dias=diasTrabalhoMeta(), f=Array.isArray(CFG.folgasSemana)?CFG.folgasSemana.length:0;
+  var f=folgasDaSemana(hoje()),dias=diasTrabalhoMeta(hoje());
   if(!CFG.metaSem||CFG.metaSem<=0)return 'Define a meta semanal para calcular automaticamente a meta diária.';
-  if(f<=0)return 'Sem folgas marcadas: a meta semanal será dividida por 7 dias.';
-  return 'Folga em '+nomesFolga()+'. Para manter a meta semanal, a meta diária passa para '+moeda(metaDiariaEfetiva())+' em '+dias+' dias de trabalho.';
+  if(!f.length)return 'Sem folgas marcadas: a meta semanal será dividida por 7 dias.';
+  return 'Folga em '+nomesFolga(hoje())+'. Para manter a meta semanal, a meta diária passa para '+moeda(metaDiariaEfetiva(hoje()))+' em '+dias+' dias de trabalho.';
 }
 function renderFolgasCfg(){
   var chk=document.getElementById('iTemFolga'),box=document.getElementById('folgaDiasBox'),msg=document.getElementById('folgaMetaMsg');
-  var tem=(Array.isArray(CFG.folgasSemana)&&CFG.folgasSemana.length>0);
+  var atuais=folgasDaSemana(hoje()),tem=atuais.length>0;
   if(chk)chk.checked=tem;
   if(box){
     box.className='folga-dias'+(tem?' show':'');
     var html='';
     for(var i=0;i<7;i++){
-      var on=(CFG.folgasSemana||[]).indexOf(i)>=0;
+      var on=atuais.indexOf(i)>=0;
       html+='<button type="button" class="folga-btn '+(on?'on':'')+'" onclick="toggleDiaFolga('+i+')">'+DIAS[i]+'</button>';
     }
     box.innerHTML=html;
@@ -782,24 +831,26 @@ function renderFolgasCfg(){
   if(msg)msg.textContent=textoMetaFolga();
 }
 function toggleTemFolga(){
-  var chk=document.getElementById('iTemFolga');
-  if(!chk||!chk.checked)CFG.folgasSemana=[];
-  else if(!Array.isArray(CFG.folgasSemana)||!CFG.folgasSemana.length)CFG.folgasSemana=[0];
-  sincMetas('sem'); renderFolgasCfg();
+  var chk=document.getElementById('iTemFolga'),atuais=folgasDaSemana(hoje());
+  if(!chk||!chk.checked)guardarFolgasDaSemana(hoje(),[]);
+  else if(!atuais.length)guardarFolgasDaSemana(hoje(),[0]);
+  sincMetas('sem'); renderFolgasCfg(); salvarLocal();
+  renderHeader(); renderSemana(); if(document.getElementById('pg-hoje').classList.contains('on'))renderHoje(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist();
 }
 function toggleDiaFolga(dia){
-  if(!Array.isArray(CFG.folgasSemana))CFG.folgasSemana=[];
-  var idx=CFG.folgasSemana.indexOf(dia);
-  if(idx>=0)CFG.folgasSemana.splice(idx,1); else CFG.folgasSemana.push(dia);
-  sincMetas('sem'); renderFolgasCfg();
+  var atuais=folgasDaSemana(hoje()).slice(),idx=atuais.indexOf(dia);
+  if(idx>=0)atuais.splice(idx,1); else atuais.push(dia);
+  guardarFolgasDaSemana(hoje(),atuais);
+  sincMetas('sem'); renderFolgasCfg(); salvarLocal();
+  renderHeader(); renderSemana(); if(document.getElementById('pg-hoje').classList.contains('on'))renderHoje(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist();
 }
 function sincMetas(origem){
   var dia=document.getElementById('iMetaDia'),sem=document.getElementById('iMetaSem');
   if(!dia||!sem)return;
-  var dias=diasTrabalhoMeta();
-  if(origem==='dia'&&dia.value){ var v=parseFloat(dia.value)||0; if(v>0)sem.value=(v*dias).toFixed(2); }
-  if(origem==='sem'&&sem.value){ var v2=parseFloat(sem.value)||0; if(v2>0)dia.value=(v2/dias).toFixed(2); }
-  var msg=document.getElementById('folgaMetaMsg'); if(msg)msg.textContent=textoMetaFolga();
+  var dias=diasTrabalhoMeta(hoje());
+  if(origem==='dia'&&dia.value){var v=parseFloat(dia.value)||0;if(v>0)sem.value=(v*dias).toFixed(2);}
+  if(origem==='sem'&&sem.value){var v2=parseFloat(sem.value)||0;if(v2>0)dia.value=(v2/dias).toFixed(2);}
+  var msg=document.getElementById('folgaMetaMsg');if(msg)msg.textContent=textoMetaFolga();
 }
 
 
@@ -918,13 +969,13 @@ function pad(n){ return n<10?'0'+n:''+n; }
 function pf(v){ var n=parseFloat((v||'').toString().replace(',','.')); return (isNaN(n)||n<0)?0:n; }
 function fmtData(iso){ var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
 function moeda(v){ var neg=v<0,s=Math.abs(v).toFixed(2).replace('.',','); return (neg?'-':'')+sim()+s; }
-function alDia(){ return CFG.aluguel/diasTrabalhoMeta(); }
+function alDia(iso){ return CFG.aluguel/diasTrabalhoMeta(iso||hoje()); }
 function diaSemanaISO(iso){ return new Date(iso+'T12:00:00').getDay(); }
 function isFolgaISO(iso){
-  if(!iso||!Array.isArray(CFG.folgasSemana))return false;
-  return CFG.folgasSemana.indexOf(diaSemanaISO(iso))>=0;
+  if(!iso)return false;
+  return folgasDaSemana(iso).indexOf(diaSemanaISO(iso))>=0;
 }
-function alDiaISO(iso){ return isFolgaISO(iso)?0:alDia(); }
+function alDiaISO(iso){ return isFolgaISO(iso)?0:alDia(iso); }
 function aluguelRegisto(iso){ return (iso&&DB[iso])?alDiaISO(iso):0; }
 function kwhParaEuro(kwh){ return (kwh||0)*CFG.precoKwh; }
 function calcEnergia(eE,eK){ return (eE||0)+kwhParaEuro(eK||0); }
@@ -1350,7 +1401,7 @@ function renderSemana(){
         '<div class="plat-c"><div class="plat-ic" style="color:#34d186">\u26a1</div><div class="plat-nm">'+plat2()+'</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+
         '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Transfer</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div></div>';
       // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
-      var vals=ds.map(function(d){ if(d>h)return{g:0,gs:0,gd:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaFrota(r)+alDiaISO(d),gd:energiaDinheiro(r)+(r.comida||0)+(r.outroG2||0)}; });
+      var vals=ds.map(function(d){ if(d>h||!DB[d])return{g:0,gs:0,gd:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaFrota(r)+alDiaISO(d),gd:energiaDinheiro(r)+(r.comida||0)+(r.outroG2||0)}; });
       var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs+v.gd); }).concat([1]));
       var bHTML='';
       ds.forEach(function(d,i){
