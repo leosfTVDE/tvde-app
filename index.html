@@ -460,6 +460,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div style="font-size:10px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="kwh-hint">
           Pre&ccedil;o usado para converter kWh em &euro;. Exemplo: 15&euro; &divide; 0,75 = 20 kWh autom&aacute;tico.
         </div>
+        <div class="fld" style="margin-top:12px">
+          <div class="fld-lbl">&#127970; Taxa do operador TVDE (%)</div>
+          <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iTaxaOperador" placeholder="0" min="0" max="100" step="0.01"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin:6px 0 12px;line-height:1.5">
+          Percentagem cobrada pelo operador sobre Uber + Bolt + Transfer. &Eacute; descontada antes dos impostos.
+        </div>
         <button class="btn btn-cyan" id="btnCfg">Guardar configura&ccedil;&atilde;o</button>
       </div>
       <div class="stit">&#127758; Pa&iacute;s de atua&ccedil;&atilde;o</div>
@@ -525,16 +532,6 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         </div>
         <div id="veiculo-extra-cfg"></div>
         <button class="btn btn-green" id="btnVeiculo" style="margin-top:10px">&#128190; Guardar ve&iacute;culo</button>
-      </div>
-      <div class="stit">&#127970; Taxa do operador TVDE</div>
-      <div class="card">
-        <div class="card-top ct-cyan"></div>
-        <p class="import-info" style="margin-bottom:12px">Define a percentagem que o operador cobra sobre o valor bruto de Uber, Bolt e Transfer. Esta taxa &eacute; descontada antes dos impostos e antes de calcular o valor real que fica para ti.</p>
-        <div class="fld">
-          <div class="fld-lbl">&#127970; Taxa do operador (%)</div>
-          <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iTaxaOperador" placeholder="0" min="0" max="100" step="0.01"></div>
-        </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:7px;line-height:1.5">Ex.: 10% sobre &euro;200 de ganhos brutos = &euro;20 de taxa.</div>
       </div>
       <div class="stit">&#127919; Metas de lucro l&iacute;quido real</div>
       <div class="card">
@@ -728,7 +725,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.2';
+var APP_VERSION='3.8.3';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -818,6 +815,16 @@ function metaDiariaEfetiva(iso){
   if(CFG.metaSem&&CFG.metaSem>0)return CFG.metaSem/diasTrabalhoMeta(iso||hoje());
   return CFG.metaDia||0;
 }
+// Meta líquida configurada continua sendo a referência do lucro real.
+// Este valor informa quanto de faturamento bruto é necessário para atingir
+// essa meta depois da taxa do operador, sem alterar as demais lógicas do app.
+function metaDiariaBrutaNecessaria(iso){
+  var metaLiquida=metaDiariaEfetiva(iso||hoje());
+  var taxa=taxaOperadorPercentual();
+  if(metaLiquida<=0)return 0;
+  if(taxa>=100)return Infinity;
+  return metaLiquida/(1-(taxa/100));
+}
 function nomesFolga(iso){
   return folgasDaSemana(iso||hoje()).map(function(i){return DIAS_FULL[i];}).join(', ');
 }
@@ -825,7 +832,7 @@ function textoMetaFolga(){
   var f=folgasDaSemana(hoje()),dias=diasTrabalhoMeta(hoje());
   if(!CFG.metaSem||CFG.metaSem<=0)return 'Define a meta semanal para calcular automaticamente a meta diária.';
   if(!f.length)return 'Sem folgas marcadas: a meta semanal será dividida por 7 dias.';
-  return 'Folga em '+nomesFolga(hoje())+'. Para manter a meta semanal, a meta diária passa para '+moeda(metaDiariaEfetiva(hoje()))+' em '+dias+' dias de trabalho.';
+  return 'Folga em '+nomesFolga(hoje())+'. Para manter a meta semanal, a meta líquida diária fica em <strong>'+moeda(metaDiariaEfetiva(hoje()))+'</strong> em '+dias+' dias de trabalho. Com a taxa do operador, o bruto necessário é <strong>'+moeda(metaDiariaBrutaNecessaria(hoje()))+'</strong>.';
 }
 function renderFolgasCfg(){
   var chk=document.getElementById('iTemFolga'),box=document.getElementById('folgaDiasBox'),msg=document.getElementById('folgaMetaMsg');
@@ -1262,7 +1269,7 @@ function renderKPIs(){
     kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')',imp?'após '+impostosSelecionadosLabel():'')+
     kpi('⏱️','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% já descontada antes dos impostos e da meta. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''));
+  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. Bruto necessário para atingir a meta líquida: '+moeda(metaDiariaBrutaNecessaria(h))+'. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''));
 }
 function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:8px;color:var(--muted);margin-top:3px;font-weight:400;font-family:DM Mono,monospace">'+sub+'</div>':'')+'</div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -1490,9 +1497,12 @@ function renderSemana(){
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
       var metaSemanalBase=CFG.metaSem;
-      var detalhesMetaSemanal=teDinheiro>0
-        ? 'Meta configurada: <strong>'+moeda(metaSemanalBase)+'</strong><br>Energia recuperada antes de contar lucro: <strong style="color:var(--amber)">'+moeda(teDinheiro)+'</strong>'
-        : '';
+      var taxaSemanal=taxaOperadorPercentual();
+      var brutoMetaSemanal=metaSemanalBase>0&&taxaSemanal<100?metaSemanalBase/(1-(taxaSemanal/100)):metaSemanalBase;
+      var detalhesMetaSemanal='';
+      if(metaSemanalBase>0)detalhesMetaSemanal+='Meta líquida configurada: <strong>'+moeda(metaSemanalBase)+'</strong>';
+      if(taxaSemanal>0&&taxaSemanal<100)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Bruto necessário após taxa do operador: <strong>'+moeda(brutoMetaSemanal)+'</strong>';
+      if(teDinheiro>0)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Energia recuperada antes de contar lucro: <strong style="color:var(--amber)">'+moeda(teDinheiro)+'</strong>';
       // O saldo real já desconta a energia do bolso uma única vez; a meta permanece a configurada.
       renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?'⚡ A energia do bolso foi recuperada antes de contar o lucro da meta.':'📌 Saldo real: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal);
 
