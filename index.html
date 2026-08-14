@@ -725,7 +725,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.3';
+var APP_VERSION='3.8.4';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -815,16 +815,6 @@ function metaDiariaEfetiva(iso){
   if(CFG.metaSem&&CFG.metaSem>0)return CFG.metaSem/diasTrabalhoMeta(iso||hoje());
   return CFG.metaDia||0;
 }
-// Meta líquida configurada continua sendo a referência do lucro real.
-// Este valor informa quanto de faturamento bruto é necessário para atingir
-// essa meta depois da taxa do operador, sem alterar as demais lógicas do app.
-function metaDiariaBrutaNecessaria(iso){
-  var metaLiquida=metaDiariaEfetiva(iso||hoje());
-  var taxa=taxaOperadorPercentual();
-  if(metaLiquida<=0)return 0;
-  if(taxa>=100)return Infinity;
-  return metaLiquida/(1-(taxa/100));
-}
 function nomesFolga(iso){
   return folgasDaSemana(iso||hoje()).map(function(i){return DIAS_FULL[i];}).join(', ');
 }
@@ -832,7 +822,7 @@ function textoMetaFolga(){
   var f=folgasDaSemana(hoje()),dias=diasTrabalhoMeta(hoje());
   if(!CFG.metaSem||CFG.metaSem<=0)return 'Define a meta semanal para calcular automaticamente a meta diária.';
   if(!f.length)return 'Sem folgas marcadas: a meta semanal será dividida por 7 dias.';
-  return 'Folga em '+nomesFolga(hoje())+'. Para manter a meta semanal, a meta líquida diária fica em <strong>'+moeda(metaDiariaEfetiva(hoje()))+'</strong> em '+dias+' dias de trabalho. Com a taxa do operador, o bruto necessário é <strong>'+moeda(metaDiariaBrutaNecessaria(hoje()))+'</strong>.';
+  return 'Folga em '+nomesFolga(hoje())+'. Para manter a meta semanal, a meta líquida diária fica em <strong>'+moeda(metaDiariaEfetiva(hoje()))+'</strong> em '+dias+' dias de trabalho.';
 }
 function renderFolgasCfg(){
   var chk=document.getElementById('iTemFolga'),box=document.getElementById('folgaDiasBox'),msg=document.getElementById('folgaMetaMsg');
@@ -1269,7 +1259,7 @@ function renderKPIs(){
     kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')',imp?'após '+impostosSelecionadosLabel():'')+
     kpi('⏱️','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. Bruto necessário para atingir a meta líquida: '+moeda(metaDiariaBrutaNecessaria(h))+'. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''));
+  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''));
 }
 function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:8px;color:var(--muted);margin-top:3px;font-weight:400;font-family:DM Mono,monospace">'+sub+'</div>':'')+'</div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -1451,6 +1441,7 @@ function renderSemana(){
       var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
       var totalHoras=reais.reduce(function(a,d){ var r=DB[d]||{}; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
       var tg=tu+tb+to;
+      var taxaOperadorSemanal=reais.reduce(function(a,d){ return a+taxaOperadorValor(DB[d]||{}); },0);
       var te=reais.reduce(function(a,d){ return a+energiaGastos(DB[d]||{}); },0);
       // v3.7: lucro/hora = saldo real acumulado \u00f7 horas
       var slRealSem=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
@@ -1497,11 +1488,8 @@ function renderSemana(){
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
       var metaSemanalBase=CFG.metaSem;
-      var taxaSemanal=taxaOperadorPercentual();
-      var brutoMetaSemanal=metaSemanalBase>0&&taxaSemanal<100?metaSemanalBase/(1-(taxaSemanal/100)):metaSemanalBase;
       var detalhesMetaSemanal='';
       if(metaSemanalBase>0)detalhesMetaSemanal+='Meta líquida configurada: <strong>'+moeda(metaSemanalBase)+'</strong>';
-      if(taxaSemanal>0&&taxaSemanal<100)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Bruto necessário após taxa do operador: <strong>'+moeda(brutoMetaSemanal)+'</strong>';
       if(teDinheiro>0)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Energia recuperada antes de contar lucro: <strong style="color:var(--amber)">'+moeda(teDinheiro)+'</strong>';
       // O saldo real já desconta a energia do bolso uma única vez; a meta permanece a configurada.
       renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?'⚡ A energia do bolso foi recuperada antes de contar o lucro da meta.':'📌 Saldo real: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal);
@@ -1515,7 +1503,7 @@ function renderSemana(){
         (!reais.length?'<div class="empty"><div class="empty-ic">📤</div>Sem dados esta semana</div>':
         rl('📅 Dias registados',reais.length+'/'+diasTrabalhoMeta())+
         rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
-        (taxaOperadorPercentual()>0?rl('🏢 Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(reais.reduce(function(a,d){return a+taxaOperadorValor(DB[d]||{});},0)),'color:var(--red)',true):'')+
+        (taxaOperadorSemanal>0?rl('🏢 Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(taxaOperadorSemanal),'color:var(--red)',true):'')+
         rl('🖤 Uber',moeda(tu),'',true)+rl('\u26a1 '+plat2(),moeda(tb),'color:#34d186',true)+rl('🚘 Transfer',moeda(to),'color:var(--orange)',true)+
         '<div class="div"></div>'+
         '<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
@@ -1648,6 +1636,7 @@ function renderHist(){
       var tu=chaves.reduce(function(a,d){ return a+(r0(d).uber||0); },0);
       var tb=chaves.reduce(function(a,d){ return a+(r0(d).bolt||0); },0);
       var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0); },0);
+      var taxaOperadorPeriodo=chaves.reduce(function(a,d){ return a+taxaOperadorValor(r0(d)); },0);
       var te=chaves.reduce(function(a,d){ return a+energiaFrota(r0(d)); },0);
       var teDinheiro=chaves.reduce(function(a,d){ return a+energiaDinheiro(r0(d)); },0);
       var tc=chaves.reduce(function(a,d){ return a+(r0(d).comida||0); },0);
@@ -1687,6 +1676,7 @@ function renderHist(){
       document.getElementById('resumoPeriodo').innerHTML=
         '<div class="rp-grid">'+
         '<div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
+        (taxaOperadorPeriodo>0?'<div class="rp-item"><div class="rp-lbl">🏢 Taxa operador</div><div class="rp-val" style="color:var(--red)">-'+moeda(taxaOperadorPeriodo)+'</div></div>':'')+
         '<div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
         '<div class="rp-item"><div class="rp-lbl">&#9889; Gasto OP Frota</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
         (teDinheiro>0?'<div class="rp-item"><div class="rp-lbl">&#128181; Gasto Dinheiro</div><div class="rp-val" style="color:var(--amber)">'+moeda(teDinheiro)+'</div></div>':'')+
@@ -1731,6 +1721,7 @@ function renderHist(){
       var totaisHtml=
         rl('📅 Dias registados',nDias+(histFiltro==='semana'?'/7':''))+
         rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
+        (taxaOperadorPeriodo>0?rl('🏢 Taxa operador', '-'+moeda(taxaOperadorPeriodo),'color:var(--red)',true):'')+
         rl('🖤 Uber',moeda(tu),'',true)+
         rl('\u26a1 '+plat2(),moeda(tb),'color:#34d186',true)+
         rl('🚘 Transfer',moeda(to),'color:var(--orange)',true)+
