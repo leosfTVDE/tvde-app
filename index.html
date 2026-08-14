@@ -526,6 +526,16 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div id="veiculo-extra-cfg"></div>
         <button class="btn btn-green" id="btnVeiculo" style="margin-top:10px">&#128190; Guardar ve&iacute;culo</button>
       </div>
+      <div class="stit">&#127970; Taxa do operador TVDE</div>
+      <div class="card">
+        <div class="card-top ct-cyan"></div>
+        <p class="import-info" style="margin-bottom:12px">Define a percentagem que o operador cobra sobre o valor bruto de Uber, Bolt e Transfer. Esta taxa &eacute; descontada antes dos impostos e antes de calcular o valor real que fica para ti.</p>
+        <div class="fld">
+          <div class="fld-lbl">&#127970; Taxa do operador (%)</div>
+          <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iTaxaOperador" placeholder="0" min="0" max="100" step="0.01"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:7px;line-height:1.5">Ex.: 10% sobre &euro;200 de ganhos brutos = &euro;20 de taxa.</div>
+      </div>
       <div class="stit">&#127919; Metas de lucro l&iacute;quido real</div>
       <div class="card">
         <div class="card-top ct-green"></div>
@@ -726,11 +736,13 @@ function loadData(){ try{var s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.pa
 function clearData(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} DB={}; }
 function salvarLocal(){ saveData(); }
 // ─────────────────────────────────────────────────────────────────────
-var DB={},CFG={aluguel:280,precoKwh:0.75,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],folgasPorSemana:{},idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
+var DB={},CFG={aluguel:280,precoKwh:0.75,taxaOperador:0,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],folgasPorSemana:{},idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
 
 (function(){
   loadData();
   if(!CFG.precoKwh)CFG.precoKwh=0.75;
+  if(typeof CFG.taxaOperador!=='number'||isNaN(CFG.taxaOperador)||CFG.taxaOperador<0)CFG.taxaOperador=0;
+  if(CFG.taxaOperador>100)CFG.taxaOperador=100;
   if(!CFG.moeda)CFG.moeda='EUR';
   if(!CFG.metaDia)CFG.metaDia=0;
   if(!CFG.metaSem)CFG.metaSem=0;
@@ -1011,12 +1023,15 @@ var MESES=['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Ag
 var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
 function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
+function taxaOperadorPercentual(){ var v=parseFloat(CFG.taxaOperador); return (isNaN(v)||v<0)?0:Math.min(100,v); }
+function taxaOperadorValor(r){ return ganhos(r)*(taxaOperadorPercentual()/100); }
+function ganhosAposOperador(r){ return ganhos(r)-taxaOperadorValor(r); }
 
 // v3.7: saldo operacional = ganhos - energia (frota, \u20ac ou kWh) - aluguer
 // Alimenta\u00e7\u00e3o e outros gastos pessoais N\u00c3O entram
 function saldo(r,iso){
   if(!r)return 0;
-  return ganhos(r)-energiaFrota(r)-alDiaISO(iso);
+  return ganhosAposOperador(r)-energiaFrota(r)-alDiaISO(iso);
 }
 // base fiscal = saldo sem Transfer (sem recibo verde, n\u00e3o tribut\u00e1vel)
 function baseFiscal(r,iso){
@@ -1247,7 +1262,7 @@ function renderKPIs(){
     kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')',imp?'após '+impostosSelecionadosLabel():'')+
     kpi('⏱️','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':'');
+  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% já descontada antes dos impostos e da meta. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''));
 }
 function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:8px;color:var(--muted);margin-top:3px;font-weight:400;font-family:DM Mono,monospace">'+sub+'</div>':'')+'</div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -1267,7 +1282,9 @@ function renderResumoDia(){
       var gph=horas&&horas>0?lucroRef/horas:0;
       var kms=r.kms||0;
       var eK=kwhEfetivo(r);
+      var taxaOp=taxaOperadorValor(r);
       var html=rl('💰 Total ganhos',moeda(g),'color:var(--cyan)')+
+        (taxaOp>0?rl('🏢 Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(taxaOp),'color:var(--red)',true):'')+
         rl('🖤 Uber',moeda(r.uber||0),'',true)+
         rl('\u26a1 '+plat2(),moeda(r.bolt||0),'color:#34d186',true)+
         rl('🚘 Transfer / Outros',moeda(r.outroG||0),'color:var(--orange)',true)+
@@ -1370,6 +1387,7 @@ function guardar(){
     tem_particular:rec.outroG>0,
     impostos_ativos:!!(CFG.impostos&&CFG.impostos.ativo),
     total_ganhos:Math.round(ganhos(rec)),
+    taxa_operador:Math.round(taxaOperadorValor(rec)),
     energia_frota:Math.round(energiaFrota(rec)),
     energia_bolso:Math.round(energiaDinheiro(rec)),
     saldo_operacional:Math.round(saldo(rec,hojeKey)),
@@ -1487,6 +1505,7 @@ function renderSemana(){
         (!reais.length?'<div class="empty"><div class="empty-ic">📤</div>Sem dados esta semana</div>':
         rl('📅 Dias registados',reais.length+'/'+diasTrabalhoMeta())+
         rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
+        (taxaOperadorPercentual()>0?rl('🏢 Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(reais.reduce(function(a,d){return a+taxaOperadorValor(DB[d]||{});},0)),'color:var(--red)',true):'')+
         rl('🖤 Uber',moeda(tu),'',true)+rl('\u26a1 '+plat2(),moeda(tb),'color:#34d186',true)+rl('🚘 Transfer',moeda(to),'color:var(--orange)',true)+
         '<div class="div"></div>'+
         '<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
@@ -1736,6 +1755,7 @@ function renderHist(){
 function renderCfg(){
   document.getElementById('iAluguer').value=CFG.aluguel;
   document.getElementById('iPrecoKwh').value=CFG.precoKwh;
+  var taxaOp=document.getElementById('iTaxaOperador'); if(taxaOp)taxaOp.value=taxaOperadorPercentual()||'';
   document.getElementById('iMetaDia').value=metaDiariaEfetiva()||'';
   document.getElementById('iMetaSem').value=CFG.metaSem||'';
   document.getElementById('iVeiculoModelo').value=CFG.veiculo.modelo||'';
@@ -1755,8 +1775,10 @@ function renderCfg(){
 }
 function salvarCfg(){
   var v=pf(document.getElementById('iAluguer').value),k=pf(document.getElementById('iPrecoKwh').value)||CFG.precoKwh;
+  var opEl=document.getElementById('iTaxaOperador'),op=opEl?pf(opEl.value):taxaOperadorPercentual();
+  if(op>100){ toast('Taxa do operador deve estar entre 0% e 100%.','er'); return; }
   if(!v||v<=0){ toast('Aluguer inv\u00e1lido!','er'); return; }
-  CFG.aluguel=v; CFG.precoKwh=k;
+  CFG.aluguel=v; CFG.precoKwh=k; CFG.taxaOperador=op;
   salvarLocal(); trackEvent('salvar_config',{pais:CFG.pais, moeda:CFG.moeda, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''}); renderHeader(); toast('\u2705 Configura\u00e7\u00e3o guardada!','ok');
 }
 function salvarMetas(){
