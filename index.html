@@ -374,6 +374,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div class="fld"><div class="fld-lbl">Corridas Transfer e outros ganhos</div>
           <div class="iw"><div class="ipfx" id="pfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="iOutroG" placeholder="0.00" min="0" step="0.01"></div>
         </div>
+        <div id="transferMetaBox" style="margin-top:10px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
+          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="iTransferTomador" onchange="atualizarTransferUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
+          <div class="fld" id="iTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="iTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"></div>
+          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferOperador" id="iTransferOperadorSim" checked onchange="atualizarTransferUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferOperador" id="iTransferOperadorNao" onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
+          <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferImpostos" id="iTransferImpSim" onchange="atualizarTransferUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferImpostos" id="iTransferImpNao" checked onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
+          <div id="iTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:7px"><label><input type="checkbox" id="iTransferIRS"> IRS</label><label><input type="checkbox" id="iTransferIVA"> IVA</label><label><input type="checkbox" id="iTransferSS"> SS</label></div></div>
+        </div>
         <div class="g-total">
           <span class="g-total-lbl">&#128176; Total ganhos</span>
           <span class="g-total-val" id="gTotal">&euro;0,00</span>
@@ -493,7 +500,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           <button class="toggle" id="toggleImp"></button>
         </div>
         <div id="impostosDetalhes" style="display:none">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional (ganhos - energia - aluguer), excluindo Transfer sem recibo verde.</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
           <div class="fld">
             <div class="fld-lbl">Impostos a considerar</div>
             <label class="login-check"><input type="checkbox" id="chkImpSS" onchange="salvarImpostosCfg()"><span>Segurança Social (15%)</span></label>
@@ -605,7 +612,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.2 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.7 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -635,6 +642,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="fld"><div class="iw"><div class="ipfx" id="mpfxBolt">&euro;</div><input type="number" inputmode="decimal" id="mBolt" placeholder="0.00" min="0" step="0.01"></div></div>
     <div class="sub-h"><span style="color:#fb923c">&#128664;</span> Transfer / Outros</div>
     <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="mOutroG" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div id="mTransferMetaBox" style="margin-top:10px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
+      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="mTransferTomador" onchange="atualizarTransferModalUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
+      <div class="fld" id="mTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="mTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"></div>
+      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferOperador" id="mTransferOperadorSim" onchange="atualizarTransferModalUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferOperador" id="mTransferOperadorNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
+      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferImpostos" id="mTransferImpSim" onchange="atualizarTransferModalUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferImpostos" id="mTransferImpNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
+      <div id="mTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:7px"><label><input type="checkbox" id="mTransferIRS"> IRS</label><label><input type="checkbox" id="mTransferIVA"> IVA</label><label><input type="checkbox" id="mTransferSS"> SS</label></div></div>
+    </div>
     <div id="mEnergiaSection"></div>
     <div class="sub-h"><span>&#128205;</span> KMs rodados</div>
     <div class="fld"><div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="mKms" placeholder="0" min="0" step="1"></div></div>
@@ -668,7 +682,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">&#128640;</div>
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.8.2</div>
+      <div class="nov-versao">Finance Drive v3.8.7</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
@@ -696,7 +710,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div class="nov-item-ic">&#128203;</div>
         <div class="nov-item-txt">
           <strong>Fiscal PT mais preciso</strong>
-          <span>Base fiscal exclui Transfer (sem recibo verde). Estima&ccedil;&atilde;o mais justa e real.</span>
+          <span>Base fiscal configur&aacute;vel: Transfers podem ser tributados individualmente por IRS, IVA e/ou SS.</span>
         </div>
       </div>
     </div>
@@ -725,7 +739,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.4';
+var APP_VERSION='3.8.7';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -1021,20 +1035,29 @@ var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
 function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
 function taxaOperadorPercentual(){ var v=parseFloat(CFG.taxaOperador); return (isNaN(v)||v<0)?0:Math.min(100,v); }
-function taxaOperadorValor(r){ return ganhos(r)*(taxaOperadorPercentual()/100); }
+function transferOperadorAplicavel(r){ return !r||typeof r.transferOperador==='undefined'?true:!!r.transferOperador; }
+function taxaOperadorBase(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(transferOperadorAplicavel(r)?(r.outroG||0):0); }
+function taxaOperadorValor(r){ return taxaOperadorBase(r)*(taxaOperadorPercentual()/100); }
 function ganhosAposOperador(r){ return ganhos(r)-taxaOperadorValor(r); }
+function transferImpostosSelecionados(r){ return r&&Array.isArray(r.transferImpostos)?r.transferImpostos:[]; }
+function transferTemImposto(r,tipo){ return transferImpostosSelecionados(r).indexOf(tipo)>=0; }
+function transferTomadorLabel(r){ if(!r)return ''; var v=(r.transferTomador||'').trim(); if(!v)return ''; return v==='Outro'?(r.transferTomadorOutro||'Outro'):v; }
 
-// v3.7: saldo operacional = ganhos - energia (frota, \u20ac ou kWh) - aluguer
-// Alimenta\u00e7\u00e3o e outros gastos pessoais N\u00c3O entram
+// v3.7: saldo operacional = ganhos - energia (frota, € ou kWh) - aluguer
+// Alimenta&ccedil;&atilde;o e outros gastos pessoais N&Atilde;O entram
 function saldo(r,iso){
   if(!r)return 0;
   return ganhosAposOperador(r)-energiaFrota(r)-alDiaISO(iso);
 }
-// base fiscal = saldo sem Transfer (sem recibo verde, n\u00e3o tribut\u00e1vel)
-function baseFiscal(r,iso){
-  if(!r)return 0;
-  return Math.max(0, saldo(r,iso)-(r.outroG||0));
+function baseFiscalSemTransfer(r,iso){ if(!r)return 0; return Math.max(0,saldo(r,iso)-(r.outroG||0)); }
+function transferBaseFiscalPorImposto(r,tipo){
+  if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
+  var transferLiquido=(r.outroG||0)-(transferOperadorAplicavel(r)?(r.outroG||0)*(taxaOperadorPercentual()/100):0);
+  return Math.max(0,transferLiquido);
 }
+function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso)+transferBaseFiscalPorImposto(r,tipo); }
+function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso):0)+transferBaseFiscalPorImposto(r,tipo); }
+function baseFiscal(r,iso){ return baseFiscalAplicada(r,iso,'IRS'); }
 function saldoReal(r,iso){
   if(!r)return 0;
   var imp=calcImpostos(r,iso);
@@ -1062,7 +1085,7 @@ function projetarRendimentoAnual(){
   var anoAtual=new Date().getFullYear();
   var keys=Object.keys(DB).filter(function(k){ return k.startsWith(anoAtual+'-'); });
   if(!keys.length)return 0;
-  // usa baseFiscal acumulada (exclui Transfer)
+  // usa a base fiscal acumulada, incluindo apenas Transfers marcados para IRS
   var total=keys.reduce(function(a,k){ var r=DB[k]||{}; var bf=baseFiscal(r,k); return a+(bf>0?bf:0); },0);
   return total;
 }
@@ -1083,32 +1106,32 @@ function impostosSelecionadosLabel(){
   if(CFG.impostos.usarIVA)arr.push('IVA');
   return arr.length?arr.join(', '):'nenhum imposto';
 }
-// calcImpostos: recebe registo completo, calcula sobre baseFiscal
+// calcImpostos: calcula impostos gerais e, separadamente, os impostos escolhidos no Transfer.
 function calcImpostos(r,iso){
   normalizarImpostosCfg();
-  if(!CFG.impostos.ativo||CFG.pais!=='PT')return null;
-  var bf=baseFiscal(r,iso);
-  if(bf<=0)return null;
+  if(CFG.pais!=='PT')return null;
+  var baseSS=baseFiscalPorImposto(r,iso,'SS'),baseIRS=baseFiscalPorImposto(r,iso,'IRS'),baseIVA=baseFiscalPorImposto(r,iso,'IVA');
+  var temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
+  if(!CFG.impostos.ativo&&!temFiscal)return null;
   var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
-  var ss=CFG.impostos.usarSS?bf*0.15:0;
-  var irs=CFG.impostos.usarIRS?bf*(taxa/100):0;
-  var iva=CFG.impostos.usarIVA?bf*0.06:0;
-  var total=ss+irs+iva;
-  var sl=saldo(r,iso);
-  var bolso=gastosBolso(r);
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-bolso,taxaIRS:taxa,base:bf,saldo:sl,bolso:bolso,recuperarEnergia:energiaDinheiro(r),usarSS:CFG.impostos.usarSS,usarIRS:CFG.impostos.usarIRS,usarIVA:CFG.impostos.usarIVA};
+  var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
+  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
+  if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*0.15:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=transferTemImposto(r,'IVA')?baseIVA*0.06:0; }
+  var total=ss+irs+iva,sl=saldo(r,iso),bolso=gastosBolso(r);
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-bolso,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:bolso,recuperarEnergia:energiaDinheiro(r),usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
-// calcImpostosValores: para semana/hist\u00f3rico (sl=saldo acumulado, bf=base fiscal acumulada)
-function calcImpostosValores(sl,bf,bolso,energiaRecuperar){
+// calcImpostosValores: semana/hist&oacute;rico com uma base separada para cada imposto.
+function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
   normalizarImpostosCfg();
-  if(!CFG.impostos.ativo||CFG.pais!=='PT'||bf<=0||sl<=0)return null;
+  if(CFG.pais!=='PT'||!bases)return null;
+  var baseSS=bases.SS||0,baseIRS=bases.IRS||0,baseIVA=bases.IVA||0,temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
+  if(!CFG.impostos.ativo&&!temFiscal)return null;
   var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
-  var ss=CFG.impostos.usarSS?bf*0.15:0;
-  var irs=CFG.impostos.usarIRS?bf*(taxa/100):0;
-  var iva=CFG.impostos.usarIVA?bf*0.06:0;
-  var total=ss+irs+iva;
-  var b=bolso||0;
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-b,taxaIRS:taxa,base:bf,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:CFG.impostos.usarSS,usarIRS:CFG.impostos.usarIRS,usarIVA:CFG.impostos.usarIVA};
+  var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
+  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
+  if(!CFG.impostos.ativo){ ss=baseSS*0.15; irs=baseIRS*(taxa/100); iva=baseIVA*0.06; }
+  var total=ss+irs+iva,b=bolso||0;
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-b,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
 function htmlImpostos(imp){
   if(!imp)return '';
@@ -1124,7 +1147,7 @@ function htmlImpostos(imp){
   return '<div class="impostos-box">'+
     '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:9px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
     '<div class="impostos-total"><span class="impostos-total-lbl">Saldo real</span><span class="impostos-total-val">'+moeda(imp.real)+'</span></div>'+ 
-    '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'. Base fiscal s/ Transfer. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+ 
+    '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'. Base fiscal conforme configurações gerais e Transfers tributáveis. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+ 
   '</div>';
 }
 function toggleImpostos(){
@@ -1332,12 +1355,45 @@ function atualizarMEnergiaTotal(){
   var lbl=document.getElementById('mKwhAutoLabel');
   if(lbl)lbl.textContent=kwhAuto>0?'\u26a1 '+kwhAuto.toFixed(1)+' kWh'+(k>0?' (direto)':' (auto)'):'';
 }
+function resetTransferFields(prefix){
+  var sel=document.getElementById(prefix+'TransferTomador'); if(sel)sel.value='Evolta';
+  var out=document.getElementById(prefix+'TransferTomadorOutro'); if(out)out.value='';
+  var sim=document.getElementById(prefix+'TransferOperadorSim'),nao=document.getElementById(prefix+'TransferOperadorNao'); if(sim)sim.checked=true; if(nao)nao.checked=false;
+  var is=document.getElementById(prefix+'TransferImpSim'),ino=document.getElementById(prefix+'TransferImpNao'); if(is)is.checked=false; if(ino)ino.checked=true;
+  ['IRS','IVA','SS'].forEach(function(t){var el=document.getElementById(prefix+'Transfer'+t);if(el)el.checked=false;});
+}
+function atualizarTransferUI(){
+  var v=pf((document.getElementById('iOutroG')||{}).value||0),box=document.getElementById('transferMetaBox'); if(box)box.style.display=v>0?'':'none';
+  var s=document.getElementById('iTransferTomador'),o=document.getElementById('iTransferTomadorOutroWrap'); if(o)o.style.display=s&&s.value==='Outro'?'':'none';
+  var is=document.getElementById('iTransferImpSim'),w=document.getElementById('iTransferImpostosWrap'); if(w)w.style.display=is&&is.checked?'':'none';
+}
+function atualizarTransferModalUI(){
+  var v=pf((document.getElementById('mOutroG')||{}).value||0),box=document.getElementById('mTransferMetaBox'); if(box)box.style.display=v>0?'':'none';
+  var s=document.getElementById('mTransferTomador'),o=document.getElementById('mTransferTomadorOutroWrap'); if(o)o.style.display=s&&s.value==='Outro'?'':'none';
+  var is=document.getElementById('mTransferImpSim'),w=document.getElementById('mTransferImpostosWrap'); if(w)w.style.display=is&&is.checked?'':'none';
+}
+function lerTransferMeta(prefix){
+  var id=prefix==='i'?'iOutroG':'mOutroG',v=pf((document.getElementById(id)||{}).value||0); if(v<=0)return{tomador:'',tomadorOutro:'',operador:true,impostos:[]};
+  var s=document.getElementById(prefix+'TransferTomador'),tom=s?s.value:'Avulso',o=document.getElementById(prefix+'TransferTomadorOutro'),op=document.getElementById(prefix+'TransferOperadorSim'),is=document.getElementById(prefix+'TransferImpSim'),imp=[];
+  if(is&&is.checked)['IRS','IVA','SS'].forEach(function(t){var el=document.getElementById(prefix+'Transfer'+t);if(el&&el.checked)imp.push(t);});
+  return{tomador:tom,tomadorOutro:tom==='Outro'?(o?o.value.trim():''):'',operador:op?!!op.checked:true,impostos:imp};
+}
+function aplicarTransferMetaModal(r){
+  var box=document.getElementById('mTransferMetaBox'); if(box)box.style.display=r&&r.outroG>0?'':'none';
+  var s=document.getElementById('mTransferTomador'); if(s)s.value=r&&r.transferTomador?r.transferTomador:'Evolta';
+  var o=document.getElementById('mTransferTomadorOutro'); if(o)o.value=r&&r.transferTomadorOutro?r.transferTomadorOutro:'';
+  var op=transferOperadorAplicavel(r),os=document.getElementById('mTransferOperadorSim'),on=document.getElementById('mTransferOperadorNao'); if(os)os.checked=op;if(on)on.checked=!op;
+  var imp=transferImpostosSelecionados(r),is=document.getElementById('mTransferImpSim'),ino=document.getElementById('mTransferImpNao'); if(is)is.checked=imp.length>0;if(ino)ino.checked=imp.length===0;
+  ['IRS','IVA','SS'].forEach(function(t){var el=document.getElementById('mTransfer'+t);if(el)el.checked=imp.indexOf(t)>=0;});
+  atualizarTransferModalUI();
+}
 function atualizarTotal(){
   var u=pf(document.getElementById('iUber').value),b=pf(document.getElementById('iBolt').value),o=pf(document.getElementById('iOutroG').value);
   document.getElementById('gTotal').textContent=moeda(u+b+o);
 }
 function limparCampos(){
   ['iUber','iBolt','iOutroG','iComida','iOutroG2','iKms'].forEach(function(id){ var el=document.getElementById(id); if(el)el.value=''; });
+  resetTransferFields('i'); atualizarTransferUI();
   var ini=document.getElementById('iHoraInicio'),fim=document.getElementById('iHoraFim'),alm=document.getElementById('iAlmoco');
   if(ini)ini.value=''; if(fim)fim.value=''; if(alm)alm.checked=false;
   document.getElementById('gTotal').textContent=moeda(0);
@@ -1357,7 +1413,8 @@ function guardar(){
   var u=pf(document.getElementById('iUber').value),b=pf(document.getElementById('iBolt').value),og=pf(document.getElementById('iOutroG').value),c=pf(document.getElementById('iComida').value),o2=pf(document.getElementById('iOutroG2').value),kms=pf(document.getElementById('iKms').value);
   var ini=document.getElementById('iHoraInicio').value,fim=document.getElementById('iHoraFim').value;
   var alm=document.getElementById('iAlmoco'); var almoco=alm?alm.checked:false;
-  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco};
+  var tm=lerTransferMeta('i');
+  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco,transferTomador:tm.tomador,transferTomadorOutro:tm.tomadorOutro,transferOperador:tm.operador,transferImpostos:tm.impostos};
   if(isEletrico()){
     var e=pf(document.getElementById('iEnergia')?document.getElementById('iEnergia').value:0);
     var ek=pf(document.getElementById('iEnergiaKwh')?document.getElementById('iEnergiaKwh').value:0);
@@ -1481,9 +1538,9 @@ function renderSemana(){
       var tal=reais.reduce(function(a,d){ return a+alDiaISO(d); },0);
       // gastos operacionais = energia + aluguer
       var gas=te+tal, sl2=tg-gas, pos2=sl2>=0;
-      // base fiscal sem Transfer
-      var bfSem=Math.max(0,sl2-to);
-      var impSemHtml=htmlImpostos(calcImpostosValores(sl2,bfSem,teDinheiro+tc+tou,teDinheiro));
+      // Bases fiscais semanais por imposto, respeitando a seleção individual dos Transfers.
+      var basesSem=reais.reduce(function(a,d){ var rr=DB[d]||{}; a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
+      var impSemHtml=htmlImpostos(calcImpostosValores(sl2,basesSem,teDinheiro+tc+tou,teDinheiro));
 
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
@@ -1526,6 +1583,7 @@ function abrirModal(iso){
   editingISO=iso; var r=DB[iso]||{};
   document.getElementById('modalDate').textContent=DIAS_FULL[new Date(iso+'T12:00:00').getDay()]+', '+fmtData(iso);
   document.getElementById('mUber').value=r.uber||''; document.getElementById('mBolt').value=r.bolt||''; document.getElementById('mOutroG').value=r.outroG||'';
+  aplicarTransferMetaModal(r);
   document.getElementById('mKms').value=r.kms||''; document.getElementById('mHoraInicio').value=r.horaInicio||''; document.getElementById('mHoraFim').value=r.horaFim||'';
   var mAlm=document.getElementById('mAlmoco'); if(mAlm)mAlm.checked=r.almoco||false;
   document.getElementById('mComida').value=r.comida||''; document.getElementById('mOutroG2').value=r.outroG2||'';
@@ -1548,7 +1606,8 @@ function salvarModal(){
   var u=pf(document.getElementById('mUber').value),b=pf(document.getElementById('mBolt').value),og=pf(document.getElementById('mOutroG').value),c=pf(document.getElementById('mComida').value),o2=pf(document.getElementById('mOutroG2').value),kms=pf(document.getElementById('mKms').value);
   var ini=document.getElementById('mHoraInicio').value,fim=document.getElementById('mHoraFim').value;
   var mAlm2=document.getElementById('mAlmoco'); var almoco2=mAlm2?mAlm2.checked:false;
-  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco2};
+  var tm=lerTransferMeta('m');
+  var rec={uber:u,bolt:b,outroG:og,comida:c,outroG2:o2,kms:kms,horaInicio:ini,horaFim:fim,almoco:almoco2,transferTomador:tm.tomador,transferTomadorOutro:tm.tomadorOutro,transferOperador:tm.operador,transferImpostos:tm.impostos};
   if(isEletrico()){
     var me=document.getElementById('mEnergia'),mk=document.getElementById('mEnergiaKwh');
     rec.energia=pf(me?me.value:0); rec.energiaKwh=pf(mk?mk.value:0);
@@ -1646,7 +1705,7 @@ function renderHist(){
       var gastos=te+alTotal;
       var slTotal=tg-gastos;
       var pos=slTotal>=0;
-      var bfHist=Math.max(0,slTotal-to);
+      var basesHist=chaves.reduce(function(a,d){ var rr=r0(d); a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
 
       if(!chaves.length){
         var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste período</div>';
@@ -1670,7 +1729,7 @@ function renderHist(){
       var custoKmHist=totalKmsHist>0&&custoEnergiaRealHist>0?(custoEnergiaRealHist/totalKmsHist):0;
       var totalLitrosHist=chaves.reduce(function(a,d){ return a+(r0(d).litros||0); },0);
       var consumoHist=!isEletrico()&&totalKmsHist>0&&totalLitrosHist>0?(totalLitrosHist/totalKmsHist*100):0;
-      var impHist=calcImpostosValores(slTotal,bfHist,teDinheiro+tc+tou,teDinheiro);
+      var impHist=calcImpostosValores(slTotal,basesHist,teDinheiro+tc+tou,teDinheiro);
       var impHistHtml=htmlImpostos(impHist);
 
       document.getElementById('resumoPeriodo').innerHTML=
@@ -1702,7 +1761,7 @@ function renderHist(){
         var sl2=saldoReal(r,iso),pos2=sl2>=0,g=ganhos(r),eT=energiaFrota(r),eDin=energiaDinheiro(r),parts=[];
         if(r.uber)parts.push('🖤 '+moeda(r.uber));
         if(r.bolt)parts.push('\u26a1 '+plat2()+': '+moeda(r.bolt));
-        if(r.outroG)parts.push('🚘 '+moeda(r.outroG));
+        if(r.outroG)parts.push('🚘 '+(transferTomadorLabel(r)?transferTomadorLabel(r)+' · ':'')+moeda(r.outroG));
         var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
         var extra='';
         if(horas>0)extra+=' \u00b7 \u23f1\ufe0f '+fmtHoras(horas);
@@ -1804,12 +1863,18 @@ function salvarVeiculo(){
 }
 function exportCSV(){
   var keys=Object.keys(DB).sort(); if(!keys.length){ trackEvent('erro_exportar_csv',{motivo:'sem_dados'}); toast('Sem dados!','er'); return; }
-  var csv='Data,Dia,Uber,'+plat2()+',Transfer,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional,Saldo_Real\n';
+  function csvCell(v){ var s=(v===null||typeof v==='undefined')?'':String(v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+  var csv='Data,Dia,Uber,'+plat2()+',Transfer,Total_Ganhos,Energia_Euro,Energia_kWh,Litros,Combustivel,Energia_Total,kWh_Efetivo,Alimentacao,Outros,KMs,Hora_Inicio,Hora_Fim,Almoco,Aluguer_Dia,Saldo_Operacional,Saldo_Real,Transfer_Tomador,Transfer_Tomador_Outro,Transfer_Operador,Transfer_Impostos\n';
   keys.forEach(function(iso){
     var r=DB[iso]||{},al=alDiaISO(iso),g=ganhos(r),eT=energiaGastos(r),sl2=saldo(r,iso),kEf=kwhEfetivo(r);
-    csv+=fmtData(iso)+','+diaNome(iso)+','+(r.uber||0).toFixed(2)+','+(r.bolt||0).toFixed(2)+','+(r.outroG||0).toFixed(2)+','+g.toFixed(2)+','+
-      (r.energia||0).toFixed(2)+','+(r.energiaKwh||0).toFixed(2)+','+(r.litros||0).toFixed(2)+','+(r.combustivel||0).toFixed(2)+','+eT.toFixed(2)+','+kEf.toFixed(2)+','+
-      (r.comida||0).toFixed(2)+','+(r.outroG2||0).toFixed(2)+','+(r.kms||0)+','+(r.horaInicio||'')+','+(r.horaFim||'')+','+(r.almoco?'1':'0')+','+al.toFixed(2)+','+sl2.toFixed(2)+','+saldoReal(r,iso).toFixed(2)+'\n';
+    var tomador=(r.transferTomador||''),tomadorOutro=(r.transferTomadorOutro||'');
+    var operador=typeof r.transferOperador==='undefined'?'':(r.transferOperador?'1':'0');
+    var impostos=Array.isArray(r.transferImpostos)?r.transferImpostos.join('|'):'';
+    var row=[fmtData(iso),diaNome(iso),(r.uber||0).toFixed(2),(r.bolt||0).toFixed(2),(r.outroG||0).toFixed(2),g.toFixed(2),
+      (r.energia||0).toFixed(2),(r.energiaKwh||0).toFixed(2),(r.litros||0).toFixed(2),(r.combustivel||0).toFixed(2),eT.toFixed(2),kEf.toFixed(2),
+      (r.comida||0).toFixed(2),(r.outroG2||0).toFixed(2),(r.kms||0),(r.horaInicio||''),(r.horaFim||''),(r.almoco?'1':'0'),al.toFixed(2),sl2.toFixed(2),saldoReal(r,iso).toFixed(2),
+      tomador,tomadorOutro,operador,impostos];
+    csv+=row.map(csvCell).join(',')+'\n';
   });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_pwa_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
@@ -1819,8 +1884,22 @@ function importCSV(e){
   var file=e.target.files[0]; if(!file)return;
   var reader=new FileReader();
   reader.onload=function(ev){
-    function parseCSVLine(line){ var result=[],cur='',inQ=false; for(var i=0;i<line.length;i++){ var ch=line[i]; if(ch==='"')inQ=!inQ; else if(ch===','&&!inQ){result.push(cur.trim().replace(/^"|"$/g,''));cur='';} else cur+=ch; } result.push(cur.trim().replace(/^"|"$/g,'')); return result; }
+    function parseCSVLine(line){
+      var result=[],cur='',inQ=false;
+      for(var i=0;i<line.length;i++){
+        var ch=line[i];
+        if(ch==='"'){
+          if(inQ && line[i+1]==='"'){ cur+='"'; i++; }
+          else inQ=!inQ;
+        } else if(ch===','&&!inQ){ result.push(cur.trim());cur=''; }
+        else cur+=ch;
+      }
+      result.push(cur.trim());
+      return result;
+    }
     function pfc(v){ var n=parseFloat((v||'').toString().replace(',','.')); return (isNaN(n)||n<0)?0:n; }
+    function pbool(v){ return (v||'').toString().trim()==='1'; }
+    function pimpostos(v){ return (v||'').toString().split('|').map(function(x){return x.trim();}).filter(function(x){return x==='IRS'||x==='IVA'||x==='SS';}); }
     var lines=ev.target.result.split(/\r?\n/),count=0,updated=0,errors=0;
     for(var i=1;i<lines.length;i++){
       var line=lines[i].trim(); if(!line)continue;
@@ -1829,6 +1908,11 @@ function importCSV(e){
         var dp=cols[0].split('/'); if(dp.length!==3){errors++;continue;}
         var iso=dp[2]+'-'+pad(parseInt(dp[1]))+'-'+pad(parseInt(dp[0])); if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)){errors++;continue;}
         var rec={uber:pfc(cols[2]),bolt:pfc(cols[3]),outroG:pfc(cols[4]),energia:pfc(cols[6]),energiaKwh:pfc(cols[7]),litros:pfc(cols[8]),combustivel:pfc(cols[9]),comida:pfc(cols[12]),outroG2:pfc(cols[13]),kms:pfc(cols[14]),horaInicio:(cols[15]||'').trim(),horaFim:(cols[16]||'').trim(),almoco:(cols[17]||'').trim()==='1'};
+        // Novos campos de Transfer: permanecem opcionais para manter compatibilidade com CSVs antigos.
+        if(cols.length>21) rec.transferTomador=(cols[21]||'').trim();
+        if(cols.length>22) rec.transferTomadorOutro=(cols[22]||'').trim();
+        if(cols.length>23 && (cols[23]||'').trim()!=='') rec.transferOperador=pbool(cols[23]);
+        if(cols.length>24) rec.transferImpostos=pimpostos(cols[24]);
         if(DB[iso])updated++; else count++; DB[iso]=rec;
       }catch(err){errors++;}
     }
@@ -1868,7 +1952,9 @@ document.getElementById('nb-hist').addEventListener('click',function(){ navTo('h
 document.getElementById('nb-cfg').addEventListener('click',function(){ navTo('cfg'); });
 document.getElementById('iUber').addEventListener('input',atualizarTotal);
 document.getElementById('iBolt').addEventListener('input',atualizarTotal);
-document.getElementById('iOutroG').addEventListener('input',atualizarTotal);
+document.getElementById('iOutroG').addEventListener('input',function(){atualizarTotal();atualizarTransferUI();});
+document.getElementById('iOutroG').addEventListener('change',atualizarTransferUI);
+document.getElementById('iOutroG').addEventListener('focus',atualizarTransferUI);
 document.getElementById('iHoraInicio').addEventListener('change',atualizarHorasTotal);
 document.getElementById('iHoraFim').addEventListener('change',atualizarHorasTotal);
 document.getElementById('fb-dia').addEventListener('click',function(){ setFiltro('dia'); });
@@ -1881,11 +1967,15 @@ document.getElementById('modalClose').addEventListener('click',fecharModal);
 document.getElementById('modalOverlay').addEventListener('click',function(e){ if(e.target===this)fecharModal(); });
 document.getElementById('btnModalSave').addEventListener('click',salvarModal);
 document.getElementById('btnModalDel').addEventListener('click',apagarDiaModal);
+document.getElementById('mOutroG').addEventListener('input',atualizarTransferModalUI);
+document.getElementById('mOutroG').addEventListener('change',atualizarTransferModalUI);
+document.getElementById('mOutroG').addEventListener('focus',atualizarTransferModalUI);
 document.getElementById('btnFecharNovidades').addEventListener('click',fecharNovidades);
 document.getElementById('novidadesOverlay').addEventListener('click',function(e){ if(e.target===this)fecharNovidades(); });
 document.getElementById('btnOnboard').addEventListener('click',function(){ fecharOnboarding(true); });
 document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
 
+atualizarTransferUI();
 trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
 </script>
