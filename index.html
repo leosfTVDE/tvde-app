@@ -612,7 +612,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.7 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.9 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -682,7 +682,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">&#128640;</div>
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.8.7</div>
+      <div class="nov-versao">Finance Drive v3.8.9</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
@@ -739,7 +739,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.7';
+var APP_VERSION='3.8.9';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -747,11 +747,12 @@ function loadData(){ try{var s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.pa
 function clearData(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} DB={}; }
 function salvarLocal(){ saveData(); }
 // ─────────────────────────────────────────────────────────────────────
-var DB={},CFG={aluguel:280,precoKwh:0.75,taxaOperador:0,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],folgasPorSemana:{},idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
+var DB={},CFG={aluguel:280,precoKwh:0.41,taxaOperador:0,moeda:'EUR',pais:'PT',metaDia:0,metaSem:0,folgasSemana:[],folgasPorSemana:{},idioma:'PT',veiculo:{modelo:'',ano:'',tipo:'eletrico'},impostos:{ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true}},editingISO='';
 
 (function(){
   loadData();
-  if(!CFG.precoKwh)CFG.precoKwh=0.75;
+  if(!CFG.precoKwh)CFG.precoKwh=0.41;
+  else if(CFG.precoKwh===0.75){ CFG.precoKwh=0.41; }
   if(typeof CFG.taxaOperador!=='number'||isNaN(CFG.taxaOperador)||CFG.taxaOperador<0)CFG.taxaOperador=0;
   if(CFG.taxaOperador>100)CFG.taxaOperador=100;
   if(!CFG.moeda)CFG.moeda='EUR';
@@ -1537,7 +1538,7 @@ function renderSemana(){
       var teDinheiro=reais.reduce(function(a,d){ return a+energiaDinheiro(DB[d]||{}); },0);
       var tal=reais.reduce(function(a,d){ return a+alDiaISO(d); },0);
       // gastos operacionais = energia + aluguer
-      var gas=te+tal, sl2=tg-gas, pos2=sl2>=0;
+      var gas=te+tal, sl2=tg-taxaOperadorSemanal-gas, pos2=sl2>=0;
       // Bases fiscais semanais por imposto, respeitando a seleção individual dos Transfers.
       var basesSem=reais.reduce(function(a,d){ var rr=DB[d]||{}; a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
       var impSemHtml=htmlImpostos(calcImpostosValores(sl2,basesSem,teDinheiro+tc+tou,teDinheiro));
