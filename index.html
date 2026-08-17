@@ -612,7 +612,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.11 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.8.9 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -739,7 +739,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.8.10';
+var APP_VERSION='3.8.9';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -1040,15 +1040,6 @@ function transferOperadorAplicavel(r){ return !r||typeof r.transferOperador==='u
 function taxaOperadorBase(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(transferOperadorAplicavel(r)?(r.outroG||0):0); }
 function taxaOperadorValor(r){ return taxaOperadorBase(r)*(taxaOperadorPercentual()/100); }
 function ganhosAposOperador(r){ return ganhos(r)-taxaOperadorValor(r); }
-// IVA retido na fonte pela frota: 6% apenas sobre Uber + Bolt (bruto), antes das despesas.
-function ivaRetidoFonte(r){
-  if(!r||CFG.pais!=='PT'||!CFG.impostos||!CFG.impostos.ativo||!CFG.impostos.usarIVA)return 0;
-  return ((r.uber||0)+(r.bolt||0))*0.06;
-}
-function ivaRetidoFontePeriodo(chaves){
-  if(!Array.isArray(chaves))return 0;
-  return chaves.reduce(function(a,d){ return a+ivaRetidoFonte(DB[d]||{}); },0);
-}
 function transferImpostosSelecionados(r){ return r&&Array.isArray(r.transferImpostos)?r.transferImpostos:[]; }
 function transferTemImposto(r,tipo){ return transferImpostosSelecionados(r).indexOf(tipo)>=0; }
 function transferTomadorLabel(r){ if(!r)return ''; var v=(r.transferTomador||'').trim(); if(!v)return ''; return v==='Outro'?(r.transferTomadorOutro||'Outro'):v; }
@@ -1057,14 +1048,7 @@ function transferTomadorLabel(r){ if(!r)return ''; var v=(r.transferTomador||'')
 // Alimenta&ccedil;&atilde;o e outros gastos pessoais N&Atilde;O entram
 function saldo(r,iso){
   if(!r)return 0;
-  // Repasse real da frota: operador + IVA retido + energia + aluguer + extras/ajustes.
-  return ganhosAposOperador(r)-ivaRetidoFonte(r)-energiaFrota(r)-alDiaISO(iso)-(r.outroG2||0);
-}
-// Fechamento de repasse do período: usa exatamente a mesma regra do saldo diário,
-// evitando uma segunda fórmula de cálculo para semana/histórico.
-function saldoRepassePeriodo(chaves){
-  if(!Array.isArray(chaves))return 0;
-  return chaves.reduce(function(total,iso){ return total+saldo(DB[iso]||{},iso); },0);
+  return ganhosAposOperador(r)-energiaFrota(r)-alDiaISO(iso);
 }
 function baseFiscalSemTransfer(r,iso){ if(!r)return 0; return Math.max(0,saldo(r,iso)-(r.outroG||0)); }
 function transferBaseFiscalPorImposto(r,tipo){
@@ -1078,9 +1062,8 @@ function baseFiscal(r,iso){ return baseFiscalAplicada(r,iso,'IRS'); }
 function saldoReal(r,iso){
   if(!r)return 0;
   var imp=calcImpostos(r,iso);
-  // IVA e extras operacionais já estão dentro de saldo(); não podem ser descontados novamente.
-  var bolsoNaoOperacional=energiaDinheiro(r)+(r.comida||0);
-  return imp ? imp.real : (saldo(r,iso)-bolsoNaoOperacional);
+  // A energia paga do bolso já faz parte de gastosBolso e é descontada uma única vez.
+  return imp ? imp.real : (saldo(r,iso)-gastosBolso(r));
 }
 function segunda(iso){ var d=new Date(iso+'T12:00:00'),wd=d.getDay(),diff=wd===0?-6:1-wd; d.setDate(d.getDate()+diff); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function diasSemana(seg){ var arr=[],d=new Date(seg+'T12:00:00'); for(var i=0;i<7;i++){ arr.push(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())); d.setDate(d.getDate()+1); } return arr; }
@@ -1133,24 +1116,23 @@ function calcImpostos(r,iso){
   if(!CFG.impostos.ativo&&!temFiscal)return null;
   var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
-  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?ivaRetidoFonte(r):0;
-  if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*0.15:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=0; }
-  var total=ss+irs+iva,sl=saldo(r,iso),bolsoNaoOperacional=energiaDinheiro(r)+(r.comida||0);
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-ss-irs-bolsoNaoOperacional,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:((r.uber||0)+(r.bolt||0)),saldo:sl,bolso:bolsoNaoOperacional,recuperarEnergia:energiaDinheiro(r),usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
+  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
+  if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*0.15:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=transferTemImposto(r,'IVA')?baseIVA*0.06:0; }
+  var total=ss+irs+iva,sl=saldo(r,iso),bolso=gastosBolso(r);
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-bolso,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:bolso,recuperarEnergia:energiaDinheiro(r),usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
 // calcImpostosValores: semana/hist&oacute;rico com uma base separada para cada imposto.
-function calcImpostosValores(sl,bases,bolso,energiaRecuperar,brutoUberBolt){
+function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
   normalizarImpostosCfg();
   if(CFG.pais!=='PT'||!bases)return null;
   var baseSS=bases.SS||0,baseIRS=bases.IRS||0,baseIVA=bases.IVA||0,temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
   if(!CFG.impostos.ativo&&!temFiscal)return null;
   var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
-  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?(brutoUberBolt||0)*0.06:0;
-  if(!CFG.impostos.ativo){ ss=baseSS*0.15; irs=baseIRS*(taxa/100); iva=0; }
+  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
+  if(!CFG.impostos.ativo){ ss=baseSS*0.15; irs=baseIRS*(taxa/100); iva=baseIVA*0.06; }
   var total=ss+irs+iva,b=bolso||0;
-  // O IVA já foi retido dentro do saldo; não o subtrair novamente no saldo real.
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-ss-irs-b,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:(brutoUberBolt||0),saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
+  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-b,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
 function htmlImpostos(imp){
   if(!imp)return '';
@@ -1342,7 +1324,7 @@ function renderResumoDia(){
         html+='<div style="margin:8px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>';
         if(eDin>0)html+=rl('\u26a1 Energia (bolso)',moeda(eDin),'color:var(--amber)');
         if((r.comida||0)>0)html+=rl('Alimenta\u00e7\u00e3o',moeda(r.comida||0),'color:var(--muted)');
-        if((r.outroG2||0)>0)html+=rl('Extras / ajustes',moeda(r.outroG2||0),'color:var(--muted)');
+        if((r.outroG2||0)>0)html+=rl('Outros gastos',moeda(r.outroG2||0),'color:var(--muted)');
       }
       if(horas>0)html+='<div class="div"></div>'+rl('\u23f1\ufe0f Horas trabalhadas',fmtHoras(horas),'color:var(--cyan)')+rl('💰 Lucro/hora',moeda(gph),'color:var(--amber)')+(imp?rl('(ap\u00f3s impostos)','','color:var(--muted)',true):'');
       if(kms>0){
@@ -1556,12 +1538,12 @@ function renderSemana(){
       var teDinheiro=reais.reduce(function(a,d){ return a+energiaDinheiro(DB[d]||{}); },0);
       var tal=reais.reduce(function(a,d){ return a+alDiaISO(d); },0);
       // gastos operacionais = energia + aluguer
-      var gas=te+tal, sl2=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0), pos2=sl2>=0;
+      var gas=te+tal, sl2=tg-taxaOperadorSemanal-gas, pos2=sl2>=0;
       // Bases fiscais semanais por imposto, respeitando a seleção individual dos Transfers.
       var basesSem=reais.reduce(function(a,d){ var rr=DB[d]||{}; a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
-      var impSemHtml=htmlImpostos(calcImpostosValores(sl2,basesSem,teDinheiro+tc,teDinheiro,tu+tb));
+      var impSemHtml=htmlImpostos(calcImpostosValores(sl2,basesSem,teDinheiro+tc+tou,teDinheiro));
 
-      var slSemanal=saldoRepassePeriodo(reais);
+      var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
       var metaSemanalBase=CFG.metaSem;
       var detalhesMetaSemanal='';
@@ -1588,7 +1570,7 @@ function renderSemana(){
         (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
         (teDinheiro>0?rl('\u26a1 Energia (bolso)',moeda(teDinheiro),'color:var(--amber)'):'')+
         (tc>0?rl('Alimenta\u00e7\u00e3o',moeda(tc),'color:var(--muted)'):'')+
-        (tou>0?rl('Extras / ajustes',moeda(tou),'color:var(--muted)'):'')+
+        (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
         (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
         rl('KMs totais',totalKms>0?totalKms+'km':'-')+
         '<div class="rl tot"><span class="lb">'+(pos2?'\U0001F3C6':'\u26a0\ufe0f')+' Saldo OP Frota</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+ moeda(sl2)+'</span></div>'+
@@ -1722,7 +1704,7 @@ function renderHist(){
       var nDias=chaves.length;
       var alTotal=chaves.reduce(function(a,d){ return a+alDiaISO(d); },0);
       var gastos=te+alTotal;
-      var slTotal=saldoRepassePeriodo(chaves);
+      var slTotal=tg-gastos;
       var pos=slTotal>=0;
       var basesHist=chaves.reduce(function(a,d){ var rr=r0(d); a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
 
@@ -1748,7 +1730,7 @@ function renderHist(){
       var custoKmHist=totalKmsHist>0&&custoEnergiaRealHist>0?(custoEnergiaRealHist/totalKmsHist):0;
       var totalLitrosHist=chaves.reduce(function(a,d){ return a+(r0(d).litros||0); },0);
       var consumoHist=!isEletrico()&&totalKmsHist>0&&totalLitrosHist>0?(totalLitrosHist/totalKmsHist*100):0;
-      var impHist=calcImpostosValores(slTotal,basesHist,teDinheiro+tc,teDinheiro,tu+tb);
+      var impHist=calcImpostosValores(slTotal,basesHist,teDinheiro+tc+tou,teDinheiro);
       var impHistHtml=htmlImpostos(impHist);
 
       document.getElementById('resumoPeriodo').innerHTML=
@@ -1810,7 +1792,7 @@ function renderHist(){
         (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
         (teDinheiro>0?rl('\u26a1 Energia (bolso)',moeda(teDinheiro),'color:var(--amber)'):'')+
         (tc>0?rl('Alimentação',moeda(tc),'color:var(--muted)'):'')+
-        (tou>0?rl('Extras / ajustes',moeda(tou),'color:var(--muted)'):'')+
+        (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
         (totalHorasHist>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHorasHist)):'')+
         rl('KMs totais',totalKmsHist>0?totalKmsHist+'km':'-')+
         (isEletrico()&&totalKwhHist>0?rl('⚡ kWh totais',totalKwhHist.toFixed(1)+' kWh','color:var(--violet)'):'')+
