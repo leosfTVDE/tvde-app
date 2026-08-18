@@ -1050,14 +1050,21 @@ function saldo(r,iso){
   if(!r)return 0;
   return ganhosAposOperador(r)-energiaFrota(r)-alDiaISO(iso);
 }
-function baseFiscalSemTransfer(r,iso){ if(!r)return 0; return Math.max(0,saldo(r,iso)-(r.outroG||0)); }
+// v3.9: base do IVA passou a ser o valor bruto (ganhos após taxa do operador,
+// sem descontar energia/aluguer), pois o IVA incide sobre o valor faturado do
+// serviço, não sobre o lucro operacional. SS e IRS continuam sobre o saldo líquido.
+function baseFiscalSemTransfer(r,iso,tipo){
+  if(!r)return 0;
+  var base=(tipo==='IVA')?ganhosAposOperador(r):saldo(r,iso);
+  return Math.max(0,base-(r.outroG||0));
+}
 function transferBaseFiscalPorImposto(r,tipo){
   if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
   var transferLiquido=(r.outroG||0)-(transferOperadorAplicavel(r)?(r.outroG||0)*(taxaOperadorPercentual()/100):0);
   return Math.max(0,transferLiquido);
 }
-function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso)+transferBaseFiscalPorImposto(r,tipo); }
-function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso):0)+transferBaseFiscalPorImposto(r,tipo); }
+function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso,tipo)+transferBaseFiscalPorImposto(r,tipo); }
+function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso,tipo):0)+transferBaseFiscalPorImposto(r,tipo); }
 function baseFiscal(r,iso){ return baseFiscalAplicada(r,iso,'IRS'); }
 function saldoReal(r,iso){
   if(!r)return 0;
