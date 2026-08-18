@@ -1711,7 +1711,10 @@ function renderHist(){
       var nDias=chaves.length;
       var alTotal=chaves.reduce(function(a,d){ return a+alDiaISO(d); },0);
       var gastos=te+alTotal;
-      var slTotal=tg-gastos;
+      // v3.9.1: slTotal agora desconta a taxa do operador, igual à função saldo()
+      // usada no card individual do dia — antes o resumo do período (topo do
+      // Histórico) e a Estimativa fiscal PT ficavam sem esse desconto.
+      var slTotal=tg-taxaOperadorPeriodo-gastos;
       var pos=slTotal>=0;
       var basesHist=chaves.reduce(function(a,d){ var rr=r0(d); a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
 
