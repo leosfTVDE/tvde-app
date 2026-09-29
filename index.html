@@ -288,6 +288,24 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .trajeto-row .tl small{display:block;color:var(--muted);font-size:9px}
 .trajeto-row .tv{font-family:'Syne',sans-serif;font-weight:800;color:var(--green);white-space:nowrap}
 
+/* Bloco de saldos: frota -> trajeto -> real */
+.saldos-bloco{margin-top:10px;border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.saldos-linha{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 11px;font-size:12px;border-bottom:1px solid var(--border)}
+.saldos-linha:last-child{border-bottom:none}
+.saldos-linha .sl-lb{color:var(--sub);line-height:1.35}
+.saldos-linha .sl-lb small{display:block;color:var(--muted);font-size:9px}
+.saldos-linha .sl-vl{font-family:'Syne',sans-serif;font-weight:800;white-space:nowrap}
+.saldos-linha.traj{background:rgba(74,222,128,.06)}
+.saldos-linha.real{background:rgba(34,211,238,.06)}
+.saldos-linha.real .sl-lb{color:var(--text);font-weight:700}
+.saldos-linha.real .sl-vl{font-size:15px}
+.meta-traj{margin-top:10px;padding:8px 10px;border-radius:9px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22)}
+.meta-traj-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;color:var(--sub);margin-bottom:5px}
+.meta-traj-row strong{font-family:'Syne',sans-serif;font-size:12px;color:var(--green);white-space:nowrap}
+.meta-traj-bar{height:4px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
+.meta-traj-fill{height:100%;background:var(--green);opacity:.7;border-radius:10px}
+.meta-traj-nota{font-size:9px;color:var(--muted);margin-top:4px}
+
 /* Histórico recolhível + recursos reservados */
 .hist-acc{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
 .hist-acc-btn{width:100%;background:transparent;border:none;color:var(--text);padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;text-align:left;cursor:pointer}
@@ -626,7 +644,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.9.2 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.9.3 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -697,14 +715,14 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">&#128640;</div>
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.9.2</div>
+      <div class="nov-versao">Finance Drive v3.9.3</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
         <div class="nov-item-ic">&#128664;</div>
         <div class="nov-item-txt">
           <strong>Trajeto Transfer</strong>
-          <span>Transfers sem taxa do operador e sem impostos passam a chamar-se Trajeto Transfer e aparecem numa linha pr&oacute;pria no saldo real, em Hoje, Semana e Hist&oacute;rico.</span>
+          <span>Saldo frota (Uber, Bolt e Transfers normais) &rarr; Trajeto Transfer &rarr; Saldo real. O Trajeto Transfer fica fora das metas e aparece numa barra informativa pr&oacute;pria.</span>
         </div>
       </div>
       <div class="nov-item">
@@ -766,7 +784,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.9.2';
+var APP_VERSION='3.9.3';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -1080,6 +1098,17 @@ function isTrajetoTransfer(r){
 function trajetoValor(r){ return isTrajetoTransfer(r)?(r.outroG||0):0; }
 function somaTrajeto(chaves){ return chaves.reduce(function(a,d){ return a+trajetoValor(DB[d]||{}); },0); }
 function transferRowLabel(r){ return isTrajetoTransfer(r)?'🚘 Trajeto Transfer':'🚘 Transfer / Outros'; }
+// Saldo frota = saldo real sem o Trajeto Transfer (Uber, Bolt e Transfers normais, após todos os descontos).
+// É este valor que conta para as metas diária e semanal.
+function saldoFrota(r,iso){ return saldoReal(r,iso)-trajetoValor(r); }
+function htmlBlocoSaldos(frota,traj,real){
+  var cF=frota>=0?'var(--green)':'var(--red)',cR=real>=0?'var(--green)':'var(--red)';
+  return '<div class="saldos-bloco">'+
+    '<div class="saldos-linha"><span class="sl-lb">'+(frota>=0?'🏆':'⚠️')+' Saldo frota<small>Uber, '+plat2()+' e Transfers normais, após descontos</small></span><span class="sl-vl" style="color:'+cF+'">'+moeda(frota)+'</span></div>'+
+    '<div class="saldos-linha traj"><span class="sl-lb">🚘 Trajeto Transfer<small>sem IVA · sem taxa do operador · sem impostos</small></span><span class="sl-vl" style="color:'+(traj>0?'var(--green)':'var(--muted)')+'">+'+moeda(traj)+'</span></div>'+
+    '<div class="saldos-linha real"><span class="sl-lb">💎 Saldo real<small>saldo frota + Trajeto Transfer</small></span><span class="sl-vl" style="color:'+cR+'">'+moeda(real)+'</span></div>'+
+  '</div>';
+}
 function htmlTrajetoRow(v){
   if(!(v>0))return '';
   return '<div class="trajeto-row"><span class="tl">🚘 Trajeto Transfer no saldo real<small>sem IVA · sem taxa do operador · sem impostos</small></span><span class="tv">+'+moeda(v)+'</span></div>';
@@ -1195,8 +1224,7 @@ function htmlImpostos(imp,trajeto){
   var ativos=[]; if(imp.usarSS)ativos.push('SS'); if(imp.usarIRS)ativos.push('IRS'); if(imp.usarIVA)ativos.push('IVA');
   return '<div class="impostos-box">'+
     '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:9px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
-    '<div class="impostos-total"><span class="impostos-total-lbl">Saldo real</span><span class="impostos-total-val">'+moeda(imp.real)+'</span></div>'+
-    htmlTrajetoRow(trajeto||0)+
+    htmlBlocoSaldos(imp.real-(trajeto||0),trajeto||0,imp.real)+
     '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'. Base fiscal conforme configurações gerais e Transfers tributáveis. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+
   '</div>';
 }
@@ -1310,15 +1338,22 @@ function renderHeader(){
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
   atualizarPrefixos(); atualizarBadgeVeiculo(); atualizarBadgePais();
 }
-function renderBarraMeta(containerId,label,atual,meta,nota,detalhesMeta){
+function renderBarraMeta(containerId,label,atual,meta,nota,detalhesMeta,trajeto){
   var el=document.getElementById(containerId); if(!el)return;
   if(!meta||meta<=0){ el.innerHTML=''; return; }
   var pct=Math.min(100,Math.max(0,Math.round((atual/meta)*100))),atingiu=atual>=meta;
   var cor=atingiu?'var(--green)':pct>=70?'var(--amber)':'var(--cyan)';
   var detalhesHtml=detalhesMeta?'<div style="font-size:10px;color:var(--sub);line-height:1.6;margin-bottom:8px">'+detalhesMeta+'</div>':'';
-  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div>'+detalhesHtml+'<div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div></div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
+  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div>'+detalhesHtml+'<div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div>'+htmlMetaTrajeto(trajeto,meta)+'</div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
 }
 
+function htmlMetaTrajeto(traj,meta){
+  if(!(traj>0))return '';
+  var pct=meta>0?Math.min(100,Math.round((traj/meta)*100)):0;
+  return '<div class="meta-traj"><div class="meta-traj-row"><span>🚘 Trajeto Transfer</span><strong>+'+moeda(traj)+'</strong></div>'+
+    '<div class="meta-traj-bar"><div class="meta-traj-fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="meta-traj-nota">Informativo: não conta para a meta. Entra só no saldo real.</div></div>';
+}
 // ── KPIs / Hoje ───────────────────────────────────────────────────────
 function renderKPIs(){
   var h=hoje(),r=DB[h]||{},g=ganhos(r),sl=saldo(r,h);
@@ -1327,14 +1362,14 @@ function renderKPIs(){
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var imp=calcImpostos(r,h),slMeta=saldoReal(r,h),slLbl=imp?'Saldo real':'Saldo hoje';
   var gph=horas&&horas>0?slMeta/horas:0;
-  var traj=trajetoValor(r);
-  var subSaldo=[]; if(imp)subSaldo.push('após '+impostosSelecionadosLabel()); if(traj>0)subSaldo.push('🚘 inclui Trajeto Transfer '+moeda(traj));
+  var traj=trajetoValor(r),slFrota=slMeta-traj;
+  var subSaldo=[]; if(imp)subSaldo.push('após '+impostosSelecionadosLabel()); if(traj>0)subSaldo.push('Frota '+moeda(slFrota)+' + 🚘 '+moeda(traj));
   document.getElementById('kpiGrid').innerHTML=
     kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
     kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')',subSaldo.join('<br>'))+
     kpi('⏱️','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
-  renderBarraMeta('metaDiariaBox','Meta diária',slMeta,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'. ':'')+(traj>0?'🚘 Inclui Trajeto Transfer (sem IVA, sem taxa, sem impostos): '+moeda(traj)+'.':''));
+  renderBarraMeta('metaDiariaBox','Meta diária',slFrota,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''),'',traj);
 }
 function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:8px;color:var(--muted);margin-top:3px;font-weight:400;font-family:DM Mono,monospace;line-height:1.4">'+sub+'</div>':'')+'</div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
@@ -1384,9 +1419,10 @@ function renderResumoDia(){
         if(isEletrico()&&eK>0){ var eff=(eK/kms*100); var custoEnergiaRealDia=eT+energiaDinheiro(r); html+=rl('\u26a1 Efici\u00eancia',eff.toFixed(1)+' kWh/100km','color:var(--violet)',true)+rl('📍 Custo/km',moeda(custoEnergiaRealDia/kms),'',true); }
         else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
       }
-      html+='<div class="rl tot"><span class="lb">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operacional</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+moeda(sl)+'</span></div>';
+      var slOpFrota=sl-traj,posOp=slOpFrota>=0;
+      html+='<div class="rl tot"><span class="lb">'+(posOp?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(posOp?'green':'red')+')">'+moeda(slOpFrota)+'</span></div>';
       if(imp)html+=htmlImpostos(imp,traj);
-      else if(traj>0)html+=rl('💎 Saldo real',moeda(slRealFinal),'color:var(--'+(slRealFinal>=0?'green':'red')+')')+htmlTrajetoRow(traj);
+      else html+=htmlBlocoSaldos(slRealFinal-traj,traj,slRealFinal);
       document.getElementById('resumoDia').innerHTML=html;
     }
 
@@ -1614,20 +1650,20 @@ function renderSemana(){
       var impSemHtml=htmlImpostos(impSemObj,trajSem);
 
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
-      var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
+      var slSemanalReal=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
+      var slSemanalMeta=slSemanalReal-trajSem;
       var metaSemanalBase=CFG.metaSem;
       var detalhesMetaSemanal='';
       if(metaSemanalBase>0)detalhesMetaSemanal+='Meta líquida configurada: <strong>'+moeda(metaSemanalBase)+'</strong>';
       if(teDinheiro>0)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Energia recuperada antes de contar lucro: <strong style="color:var(--amber)">'+moeda(teDinheiro)+'</strong>';
-      if(trajSem>0)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'🚘 Trajeto Transfer incluído (sem IVA, sem taxa, sem impostos): <strong style="color:var(--green)">'+moeda(trajSem)+'</strong>';
       // O saldo real já desconta a energia do bolso uma única vez; a meta permanece a configurada.
-      renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?'⚡ A energia do bolso foi recuperada antes de contar o lucro da meta.':'📌 Saldo real: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal);
+      renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?'⚡ A energia do bolso foi recuperada antes de contar o lucro da meta.':'📌 Meta conta o saldo frota: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal,trajSem);
 
       var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
 
       var fiscalSemanaEl=document.getElementById('fiscalSemanaBox');
     if(fiscalSemanaEl)fiscalSemanaEl.innerHTML=impSemHtml?'<div class="stit">&#128203; Estimativa fiscal PT</div><div class="card" style="border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)"><div class="card-top ct-violet"></div>'+impSemHtml.replace('<div class="impostos-box">','<div style="margin-top:0">')+'</div>':'';
-    var slRealSemanaFinal=impSemObj?impSemObj.real:slSemanalMeta;
+    var slRealSemanaFinal=impSemObj?impSemObj.real:slSemanalReal;
     document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+
         (!reais.length?'<div class="empty"><div class="empty-ic">📤</div>Sem dados esta semana</div>':
         rl('📅 Dias registados',reais.length+'/'+diasTrabalhoMeta())+
@@ -1645,8 +1681,8 @@ function renderSemana(){
         (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
         (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
         rl('KMs totais',totalKms>0?totalKms+'km':'-')+
-        '<div class="rl tot"><span class="lb">'+(pos2?'🏆':'\u26a0\ufe0f')+' Saldo OP Frota</span><span class="vl" style="color:var(--'+(pos2?'green':'red')+')">'+ moeda(sl2)+'</span></div>'+
-        (trajSem>0?rl('💎 Saldo real',moeda(slRealSemanaFinal),'color:var(--'+(slRealSemanaFinal>=0?'green':'red')+')')+htmlTrajetoRow(trajSem):'')+
+        '<div class="rl tot"><span class="lb">'+(sl2-trajSem>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(sl2-trajSem>=0?'green':'red')+')">'+ moeda(sl2-trajSem)+'</span></div>'+
+        htmlBlocoSaldos(slRealSemanaFinal-trajSem,trajSem,slRealSemanaFinal)+
         notaSemana);
     }
 function perf(ic,lb,vl,st){ return '<div class="perf-card"><div class="perf-ic">'+ic+'</div><div class="perf-lbl">'+lb+'</div><div class="perf-val" style="'+st+'">'+vl+'</div></div>'; }
@@ -1818,9 +1854,10 @@ function renderHist(){
         '<div class="rp-grid">'+
         '<div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
         (taxaOperadorPeriodo>0?'<div class="rp-item"><div class="rp-lbl">🏢 Taxa operador</div><div class="rp-val" style="color:var(--red)">-'+moeda(taxaOperadorPeriodo)+'</div></div>':'')+
-        '<div class="rp-item"><div class="rp-lbl">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo operac.</div><div class="rp-val" style="color:var(--'+(pos?'green':'red')+')">'+moeda(slTotal)+'</div></div>'+
-        (trajHist>0?'<div class="rp-item"><div class="rp-lbl">💎 Saldo real</div><div class="rp-val" style="color:var(--'+(slRealPeriodo>=0?'green':'red')+')">'+moeda(slRealPeriodo)+'</div></div>':'')+
-        (trajHist>0?'<div class="rp-item" style="border:1px solid rgba(74,222,128,.25)"><div class="rp-lbl">🚘 Trajeto Transfer</div><div class="rp-val" style="color:var(--green)">+'+moeda(trajHist)+'</div></div>':'')+
+        '<div class="rp-item"><div class="rp-lbl">📊 Saldo operac. frota</div><div class="rp-val" style="color:var(--'+(slTotal-trajHist>=0?'green':'red')+')">'+moeda(slTotal-trajHist)+'</div></div>'+
+        '<div class="rp-item"><div class="rp-lbl">🏆 Saldo frota</div><div class="rp-val" style="color:var(--'+(slRealPeriodo-trajHist>=0?'green':'red')+')">'+moeda(slRealPeriodo-trajHist)+'</div></div>'+
+        '<div class="rp-item" style="border:1px solid rgba(74,222,128,.25)"><div class="rp-lbl">🚘 Trajeto Transfer</div><div class="rp-val" style="color:var(--green)">+'+moeda(trajHist)+'</div></div>'+
+        '<div class="rp-item" style="grid-column:1/-1;border:1px solid rgba(34,211,238,.25)"><div class="rp-lbl">💎 Saldo real</div><div class="rp-val" style="color:var(--'+(slRealPeriodo>=0?'green':'red')+')">'+moeda(slRealPeriodo)+'</div></div>'+
         '<div class="rp-item"><div class="rp-lbl">&#9889; Gasto OP Frota</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
         (teDinheiro>0?'<div class="rp-item"><div class="rp-lbl">&#128181; Gasto Dinheiro</div><div class="rp-val" style="color:var(--amber)">'+moeda(teDinheiro)+'</div></div>':'')+
         '<div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
@@ -1861,7 +1898,7 @@ function renderHist(){
             '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Frota: '+moeda(eT)+(eDin>0?' \u00b7 Bolso: '+moeda(eDin):'')+'</div>'+
             (parts.length||extra?'<div class="hi-pl">'+parts.join(' \u00b7 ')+extra+'</div>':'')+
           '</div>'+
-          '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div>'+(traj>0?'<div style="font-size:9px;color:var(--green);margin-top:2px">inclui 🚘 '+moeda(traj)+'</div>':'')+'<div class="hi-edit">\u270f\ufe0f editar</div></div>'+
+          '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div>'+(traj>0?'<div style="font-size:9px;color:var(--muted);margin-top:2px">frota '+moeda(sl2-traj)+' + <span style="color:var(--green)">🚘 '+moeda(traj)+'</span></div>':'')+'<div class="hi-edit">\u270f\ufe0f editar</div></div>'+
         '</div>';
       });
 
@@ -1887,12 +1924,12 @@ function renderHist(){
         (isEletrico()&&eficienciaHist>0?rl('⚡ Eficiência energética',eficienciaHist.toFixed(1)+' kWh/100km','color:var(--violet)'):'')+
         (!isEletrico()&&consumoHist>0?rl('⛽ Consumo médio',consumoHist.toFixed(1)+' L/100km','color:var(--amber)'):'')+
         (custoKmHist>0?rl('📍 Custo/km energia',moeda(custoKmHist),'color:var(--cyan)'):'')+
-        '<div class="rl tot"><span class="lb">'+(pos?'🏆':'\u26a0\ufe0f')+' Saldo OP Frota</span><span class="vl" style="color:var(--'+(pos?'green':'red')+')">'+ moeda(slTotal)+'</span></div>'+
-        (trajHist>0?rl('💎 Saldo real',moeda(slRealPeriodo),'color:var(--'+(slRealPeriodo>=0?'green':'red')+')')+htmlTrajetoRow(trajHist):'')+
+        '<div class="rl tot"><span class="lb">'+(slTotal-trajHist>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(slTotal-trajHist>=0?'green':'red')+')">'+ moeda(slTotal-trajHist)+'</span></div>'+
+        htmlBlocoSaldos(slRealPeriodo-trajHist,trajHist,slRealPeriodo)+
         '<div class="hist-acc-note">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimentação e gastos pessoais não entram.</div>';
 
       if(histFiltro==='dia'){
-        document.getElementById('histList').innerHTML=diasHtml+(trajHist>0?htmlTrajetoRow(trajHist):'');
+        document.getElementById('histList').innerHTML=diasHtml+htmlBlocoSaldos(slRealPeriodo-trajHist,trajHist,slRealPeriodo);
       }else{
         document.getElementById('histList').innerHTML=
           histAcc('histAccTotais','💰 Totais do período',totaisHtml,true)+
@@ -2045,9 +2082,9 @@ function verificarConquistas(iso){
   if(metaDia>0){
     var idDia='dia_'+iso;
     if(!vistos[idDia]){
-      var slDia=saldoReal(r,iso);
+      var slDia=saldoFrota(r,iso);
       if(slDia>=metaDia){
-        enfileirarConquista('\ud83c\udf89','Meta di\u00e1ria batida!','Fizeste '+moeda(slDia)+' de lucro l\u00edquido hoje, acima da meta de '+moeda(metaDia)+'. Bom trabalho!','green');
+        enfileirarConquista('\ud83c\udf89','Meta di\u00e1ria batida!','Fizeste '+moeda(slDia)+' de saldo frota hoje, acima da meta de '+moeda(metaDia)+'. Bom trabalho!','green');
       } else {
         enfileirarConquista('\ud83d\udcaa','Quase l\u00e1!','Ficaste a '+moeda(metaDia-slDia)+' da meta di\u00e1ria de hoje. Amanh\u00e3 \u00e9 um novo dia para recuperar!','cyan');
       }
@@ -2057,7 +2094,7 @@ function verificarConquistas(iso){
   if(CFG.metaSem&&CFG.metaSem>0){
     var seg=segunda(iso),dias=diasSemana(seg),idSem='sem_'+seg;
     if(!vistos[idSem]){
-      var totalSem=dias.reduce(function(a,d){ return a+(DB[d]?saldoReal(DB[d],d):0); },0);
+      var totalSem=dias.reduce(function(a,d){ return a+(DB[d]?saldoFrota(DB[d],d):0); },0);
       var ehDomingo=(new Date(iso+'T12:00:00')).getDay()===0;
       if(totalSem>=CFG.metaSem){
         enfileirarConquista('\ud83c\udfc6','Meta semanal batida!','J\u00e1 somaste '+moeda(totalSem)+' esta semana, superando a meta de '+moeda(CFG.metaSem)+'!','green');
