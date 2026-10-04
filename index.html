@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Finance Drive">
@@ -14,31 +14,44 @@
   --bg:#080d1a;--surface:#0f172a;--card:#1a2540;--border:rgba(99,130,180,0.2);
   --cyan:#22d3ee;--cyan2:#0891b2;--green:#4ade80;--green2:#16a34a;
   --red:#f43f5e;--amber:#fbbf24;--violet:#a78bfa;--orange:#fb923c;
-  --text:#e2e8f0;--muted:#64748b;--sub:#94a3b8;
+  --text:#e2e8f0;--muted:#7b8aa3;--sub:#94a3b8;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
+  --fd-head:'Syne',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fd-mono:'DM Mono',ui-monospace,'SF Mono',Menlo,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overscroll-behavior:none;background:var(--bg)}
-body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:100vh;position:fixed;width:100%;font-size:14px}
+body{font-family:var(--fd-mono);color:var(--text);overflow:hidden;height:100vh;position:fixed;width:100%;font-size:14px}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .hdr{padding:calc(var(--safe-top) + 10px) 18px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:8px}
 .hdr-logo-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0}
-.hdr-logo-txt{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-logo-txt{font-family:var(--fd-head);font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hdr-right{text-align:right}
-.hdr-date{font-size:10px;color:var(--muted)}
+.hdr-date{font-size:11px;color:var(--muted)}
 .hdr-week{font-size:11px;color:var(--sub);margin-top:1px}
-.ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;height:56px;background:var(--surface);font-size:11px;color:var(--cyan);gap:7px;transform:translateY(-56px);transition:transform .25s ease;z-index:300;border-bottom:1px solid var(--border)}
+.ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;height:56px;background:var(--surface);font-size:12px;color:var(--cyan);gap:7px;transform:translateY(-56px);transition:transform .25s ease;z-index:300;border-bottom:1px solid var(--border)}
 .ptr.visible{transform:translateY(0)}
 .ptr-spin{font-size:18px;display:inline-block}
 .ptr-spin.spin{animation:spin .6s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(72px + var(--safe-bot));position:relative}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--nav-h,64px) + 16px);position:relative}
+body.on-hoje .content{padding-bottom:calc(var(--nav-h,64px) + 90px)}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:var(--safe-bot);z-index:200}
-.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer}
+.nb{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:var(--fd-mono);font-size:11px;cursor:pointer}
 .nb.on{color:var(--cyan)}
-.nb-ic{font-size:26px;line-height:1}
+.nb.on::before{content:'';position:absolute;top:0;left:28%;right:28%;height:3px;border-radius:0 0 3px 3px;background:var(--cyan)}
+.nb-ic{font-size:23px;line-height:1}
+
+/* Barra fixa de guardar (aba Hoje) */
+.savebar{display:none;position:fixed;left:0;right:0;bottom:var(--nav-h,64px);z-index:190;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px;align-items:center;gap:12px}
+body.on-hoje .savebar{display:flex}
+.savebar-info{flex:1;min-width:0}
+.savebar-lbl{font-size:11px;color:var(--muted)}
+.savebar-val{font-family:var(--fd-head);font-size:18px;font-weight:800;color:var(--cyan);white-space:nowrap}
+.savebar .btn{width:auto;margin-top:0;padding:13px 22px;flex-shrink:0}
+
 .pg{display:none}
 .pg.on{display:block;animation:fi .18s ease}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -50,141 +63,179 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .ct-green{background:linear-gradient(90deg,var(--green),var(--green2))}
 .ct-amber{background:linear-gradient(90deg,var(--amber),#d97706)}
 .ct-orange{background:linear-gradient(90deg,var(--orange),#ea580c)}
-.stit{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 9px}
+.stit{font-family:var(--fd-head);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 9px}
 .sub-h{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.07em;margin:13px 0 7px;display:flex;align-items:center;gap:5px}
 .fld{margin-bottom:9px}
-.fld-lbl{font-size:10px;color:var(--sub);margin-bottom:4px}
+.fld-lbl{font-size:11px;color:var(--sub);margin-bottom:4px}
 .iw{display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .15s}
 .iw:focus-within{border-color:var(--cyan)}
-.ipfx{padding:0 11px;font-size:14px;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;border-right:1px solid var(--border);height:44px;display:flex;align-items:center;background:var(--card);flex-shrink:0;white-space:nowrap}
-.iw input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'DM Mono',monospace;font-size:17px;padding:10px 12px;width:100%;-webkit-appearance:none;min-width:0}
+.ipfx{padding:0 11px;font-size:14px;color:var(--muted);font-family:var(--fd-head);font-weight:700;border-right:1px solid var(--border);height:44px;display:flex;align-items:center;background:var(--card);flex-shrink:0;white-space:nowrap}
+.iw input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--fd-mono);font-size:17px;padding:10px 12px;width:100%;-webkit-appearance:none;min-width:0}
 .iw input::placeholder{color:var(--muted);font-size:13px}
-.iw input[type=date]{font-size:14px;color:var(--text)}
+.iw input[type=date]{font-size:16px;color:var(--text)}
 .iw input[type=time]{font-size:17px;color:var(--text)}
+
+/* Entradas compactas de ganhos e gastos */
+.plat-inputs,.gastos-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
+.plat-in{border-left:3px solid var(--border);padding-left:9px;margin-bottom:9px}
+.plat-in .fld-lbl{font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.plat-uber{border-left-color:var(--text)}
+.plat-bolt{border-left-color:#34d186}
+.plat-transfer{border-left-color:var(--orange)}
+.plat-in .ipfx,.gastos-grid .ipfx{padding:0 9px}
+.aluguer-linha{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+
+/* Controlos segmentados e chips (Transfer) */
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-top:7px}
+.seg-opt{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 8px;font-family:var(--fd-head);font-size:13px;font-weight:700;color:var(--sub);cursor:pointer;background:var(--card);transition:background .15s,color .15s}
+.seg-opt+.seg-opt{border-left:1px solid var(--border)}
+.seg-opt input{width:16px;height:16px;accent-color:var(--cyan);margin:0}
+.seg-opt:has(input:checked){background:rgba(34,211,238,.12);color:var(--cyan)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.chip-opt{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:999px;background:var(--card);font-family:var(--fd-head);font-size:13px;font-weight:700;color:var(--sub);cursor:pointer;transition:all .15s}
+.chip-opt input{width:15px;height:15px;accent-color:var(--violet);margin:0}
+.chip-opt:has(input:checked){border-color:var(--violet);color:var(--violet);background:rgba(167,139,250,.1)}
+
 .energia-box{background:var(--surface);border:1.5px solid rgba(167,139,250,.25);border-radius:12px;padding:12px;margin-bottom:9px}
-.energia-box-title{font-size:10px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.energia-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.energia-box-title{font-size:11px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.energia-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .energia-sep{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);margin:6px 0;gap:8px}
 .energia-sep::before,.energia-sep::after{content:'';flex:1;height:1px;background:var(--border)}
 .energia-total{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:8px;margin-top:8px}
-.energia-total-lbl{font-size:10px;color:var(--muted)}
-.energia-total-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--violet)}
+.energia-total-lbl{font-size:11px;color:var(--muted)}
+.energia-total-val{font-family:var(--fd-head);font-size:13px;font-weight:800;color:var(--violet)}
 .combustao-box{background:var(--surface);border:1.5px solid rgba(251,191,36,.25);border-radius:12px;padding:12px;margin-bottom:9px}
-.combustao-box-title{font-size:10px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.horas-box{background:var(--surface);border:1.5px solid rgba(34,211,238,.2);border-radius:12px;padding:12px;margin-bottom:9px}
-.horas-box-title{font-size:10px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.horas-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.combustao-box-title{font-size:11px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.horas-box{background:var(--surface);border:1.5px solid rgba(34,211,238,.2);border-radius:12px;padding:12px;margin-bottom:0}
+.horas-box-title{font-size:11px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.horas-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .horas-total{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);border-radius:8px;margin-top:8px}
-.horas-total-lbl{font-size:10px;color:var(--muted)}
-.horas-total-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--cyan)}
-.g-total{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.22);border-radius:9px;margin:9px 0 3px}
-.g-total-lbl{font-size:10px;color:var(--sub)}
-.g-total-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--cyan)}
-.btn{width:100%;padding:14px;border:none;border-radius:11px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.04em;transition:opacity .15s,transform .1s;margin-top:4px}
+.horas-total-lbl{font-size:11px;color:var(--muted)}
+.horas-total-val{font-family:var(--fd-head);font-size:13px;font-weight:800;color:var(--cyan)}
+.btn{width:100%;padding:14px;border:none;border-radius:11px;font-family:var(--fd-head);font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.04em;transition:opacity .15s,transform .1s;margin-top:4px}
 .btn:active{opacity:.8;transform:scale(.98)}
 .btn-cyan{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000}
 .btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#000}
 .btn-red{background:linear-gradient(135deg,var(--red),#be123c);color:#fff}
 .btn-amber{background:linear-gradient(135deg,var(--amber),#d97706);color:#000}
 .btn-outline{background:none;border:1.5px solid var(--border);color:var(--sub)}
-.kpi-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:12px}
-.kpi-ic{font-size:16px;margin-bottom:4px}
-.kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.kpi-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}
+
+/* Card principal de saldo */
+.hero{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.hero.pos{border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.06)}
+.hero.neg{border-color:rgba(244,63,94,.35);background:rgba(244,63,94,.06)}
+.hero-lbl{font-size:12px;color:var(--sub)}
+.hero-val{font-family:var(--fd-head);font-size:34px;font-weight:800;line-height:1.15;margin-top:2px}
+.hero.pos .hero-val{color:var(--green)}
+.hero.neg .hero-val{color:var(--red)}
+.hero-sub{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.hero-det{margin-top:10px}
+.hero-det summary{list-style:none;cursor:pointer;font-size:12px;color:var(--cyan);display:flex;align-items:center;gap:6px}
+.hero-det summary::-webkit-details-marker{display:none}
+.hero-det summary::after{content:'\2304';font-size:16px;line-height:1;transition:transform .18s}
+.hero-det[open] summary::after{transform:rotate(180deg)}
+
+.kpi-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;margin-bottom:12px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:11px 12px}
+.kpi-ic{font-size:15px;margin-bottom:3px}
+.kpi-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kpi-val{font-family:var(--fd-head);font-size:17px;font-weight:800}
 .meta-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:12px}
-.meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.meta-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.meta-vals{font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
-.meta-bar{height:6px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:3px}
+.meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px}
+.meta-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.meta-vals{font-family:var(--fd-head);font-size:12px;font-weight:700}
+.meta-bar{height:8px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:4px}
 .meta-bar-fill{height:100%;border-radius:10px;transition:width .5s ease}
-.meta-pct{font-size:10px;color:var(--muted);text-align:right}
+.meta-pct{font-size:11px;color:var(--muted);text-align:right}
 .folga-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.18);border-radius:11px;padding:10px 12px;margin:10px 0;cursor:pointer}
 .folga-toggle span{font-size:12px;color:var(--sub);line-height:1.4}
 .folga-toggle input{width:18px;height:18px;accent-color:var(--cyan);flex-shrink:0}
 .folga-dias{display:none;grid-template-columns:repeat(7,1fr);gap:5px;margin:8px 0 6px}
 .folga-dias.show{display:grid}
-.folga-btn{padding:8px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:10px;font-weight:800;cursor:pointer;text-align:center;transition:all .15s}
+.folga-btn{padding:9px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);color:var(--sub);font-family:var(--fd-head);font-size:11px;font-weight:800;cursor:pointer;text-align:center;transition:all .15s}
 .folga-btn.on{border-color:var(--amber);color:var(--amber);background:rgba(251,191,36,.08)}
-.folga-msg{font-size:10px;color:var(--muted);margin:8px 0 4px;line-height:1.55;font-style:italic}
-.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.folga-msg{font-size:11px;color:var(--muted);margin:8px 0 4px;line-height:1.55;font-style:italic}
+.perf-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:12px}
 .perf-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px;text-align:center}
 .perf-ic{font-size:18px;margin-bottom:4px}
-.perf-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-.perf-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800}
-.perf-sub{font-size:9px;color:var(--muted);margin-top:2px}
-.kwh-chart{display:flex;align-items:flex-end;gap:4px;height:80px;padding:0 2px;margin:10px 0 4px}
-.kwh-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.perf-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.perf-val{font-family:var(--fd-head);font-size:15px;font-weight:800}
+.perf-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.kwh-chart{display:flex;align-items:flex-end;gap:4px;height:92px;padding:0 2px;margin:10px 0 4px;overflow-x:auto}
+.kwh-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:26px}
 .kwh-bar{border-radius:3px 3px 0 0;width:100%;transition:height .4s ease;background:linear-gradient(180deg,var(--violet),rgba(167,139,250,.4))}
-.kwh-lbl{font-size:8px;color:var(--muted);margin-top:3px;text-align:center}
-.kwh-val{font-size:8px;color:var(--violet);margin-bottom:2px;font-weight:600;font-family:'Syne',sans-serif}
-.plat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.plat-c{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px;text-align:center}
+.kwh-lbl{font-size:11px;color:var(--muted);margin-top:3px;text-align:center}
+.kwh-val{font-size:11px;color:var(--violet);margin-bottom:2px;font-weight:600;font-family:var(--fd-head)}
+.plat-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.plat-c{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 6px;text-align:center}
 .plat-ic{font-size:13px;margin-bottom:3px}
-.plat-nm{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
-.plat-vl{font-family:'Syne',sans-serif;font-size:13px;font-weight:800}
-.rl{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.plat-nm{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.plat-vl{font-family:var(--fd-head);font-size:13px;font-weight:800}
+.rl{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px}
 .rl:last-child{border-bottom:none}
 .rl .lb{color:var(--sub);display:flex;align-items:center;gap:4px}
-.rl .vl{font-family:'Syne',sans-serif;font-weight:600}
+.rl .vl{font-family:var(--fd-head);font-weight:600;white-space:nowrap}
 .rl.tot{padding-top:10px;margin-top:3px;border-top:1px solid var(--border);border-bottom:none}
-.rl.sub{padding:5px 0 5px 13px;font-size:11px}
+.rl.sub{padding:5px 0 5px 13px;font-size:12px}
 .rl.sub .lb{color:var(--muted)}
 .div{height:1px;background:var(--border);margin:10px 0}
 .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
-.dc{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:6px 2px;text-align:center}
+.dc{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:7px 1px;text-align:center}
 .dc.hd{border-color:rgba(34,211,238,.4)}
-.dc.td{border-color:var(--cyan);background:rgba(34,211,238,.07)}
-.dc.ft{opacity:.3}
-.dn{font-size:8px;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
-.ds{font-family:'Syne',sans-serif;font-size:10px;font-weight:700}
-.ds.p{color:var(--green)}.ds.n{color:var(--red)}.ds.z{color:var(--muted)}
+.dc.pos{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3)}
+.dc.neg{background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.3)}
+.dc.td{border-color:var(--cyan);border-width:1.5px}
+.dc.ft{opacity:.35}
+.dn{font-size:11px;color:var(--muted);margin-bottom:2px}
+.ds{font-family:var(--fd-head);font-size:12px;font-weight:800}
+.ds.p{color:var(--green)}.ds.n{color:var(--red)}.ds.z{color:var(--muted);font-size:11px;font-weight:600}
 .dd{width:4px;height:4px;border-radius:50%;margin:3px auto 0}
 .dd.h{background:var(--green)}.dd.e{background:var(--border)}
 .bc-wrap{overflow-x:auto}
 .bc{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 1px}
-.bc-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.bc-col{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer}
+.bc-col:active{opacity:.7}
 .bc-grp{display:flex;gap:2px;align-items:flex-end;width:100%}
 .bar{border-radius:3px 3px 0 0;flex:1;transition:height .35s ease}
 .bar.g{background:var(--cyan);opacity:.9}
 .bar.gs{background:var(--red);opacity:.9}
 .bar.gd{background:var(--orange);opacity:.9}
-.bc-lbl{font-size:8px;color:var(--muted);margin-top:3px;text-align:center}
+.bc-lbl{font-size:11px;color:var(--muted);margin-top:3px;text-align:center}
 .hi{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;border-radius:8px;margin:0 -4px;padding-left:4px;padding-right:4px}
 .hi:last-child{border-bottom:none}
 .hi:active{background:rgba(34,211,238,.05)}
 .hi-dot{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px}
 .hi-dot.p{background:rgba(74,222,128,.12)}.hi-dot.n{background:rgba(244,63,94,.12)}
 .hi-inf{flex:1;min-width:0}
-.hi-dt{font-size:10px;color:var(--muted)}
+.hi-dt{font-size:11px;color:var(--muted)}
 .hi-g{font-size:12px;color:var(--text);font-weight:500;margin-top:1px}
-.hi-pl{font-size:10px;color:var(--muted);margin-top:1px}
+.hi-pl{font-size:11px;color:var(--muted);margin-top:1px}
 .hi-r{text-align:right;flex-shrink:0}
-.hi-sl{font-family:'Syne',sans-serif;font-size:13px;font-weight:800}
+.hi-sl{font-family:var(--fd-head);font-size:13px;font-weight:800}
 .hi-sl.p{color:var(--green)}.hi-sl.n{color:var(--red)}
-.hi-edit{font-size:10px;color:var(--cyan);margin-top:3px}
+.hi-edit{font-size:11px;color:var(--cyan);margin-top:3px}
 .filtros{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
-.filtro-btn{padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--sub);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+.filtro-btn{padding:9px 4px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--sub);font-family:var(--fd-head);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
 .filtro-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
 .periodo-sel{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 14px;margin-bottom:12px}
-.periodo-arr{background:none;border:none;color:var(--cyan);font-size:20px;cursor:pointer;padding:0 4px;line-height:1}
-.periodo-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-align:center;flex:1}
+.periodo-arr{background:none;border:none;color:var(--cyan);font-size:22px;cursor:pointer;padding:0 8px;line-height:1}
+.periodo-label{font-family:var(--fd-head);font-size:13px;font-weight:700;color:var(--text);text-align:center;flex:1}
 .resumo-periodo{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:12px}
-.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.rp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:10px}
 .rp-item{background:var(--surface);border-radius:9px;padding:9px 11px}
-.rp-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.rp-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800}
+.rp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.rp-val{font-family:var(--fd-head);font-size:15px;font-weight:800}
 .moeda-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
-.moeda-btn{padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.moeda-btn{padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--sub);font-family:var(--fd-head);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .moeda-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
-.moeda-simbolo{font-size:18px;font-weight:800;font-family:'Syne',sans-serif}
-.moeda-nome{font-size:9px;text-transform:uppercase;letter-spacing:.06em}
+.moeda-simbolo{font-size:18px;font-weight:800;font-family:var(--fd-head)}
+.moeda-nome{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
 .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
-.lang-btn{padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.lang-btn{padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--sub);font-family:var(--fd-head);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
 .lang-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
 .lang-flag{font-size:22px}
 .tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.tipo-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tipo-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:var(--fd-head);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
 .tipo-btn.on-eletrico{border-color:var(--violet);color:var(--violet);background:rgba(167,139,250,.08)}
 .tipo-btn.on-combustao{border-color:var(--amber);color:var(--amber);background:rgba(251,191,36,.08)}
 .tipo-ic{font-size:26px}
@@ -193,17 +244,21 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 18px calc(20px + var(--safe-bot));width:100%;max-width:500px;transform:translateY(100%);transition:transform .3s ease;max-height:90vh;overflow-y:auto}
 .modal-overlay.show .modal{transform:translateY(0)}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.modal-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
-.modal-close{background:var(--card);border:none;color:var(--muted);font-size:18px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.modal-date{font-size:11px;color:var(--cyan);margin-bottom:16px;text-align:center;font-weight:600}
+.modal-title{font-family:var(--fd-head);font-size:16px;font-weight:800;color:var(--text)}
+.modal-close{background:var(--card);border:none;color:var(--muted);font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-date{font-size:12px;color:var(--cyan);margin-bottom:16px;text-align:center;font-weight:600}
+.confirm-overlay{z-index:650}
+.confirm-msg{font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:16px}
+.confirm-acoes{display:flex;gap:10px;margin-top:6px}
+.confirm-acoes .btn{flex:1;margin-top:0}
 .novidades-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 .novidades-overlay.show{opacity:1;pointer-events:all}
 .novidades-modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px calc(24px + var(--safe-bot));width:100%;max-width:500px;transform:translateY(100%);transition:transform .35s ease;max-height:85vh;overflow-y:auto}
 .novidades-overlay.show .novidades-modal{transform:translateY(0)}
 .nov-header{text-align:center;margin-bottom:20px}
 .nov-icon{font-size:40px;margin-bottom:10px}
-.nov-titulo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
-.nov-versao{font-size:11px;color:var(--cyan);font-weight:600}
+.nov-titulo{font-family:var(--fd-head);font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.nov-versao{font-size:12px;color:var(--cyan);font-weight:600}
 .nov-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
 .nov-item{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--card);border-radius:11px;border:1px solid var(--border)}
 .nov-item-ic{font-size:20px;flex-shrink:0}
@@ -213,115 +268,119 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 .conquista-overlay.show .conquista-modal{transform:translateY(0)}
 .conquista-msg{font-size:14px;color:var(--sub);line-height:1.6;margin-bottom:20px}
 .nov-item-txt strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px}
-.nov-item-txt span{font-size:11px;color:var(--muted);line-height:1.5}
+.nov-item-txt span{font-size:12px;color:var(--muted);line-height:1.5}
 .onboard-overlay{position:fixed;inset:0;background:var(--bg);z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .3s}
 .onboard-overlay.show{opacity:1;pointer-events:all}
 .onboard-modal{background:var(--surface);border-radius:28px 28px 0 0;padding:28px 22px calc(28px + var(--safe-bot));width:100%;max-width:500px;text-align:center}
 .onboard-ic{font-size:56px;margin-bottom:12px;line-height:1}
-.onboard-titulo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
+.onboard-titulo{font-family:var(--fd-head);font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
 .onboard-sub{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:22px}
 .onboard-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;text-align:left}
 .onboard-step{display:flex;gap:12px;align-items:flex-start;padding:11px;background:var(--card);border-radius:11px;border:1px solid var(--border)}
-.onboard-step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.onboard-step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;font-family:var(--fd-head);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .onboard-step-txt strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px}
-.onboard-step-txt span{font-size:11px;color:var(--muted)}
-.toast{position:fixed;top:calc(var(--safe-top) + 70px);left:50%;transform:translateX(-50%) translateY(-15px);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap}
+.onboard-step-txt span{font-size:12px;color:var(--muted)}
+.toast{position:fixed;top:calc(var(--safe-top) + 70px);left:50%;transform:translateX(-50%) translateY(-15px);padding:9px 18px;border-radius:30px;font-size:12px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .toast.ok{background:var(--green2);color:#fff}
 .toast.er{background:var(--red);color:#fff}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:36px 16px;color:var(--muted);font-size:12px;line-height:1.7}
 .empty-ic{font-size:38px;margin-bottom:10px}
-.chip{display:inline-flex;align-items:center;gap:4px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--violet)}
-.import-info{font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:11px}
+.chip{display:inline-flex;align-items:center;gap:4px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--violet)}
+.import-info{font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:11px}
 .import-info strong{color:var(--amber)}
 .feedback-email{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .feedback-email-icon{font-size:18px;flex-shrink:0}
-.feedback-email-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.feedback-email-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--cyan)}
+.feedback-email-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.feedback-email-val{font-family:var(--fd-mono);font-size:12px;color:var(--cyan)}
 .hdr-pais{display:none;align-items:center;font-size:20px;margin-left:6px}
 .hdr-pais.show{display:flex}
 .veiculo-bar{display:none;align-items:center;justify-content:center;gap:6px;background:var(--surface);border-bottom:1px solid var(--border);padding:5px 18px;font-size:11px;color:var(--sub);flex-shrink:0}
 .veiculo-bar.show{display:flex}
-.veiculo-bar-txt{font-family:'Syne',sans-serif;font-weight:700;color:var(--sub)}
+.veiculo-bar-txt{font-family:var(--fd-head);font-weight:700;color:var(--sub)}
 .almoco-check{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:10px;margin-top:8px;cursor:pointer}
 .almoco-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
 .almoco-check-lbl{font-size:12px;color:var(--sub);line-height:1.4}
 .almoco-check-lbl span{color:var(--amber);font-weight:700}
 .pais-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
-.pais-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pais-btn{padding:14px 8px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-family:var(--fd-head);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
 .pais-btn.on{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.08)}
 .pais-flag{font-size:28px}
-.footer-credits{text-align:center;padding:18px 18px 6px;font-size:10px;color:var(--muted)}
-.footer-ig{display:flex;justify-content:center;gap:16px;padding:4px 0 22px;font-size:11px}
+.footer-credits{text-align:center;padding:18px 18px 6px;font-size:11px;color:var(--muted)}
+.footer-ig{display:flex;justify-content:center;gap:16px;padding:4px 0 22px;font-size:12px}
 .footer-ig a{color:var(--cyan);text-decoration:none}
 .impostos-box{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:12px 14px;margin-top:10px}
-.impostos-titulo{font-size:10px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.impostos-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(167,139,250,.1);font-size:11px}
+.impostos-titulo{font-size:11px;color:var(--violet);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.impostos-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(167,139,250,.1);font-size:12px}
 .impostos-row:last-child{border-bottom:none}
 .impostos-lbl{color:var(--muted)}
-.impostos-val{font-family:'Syne',sans-serif;font-weight:700;color:var(--red)}
+.impostos-val{font-family:var(--fd-head);font-weight:700;color:var(--red)}
 .impostos-total{display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;margin-top:4px;border-top:1px solid rgba(167,139,250,.3)}
 .impostos-total-lbl{font-size:11px;font-weight:700;color:var(--sub)}
-.impostos-total-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--green)}
-.impostos-nota{font-size:9px;color:var(--muted);margin-top:6px;font-style:italic;line-height:1.5}
-.login-check{display:flex;align-items:flex-start;gap:9px;margin:9px 0;color:var(--sub);font-size:11px;line-height:1.45;cursor:pointer}.login-check input{width:17px;height:17px;accent-color:var(--violet);margin-top:1px;flex-shrink:0}
+.impostos-total-val{font-family:var(--fd-head);font-size:14px;font-weight:800;color:var(--green)}
+.impostos-nota{font-size:11px;color:var(--muted);margin-top:6px;font-style:italic;line-height:1.5}
+.login-check{display:flex;align-items:flex-start;gap:9px;margin:9px 0;color:var(--sub);font-size:12px;line-height:1.45;cursor:pointer}.login-check input{width:17px;height:17px;accent-color:var(--violet);margin-top:1px;flex-shrink:0}
 .toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer}
 .toggle-lbl{font-size:12px;color:var(--sub)}
 .toggle{width:44px;height:24px;border-radius:12px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0;cursor:pointer;border:none}
 .toggle.on{background:var(--violet)}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s}
 .toggle.on::after{left:23px}
-.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.comp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:8px}
 .comp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px}
-.comp-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.comp-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:2px}
-.comp-delta{font-size:11px;font-weight:700}
+.comp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.comp-val{font-family:var(--fd-head);font-size:15px;font-weight:800;margin-bottom:2px}
+.comp-delta{font-size:12px;font-weight:700}
 .comp-delta.up{color:var(--green)}
 .comp-delta.down{color:var(--red)}
 .comp-delta.neutral{color:var(--muted)}
 
 /* Trajeto Transfer (sem IVA, sem taxa, sem impostos) */
-.trajeto-hint{display:none;margin-top:10px;padding:8px 10px;border-radius:9px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);font-size:11px;color:var(--green);line-height:1.45}
+.trajeto-hint{display:none;margin-top:10px;padding:8px 10px;border-radius:9px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);font-size:12px;color:var(--green);line-height:1.45}
 .trajeto-hint.show{display:block}
-.trajeto-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;margin:8px 0 2px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22);border-radius:9px;font-size:11px}
+.trajeto-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;margin:8px 0 2px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22);border-radius:9px;font-size:12px}
 .trajeto-row .tl{color:var(--sub);line-height:1.35}
-.trajeto-row .tl small{display:block;color:var(--muted);font-size:9px}
-.trajeto-row .tv{font-family:'Syne',sans-serif;font-weight:800;color:var(--green);white-space:nowrap}
+.trajeto-row .tl small{display:block;color:var(--muted);font-size:11px}
+.trajeto-row .tv{font-family:var(--fd-head);font-weight:800;color:var(--green);white-space:nowrap}
 
 /* Bloco de saldos: frota -> trajeto -> real */
 .saldos-bloco{margin-top:10px;border:1px solid var(--border);border-radius:11px;overflow:hidden}
 .saldos-linha{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 11px;font-size:12px;border-bottom:1px solid var(--border)}
 .saldos-linha:last-child{border-bottom:none}
 .saldos-linha .sl-lb{color:var(--sub);line-height:1.35}
-.saldos-linha .sl-lb small{display:block;color:var(--muted);font-size:9px}
-.saldos-linha .sl-vl{font-family:'Syne',sans-serif;font-weight:800;white-space:nowrap}
+.saldos-linha .sl-lb small{display:block;color:var(--muted);font-size:11px}
+.saldos-linha .sl-vl{font-family:var(--fd-head);font-weight:800;white-space:nowrap}
 .saldos-linha.traj{background:rgba(74,222,128,.06)}
 .saldos-linha.real{background:rgba(34,211,238,.06)}
 .saldos-linha.real .sl-lb{color:var(--text);font-weight:700}
 .saldos-linha.real .sl-vl{font-size:15px}
 .meta-traj{margin-top:10px;padding:8px 10px;border-radius:9px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22)}
-.meta-traj-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;color:var(--sub);margin-bottom:5px}
-.meta-traj-row strong{font-family:'Syne',sans-serif;font-size:12px;color:var(--green);white-space:nowrap}
+.meta-traj-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:var(--sub);margin-bottom:5px}
+.meta-traj-row strong{font-family:var(--fd-head);font-size:12px;color:var(--green);white-space:nowrap}
 .meta-traj-bar{height:4px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
 .meta-traj-fill{height:100%;background:var(--green);opacity:.7;border-radius:10px}
-.meta-traj-nota{font-size:9px;color:var(--muted);margin-top:4px}
+.meta-traj-nota{font-size:11px;color:var(--muted);margin-top:4px}
 
-/* Histórico recolhível + recursos reservados */
+/* Secções recolhíveis (Histórico, Semana e Config) */
 .hist-acc{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
-.hist-acc-btn{width:100%;background:transparent;border:none;color:var(--text);padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;text-align:left;cursor:pointer}
+.hist-acc-btn{width:100%;background:transparent;border:none;color:var(--text);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--fd-head);font-size:14px;font-weight:800;text-align:left;cursor:pointer}
 .hist-acc-btn:active{opacity:.8}
 .hist-acc-arrow{color:var(--cyan);font-size:18px;line-height:1;transition:transform .18s ease}
 .hist-acc-body{display:none;padding:0 14px 14px}
 .hist-acc.open .hist-acc-body{display:block}
 .hist-acc.open .hist-acc-arrow{transform:rotate(180deg)}
-.hist-acc-note{font-size:10px;color:var(--muted);line-height:1.5;font-style:italic;margin-top:8px}
-.pro-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.28);color:var(--amber);font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:.04em}
+.hist-acc-note{font-size:11px;color:var(--muted);line-height:1.5;font-style:italic;margin-top:8px}
+.cfg-acc .hist-acc-body{padding:0 10px 10px}
+.cfg-acc .hist-acc-body > .stit:first-child{margin-top:4px}
+.cfg-acc .card{background:var(--surface)}
+.pro-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.28);color:var(--amber);font-family:var(--fd-head);font-size:11px;font-weight:800;letter-spacing:.04em}
 .plan-card,.installed-card{background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.25);border-radius:14px;padding:14px;margin-bottom:12px}
 .plan-head,.installed-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.plan-title,.installed-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text)}
-.plan-desc,.installed-desc{font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:10px}
+.plan-title,.installed-title{font-family:var(--fd-head);font-size:15px;font-weight:800;color:var(--text)}
+.plan-desc,.installed-desc{font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:10px}
 .plan-list,.installed-list{display:grid;gap:6px;margin:10px 0 2px}
-.plan-item,.installed-item{font-size:11px;color:var(--sub);display:flex;align-items:flex-start;gap:7px;line-height:1.45}
+.plan-item,.installed-item{font-size:12px;color:var(--sub);display:flex;align-items:flex-start;gap:7px;line-height:1.45}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 </style>
 <!-- Google Analytics -->
@@ -341,7 +400,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
   }
 </script>
 </head>
-<body>
+<body class="on-hoje">
 <div class="app">
   <div class="ptr" id="ptr">
     <span class="ptr-spin" id="ptrSpin">&#8635;</span>
@@ -363,13 +422,13 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
     <!-- HOJE -->
     <div class="pg on" id="pg-hoje">
-      <div class="kpi-g" id="kpiGrid"></div>
+      <div id="kpiGrid"></div>
       <div id="metaDiariaBox"></div>
+      <div class="kpi-g" id="kpiMini"></div>
       <div class="stit">&#9203;&#65039; Horas de trabalho</div>
       <div class="card">
         <div class="card-top ct-cyan"></div>
         <div class="horas-box">
-          <div class="horas-box-title">&#9203;&#65039; Turno de hoje</div>
           <div class="horas-row">
             <div class="fld" style="margin-bottom:0">
               <div class="fld-lbl">&#128994; Hora in&iacute;cio</div>
@@ -393,49 +452,52 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
       <div class="stit">&#128176; Ganhos de hoje</div>
       <div class="card">
         <div class="card-top ct-cyan"></div>
-        <div class="sub-h"><span>&#129095;</span> Uber</div>
-        <div class="fld"><div class="fld-lbl">Valor recebido</div>
-          <div class="iw"><div class="ipfx" id="pfxUber">&euro;</div><input type="number" inputmode="decimal" id="iUber" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="plat-inputs">
+          <div class="plat-in plat-uber">
+            <div class="fld-lbl">&#129095; Uber</div>
+            <div class="iw"><div class="ipfx" id="pfxUber">&euro;</div><input type="number" inputmode="decimal" id="iUber" placeholder="0.00" min="0" step="0.01"></div>
+          </div>
+          <div class="plat-in plat-bolt">
+            <div class="fld-lbl"><span style="color:#34d186">&#9889;</span> <span id="lblPlat2Hoje">Bolt</span></div>
+            <div class="iw"><div class="ipfx" id="pfxBolt">&euro;</div><input type="number" inputmode="decimal" id="iBolt" placeholder="0.00" min="0" step="0.01"></div>
+          </div>
         </div>
-        <div class="sub-h"><span style="color:#34d186">&#9889;</span> <span id="lblPlat2Hoje">Bolt</span></div>
-        <div class="fld"><div class="fld-lbl">Valor recebido</div>
-          <div class="iw"><div class="ipfx" id="pfxBolt">&euro;</div><input type="number" inputmode="decimal" id="iBolt" placeholder="0.00" min="0" step="0.01"></div>
-        </div>
-        <div class="sub-h"><span style="color:#fb923c">&#128664;</span> Transfer</div>
-        <div class="fld"><div class="fld-lbl">Corridas Transfer e outros ganhos</div>
+        <div class="plat-in plat-transfer" style="margin-bottom:0">
+          <div class="fld-lbl"><span style="color:#fb923c">&#128664;</span> Transfer e outros ganhos</div>
           <div class="iw"><div class="ipfx" id="pfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="iOutroG" placeholder="0.00" min="0" step="0.01"></div>
         </div>
         <div id="transferMetaBox" style="margin-top:10px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
-          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="iTransferTomador" onchange="atualizarTransferUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
-          <div class="fld" id="iTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="iTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"></div>
-          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferOperador" id="iTransferOperadorSim" checked onchange="atualizarTransferUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferOperador" id="iTransferOperadorNao" onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
-          <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferImpostos" id="iTransferImpSim" onchange="atualizarTransferUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="iTransferImpostos" id="iTransferImpNao" checked onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
-          <div id="iTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:7px"><label><input type="checkbox" id="iTransferIRS" onchange="atualizarTransferUI()"> IRS</label><label><input type="checkbox" id="iTransferIVA" onchange="atualizarTransferUI()"> IVA</label><label><input type="checkbox" id="iTransferSS" onchange="atualizarTransferUI()"> SS</label></div></div>
+          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="iTransferTomador" onchange="atualizarTransferUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit;font-size:15px"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
+          <div class="fld" id="iTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="iTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit;font-size:16px"></div>
+          <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div class="seg"><label class="seg-opt"><input type="radio" name="iTransferOperador" id="iTransferOperadorSim" checked onchange="atualizarTransferUI()"> Sim</label><label class="seg-opt"><input type="radio" name="iTransferOperador" id="iTransferOperadorNao" onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
+          <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div class="seg"><label class="seg-opt"><input type="radio" name="iTransferImpostos" id="iTransferImpSim" onchange="atualizarTransferUI()"> Sim</label><label class="seg-opt"><input type="radio" name="iTransferImpostos" id="iTransferImpNao" checked onchange="atualizarTransferUI()"> N&atilde;o</label></div></div>
+          <div id="iTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div class="chips"><label class="chip-opt"><input type="checkbox" id="iTransferIRS" onchange="atualizarTransferUI()"> IRS</label><label class="chip-opt"><input type="checkbox" id="iTransferIVA" onchange="atualizarTransferUI()"> IVA</label><label class="chip-opt"><input type="checkbox" id="iTransferSS" onchange="atualizarTransferUI()"> SS</label></div></div>
           <div class="trajeto-hint" id="iTrajetoHint">&#9989; Sem taxa do operador e sem impostos: este valor fica registado como <strong>Trajeto Transfer</strong> e aparece &agrave; parte no saldo real.</div>
-        </div>
-        <div class="g-total">
-          <span class="g-total-lbl">&#128176; Total ganhos</span>
-          <span class="g-total-val" id="gTotal">&euro;0,00</span>
         </div>
       </div>
       <div class="stit">&#128228; Gastos de hoje</div>
       <div class="card">
         <div class="card-top ct-red"></div>
         <div id="energiaSection"></div>
-        <div class="sub-h"><span>&#128205;</span> Quil&oacute;metros rodados</div>
+        <div class="gastos-grid">
+          <div class="fld">
+            <div class="fld-lbl">&#128205; KMs do dia</div>
+            <div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="iKms" placeholder="0" min="0" step="1"></div>
+          </div>
+          <div class="fld">
+            <div class="fld-lbl">&#127828; Alimenta&ccedil;&atilde;o</div>
+            <div class="iw"><div class="ipfx" id="pfxComida">&euro;</div><input type="number" inputmode="decimal" id="iComida" placeholder="0.00" min="0" step="0.01"></div>
+          </div>
+        </div>
         <div class="fld">
-          <div class="fld-lbl">KMs totais do dia (com e sem corrida)</div>
-          <div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="iKms" placeholder="0" min="0" step="1"></div>
+          <div class="fld-lbl">&#128179; Outros gastos <span style="color:var(--muted)">(pessoal)</span></div>
+          <div class="iw"><div class="ipfx" id="pfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="iOutroG2" placeholder="0.00" min="0" step="0.01"></div>
         </div>
-        <div class="sub-h"><span>&#127828;</span> Alimenta&ccedil;&atilde;o <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(registo pessoal)</span></div>
-        <div class="fld"><div class="iw"><div class="ipfx" id="pfxComida">&euro;</div><input type="number" inputmode="decimal" id="iComida" placeholder="0.00" min="0" step="0.01"></div></div>
-        <div class="sub-h"><span>&#128179;</span> Outros gastos <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(registo pessoal)</span></div>
-        <div class="fld"><div class="iw"><div class="ipfx" id="pfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="iOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0 13px">
-          <span class="chip">&#127968; Aluguer: <span id="chipAl"></span>/dia</span>
-          <span style="font-size:10px;color:var(--muted)">autom&aacute;tico</span>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px">KMs: todos os do dia, com e sem corrida. Alimenta&ccedil;&atilde;o e outros gastos s&atilde;o registo pessoal.</div>
+        <div class="aluguer-linha">
+          <span class="chip">&#127968; Aluguer: <span id="chipAl"></span></span>
+          <span style="font-size:11px;color:var(--muted)">autom&aacute;tico</span>
         </div>
-        <button class="btn btn-cyan" id="btnGuardar">&#9989; Guardar dia</button>
       </div>
       <div class="stit">&#128202; Resumo do dia</div>
       <div class="card" id="resumoDia"></div>
@@ -451,19 +513,26 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
       <div class="stit">&#128200; Ganhos vs Gastos</div>
       <div class="card">
         <div class="bc-wrap"><div class="bc" id="barChart"></div></div>
-        <div style="display:flex;gap:10px;margin-top:7px">
-          <span style="font-size:10px;color:var(--cyan)">&#9632; Ganhos</span>
-          <span style="font-size:10px;color:var(--red)">&#9632; Gastos (energia+aluguer)</span>
-          <span style="font-size:10px;color:var(--orange)">&#9632; Gasto Dinheiro (bolso)</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <span style="font-size:11px;color:var(--cyan)">&#9632; Ganhos</span>
+          <span style="font-size:11px;color:var(--red)">&#9632; Gastos frota</span>
+          <span style="font-size:11px;color:var(--orange)">&#9632; Bolso</span>
         </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Toca numa barra para ver os valores do dia.</div>
       </div>
       <div class="stit" id="perfTit">&#9889; Performance semanal</div>
       <div class="perf-grid" id="perfGrid"></div>
       <div class="stit" id="compStit" style="display:none">Comparativo vs semana anterior</div>
       <div id="comparativoBox"></div>
-      <div class="stit">&#128176; Totais da semana</div>
-      <div class="card" id="resumoSemana"><div class="card-top ct-violet"></div></div>
-      <div id="fiscalSemanaBox"></div>
+      <div class="stit">&#128176; Detalhes da semana</div>
+      <div class="hist-acc open" id="accSemTotais">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('accSemTotais')"><span>&#128176; Totais da semana</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body" id="resumoSemana"></div>
+      </div>
+      <div class="hist-acc" id="accSemFiscal" style="display:none">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('accSemFiscal')"><span>&#128203; Estimativa fiscal PT</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body" id="fiscalSemanaBox"></div>
+      </div>
     </div>
 
     <!-- HIST&Oacute;RICO -->
@@ -476,9 +545,9 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <button class="filtro-btn" id="fb-ano">&#128202; Ano</button>
       </div>
       <div class="periodo-sel">
-        <button class="periodo-arr" id="btnPrev">&#8249;</button>
+        <button class="periodo-arr" id="btnPrev" aria-label="Per&iacute;odo anterior">&#8249;</button>
         <div class="periodo-label" id="periodoLabel"></div>
-        <button class="periodo-arr" id="btnNext">&#8250;</button>
+        <button class="periodo-arr" id="btnNext" aria-label="Pr&oacute;ximo per&iacute;odo">&#8250;</button>
       </div>
       <div class="resumo-periodo" id="resumoPeriodo"></div>
       <div id="analiseConsumoBox"></div>
@@ -487,7 +556,12 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 
     <!-- CONFIG -->
     <div class="pg" id="pg-cfg">
-      <div class="stit">&#9881;&#65039; Configura&ccedil;&otilde;es gerais</div>
+      <div class="stit">&#9881;&#65039; Configura&ccedil;&otilde;es</div>
+
+      <div class="hist-acc cfg-acc open" id="cfgFin">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgFin')"><span>&#128176; Financeiro, pa&iacute;s e impostos</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body">
+      <div class="stit">&#127968; Aluguer, energia e operador</div>
       <div class="card">
         <div class="fld"><div class="fld-lbl">&#127968; Aluguer semanal</div>
           <div class="iw"><div class="ipfx" id="pfxAluguer">&euro;</div><input type="number" inputmode="decimal" id="iAluguer" placeholder="280.00" step="0.01"></div>
@@ -496,14 +570,14 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           <div class="fld-lbl">&#9889; Pre&ccedil;o por kWh</div>
           <div class="iw"><div class="ipfx" id="pfxKwh">&euro;/kWh</div><input type="number" inputmode="decimal" id="iPrecoKwh" placeholder="0.75" step="0.01"></div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="kwh-hint">
+        <div style="font-size:11px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="kwh-hint">
           Pre&ccedil;o usado para converter kWh em &euro;. Exemplo: 15&euro; &divide; 0,75 = 20 kWh autom&aacute;tico.
         </div>
         <div class="fld" style="margin-top:12px">
           <div class="fld-lbl">&#127970; Taxa do operador TVDE (%)</div>
           <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iTaxaOperador" placeholder="0" min="0" max="100" step="0.01"></div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin:6px 0 12px;line-height:1.5">
+        <div style="font-size:11px;color:var(--muted);margin:6px 0 12px;line-height:1.5">
           Percentagem cobrada pelo operador sobre Uber + Bolt + Transfer. &Eacute; descontada antes dos impostos.
         </div>
         <button class="btn btn-cyan" id="btnCfg">Guardar configura&ccedil;&atilde;o</button>
@@ -520,7 +594,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
             <span class="pais-flag">&#127463;&#127479;</span><span>Brasil</span>
           </button>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center">
           Moeda: <span style="color:var(--cyan)" id="moedaAtual">Euro (&euro;)</span>
         </div>
       </div>
@@ -529,10 +603,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div class="card-top ct-violet"></div>
         <div class="toggle-wrap" onclick="toggleImpostos()">
           <span class="toggle-lbl">Ativar estimativa de impostos</span>
-          <button class="toggle" id="toggleImp"></button>
+          <button class="toggle" id="toggleImp" aria-label="Ativar estimativa de impostos"></button>
         </div>
         <div id="impostosDetalhes" style="display:none">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
           <div class="fld">
             <div class="fld-lbl">Impostos a considerar</div>
             <label class="login-check"><input type="checkbox" id="chkImpSS" onchange="salvarImpostosCfg()"><span>Segurança Social (15%)</span></label>
@@ -542,23 +616,28 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
           <div class="fld">
             <div class="fld-lbl">IRS taxa manual (opcional)</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Deixa em branco para c&aacute;lculo autom&aacute;tico por escal&atilde;o</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Deixa em branco para c&aacute;lculo autom&aacute;tico por escal&atilde;o</div>
             <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iIrsManual" placeholder="automatico" min="0" max="53" step="0.1" oninput="salvarImpostosCfg()"></div>
           </div>
-          <div style="font-size:10px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
             Seleciona apenas os impostos que queres considerar no c&aacute;lculo. Podes deixar todos ativos ou calcular s&oacute; SS, IRS ou IVA.<br>
             <strong style="color:var(--amber)">N&atilde;o incluem:</strong> energia em &euro; (bolso), alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Transfer
           </div>
         </div>
       </div>
-      <div class="stit">&#128663; O meu ve&iacute;culo</div>
+        </div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgVeic">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgVeic')"><span>&#128663; O meu ve&iacute;culo</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body">
       <div class="card">
         <div class="card-top ct-orange"></div>
         <div class="fld"><div class="fld-lbl">&#128663; Marca e modelo</div>
-          <div class="iw"><div class="ipfx">&#128663;</div><input type="text" id="iVeiculoModelo" placeholder="Ex: Tesla Model 3" style="font-size:14px"></div>
+          <div class="iw"><div class="ipfx">&#128663;</div><input type="text" id="iVeiculoModelo" placeholder="Ex: Tesla Model 3" style="font-size:16px"></div>
         </div>
         <div class="fld" style="margin-top:10px"><div class="fld-lbl">&#128197; Ano</div>
-          <div class="iw"><div class="ipfx">&#128197;</div><input type="number" inputmode="numeric" id="iVeiculoAno" placeholder="Ex: 2022" min="2000" max="2030" style="font-size:14px"></div>
+          <div class="iw"><div class="ipfx">&#128197;</div><input type="number" inputmode="numeric" id="iVeiculoAno" placeholder="Ex: 2022" min="2000" max="2030" style="font-size:16px"></div>
         </div>
         <div class="fld-lbl" style="margin:12px 0 8px">&#128267; Tipo de motoriza&ccedil;&atilde;o</div>
         <div class="tipo-grid">
@@ -572,7 +651,12 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <div id="veiculo-extra-cfg"></div>
         <button class="btn btn-green" id="btnVeiculo" style="margin-top:10px">&#128190; Guardar ve&iacute;culo</button>
       </div>
-      <div class="stit">&#127919; Metas de lucro l&iacute;quido real</div>
+        </div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgMetas">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgMetas')"><span>&#127919; Metas e folgas</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body">
       <div class="card">
         <div class="card-top ct-green"></div>
         <p class="import-info" style="margin-bottom:12px">Define o teu objetivo de lucro l&iacute;quido real (ap&oacute;s energia e aluguer).</p>
@@ -590,21 +674,22 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         </label>
         <div class="folga-dias" id="folgaDiasBox"></div>
         <div class="folga-msg" id="folgaMetaMsg">Define a meta semanal para calcular automaticamente a meta diária.</div>
-        <div style="font-size:10px;color:var(--muted);margin:6px 0 4px;line-height:1.5;font-style:italic">&#128161; A meta semanal é redistribuída conforme os dias de folga marcados.</div>
+        <div style="font-size:11px;color:var(--muted);margin:6px 0 4px;line-height:1.5;font-style:italic">&#128161; A meta semanal é redistribuída conforme os dias de folga marcados.</div>
         <button class="btn btn-green" id="btnMetas" style="margin-top:10px">&#128190; Guardar metas</button>
       </div>
-      <div class="stit">&#128176; Plano &amp; monetiza&ccedil;&atilde;o</div>
-      <div class="plan-card">
-        <div class="plan-head">
-          <div class="plan-title">Finance Drive <span>Free</span></div>
-          <span class="pro-badge">Preparado para Pro</span>
         </div>
-        <div class="plan-desc">Esta versão continua gratuita. Este espaço fica reservado para futuros recursos Pro, backup, relatórios avançados e sincronização.</div>
-        <div class="plan-list">
-          <div class="plan-item">&#9989; Registos diários, metas e histórico continuam liberados</div>
-          <div class="plan-item">&#128274; Futuro Pro: backup em nuvem, relatórios avançados e sincronização</div>
-          <div class="plan-item">&#128226; Espaço reservado, hoje sem cobrança e sem anúncios ativos</div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgDados">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgDados')"><span>&#128190; Dados e registos</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body">
+      <div class="stit">&#9999;&#65039; Registar dia anterior</div>
+      <div class="card">
+        <p class="import-info">Esqueceste de registar um dia? Escolhe a data e adiciona os valores.</p>
+        <div class="fld"><div class="fld-lbl">&#128197; Data</div>
+          <div class="iw"><input type="date" id="iDataManual" style="padding:10px 12px"></div>
         </div>
+        <button class="btn btn-outline" id="btnRegistarDia" style="margin-top:8px">Registar este dia</button>
       </div>
       <div class="stit">&#128228; Exportar dados</div>
       <div class="card">
@@ -618,20 +703,31 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
         <button class="btn btn-amber" id="btnImport">&#128194; Importar CSV</button>
         <input type="file" id="fileInput" accept=".csv" style="display:none">
       </div>
-      <div class="stit">&#9999;&#65039; Registar dia anterior</div>
-      <div class="card">
-        <p class="import-info">Esqueceste de registar um dia? Escolhe a data e adiciona os valores.</p>
-        <div class="fld"><div class="fld-lbl">&#128197; Data</div>
-          <div class="iw"><input type="date" id="iDataManual" style="padding:10px 12px;font-size:14px"></div>
-        </div>
-        <button class="btn btn-outline" id="btnRegistarDia" style="margin-top:8px">Registar este dia</button>
-      </div>
       <div class="stit">&#128465;&#65039; Apagar dados</div>
       <div class="card">
         <p class="import-info">Apaga todos os registos. Esta a&ccedil;&atilde;o n&atilde;o pode ser desfeita.</p>
         <button class="btn btn-red" id="btnLimpar">Apagar todos os dados</button>
       </div>
-      <div class="stit" style="margin-top:28px">&#128172; Feedback &amp; Suporte</div>
+        </div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgSobre">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgSobre')"><span>&#128172; Plano, feedback e suporte</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body">
+      <div class="stit">&#128176; Plano &amp; monetiza&ccedil;&atilde;o</div>
+      <div class="plan-card">
+        <div class="plan-head">
+          <div class="plan-title">Finance Drive <span>Free</span></div>
+          <span class="pro-badge">Preparado para Pro</span>
+        </div>
+        <div class="plan-desc">Esta versão continua gratuita. Este espaço fica reservado para futuros recursos Pro, backup, relatórios avançados e sincronização.</div>
+        <div class="plan-list">
+          <div class="plan-item">&#9989; Registos diários, metas e histórico continuam liberados</div>
+          <div class="plan-item">&#128274; Futuro Pro: backup em nuvem, relatórios avançados e sincronização</div>
+          <div class="plan-item">&#128226; Espaço reservado, hoje sem cobrança e sem anúncios ativos</div>
+        </div>
+      </div>
+      <div class="stit">&#128172; Feedback &amp; Suporte</div>
       <div class="card">
         <div class="card-top ct-violet"></div>
         <p class="import-info" style="margin-bottom:11px">A tua opini&atilde;o &eacute; muito importante! Ajuda-nos a melhorar a <strong style="color:var(--text)">Finance Drive</strong>.</p>
@@ -644,7 +740,10 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
           </div>
         </div>
       </div>
-      <div style="text-align:center;padding:18px;font-size:10px;color:var(--muted)">Finance Drive v3.9.3 &middot; <span style="color:var(--violet)">Beta</span></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.10.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">&#128248; @financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">&#128100; @_spinasseleonardo</a>
@@ -652,12 +751,21 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     </div>
   </div>
 
-  <nav class="nav">
+  <nav class="nav" id="navBar">
     <button class="nb on" id="nb-hoje"><span class="nb-ic">&#127968;</span>Hoje</button>
     <button class="nb" id="nb-semana"><span class="nb-ic">&#128198;</span>Semana</button>
     <button class="nb" id="nb-hist"><span class="nb-ic">&#128194;</span>Hist&oacute;rico</button>
     <button class="nb" id="nb-cfg"><span class="nb-ic">&#9881;&#65039;</span>Config</button>
   </nav>
+
+  <!-- Barra fixa: total + guardar -->
+  <div class="savebar" id="saveBar">
+    <div class="savebar-info">
+      <div class="savebar-lbl">&#128176; Total ganhos</div>
+      <div class="savebar-val" id="gTotal">&euro;0,00</div>
+    </div>
+    <button class="btn btn-cyan" id="btnGuardar">&#9989; Guardar dia</button>
+  </div>
 </div>
 
 <!-- Modal Editar -->
@@ -665,28 +773,39 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
   <div class="modal">
     <div class="modal-hdr">
       <div class="modal-title">&#9999;&#65039; Editar dia</div>
-      <button class="modal-close" id="modalClose">&#10005;</button>
+      <button class="modal-close" id="modalClose" aria-label="Fechar">&#10005;</button>
     </div>
     <div class="modal-date" id="modalDate"></div>
-    <div class="sub-h"><span>&#129095;</span> Uber</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxUber">&euro;</div><input type="number" inputmode="decimal" id="mUber" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span style="color:#34d186">&#9889;</span> <span id="lblPlat2Modal">Bolt</span></div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxBolt">&euro;</div><input type="number" inputmode="decimal" id="mBolt" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span style="color:#fb923c">&#128664;</span> Transfer / Outros</div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="mOutroG" placeholder="0.00" min="0" step="0.01"></div></div>
+    <div class="plat-inputs">
+      <div class="plat-in plat-uber">
+        <div class="fld-lbl">&#129095; Uber</div>
+        <div class="iw"><div class="ipfx" id="mpfxUber">&euro;</div><input type="number" inputmode="decimal" id="mUber" placeholder="0.00" min="0" step="0.01"></div>
+      </div>
+      <div class="plat-in plat-bolt">
+        <div class="fld-lbl"><span style="color:#34d186">&#9889;</span> <span id="lblPlat2Modal">Bolt</span></div>
+        <div class="iw"><div class="ipfx" id="mpfxBolt">&euro;</div><input type="number" inputmode="decimal" id="mBolt" placeholder="0.00" min="0" step="0.01"></div>
+      </div>
+    </div>
+    <div class="plat-in plat-transfer" style="margin-bottom:0">
+      <div class="fld-lbl"><span style="color:#fb923c">&#128664;</span> Transfer / Outros</div>
+      <div class="iw"><div class="ipfx" id="mpfxOutroG">&euro;</div><input type="number" inputmode="decimal" id="mOutroG" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
     <div id="mTransferMetaBox" style="margin-top:10px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">
-      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="mTransferTomador" onchange="atualizarTransferModalUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
-      <div class="fld" id="mTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="mTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit"></div>
-      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferOperador" id="mTransferOperadorSim" onchange="atualizarTransferModalUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferOperador" id="mTransferOperadorNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
-      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div style="display:flex;gap:8px;margin-top:7px"><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferImpostos" id="mTransferImpSim" onchange="atualizarTransferModalUI()"> Sim</label><label style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--card)"><input type="radio" name="mTransferImpostos" id="mTransferImpNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
-      <div id="mTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:7px"><label><input type="checkbox" id="mTransferIRS" onchange="atualizarTransferModalUI()"> IRS</label><label><input type="checkbox" id="mTransferIVA" onchange="atualizarTransferModalUI()"> IVA</label><label><input type="checkbox" id="mTransferSS" onchange="atualizarTransferModalUI()"> SS</label></div></div>
+      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Tomador do servi&ccedil;o</div><select id="mTransferTomador" onchange="atualizarTransferModalUI()" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit;font-size:15px"><option value="Evolta">Evolta</option><option value="Sixt">Sixt</option><option value="Avulso">Avulso</option><option value="Outro">Outro / personalizado</option></select></div>
+      <div class="fld" id="mTransferTomadorOutroWrap" style="display:none;margin-bottom:10px"><div class="fld-lbl">Nome do tomador</div><input type="text" id="mTransferTomadorOutro" placeholder="Ex.: Hotel, empresa ou pessoa" style="width:100%;padding:11px;border-radius:9px;background:var(--card);color:var(--text);border:1px solid var(--border);font-family:inherit;font-size:16px"></div>
+      <div class="fld" style="margin-bottom:10px"><div class="fld-lbl">&#127970; Este Transfer entra no c&aacute;lculo da taxa do operador?</div><div class="seg"><label class="seg-opt"><input type="radio" name="mTransferOperador" id="mTransferOperadorSim" onchange="atualizarTransferModalUI()"> Sim</label><label class="seg-opt"><input type="radio" name="mTransferOperador" id="mTransferOperadorNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
+      <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128202; Este Transfer ter&aacute; abatimento de impostos?</div><div class="seg"><label class="seg-opt"><input type="radio" name="mTransferImpostos" id="mTransferImpSim" onchange="atualizarTransferModalUI()"> Sim</label><label class="seg-opt"><input type="radio" name="mTransferImpostos" id="mTransferImpNao" onchange="atualizarTransferModalUI()"> N&atilde;o</label></div></div>
+      <div id="mTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div class="chips"><label class="chip-opt"><input type="checkbox" id="mTransferIRS" onchange="atualizarTransferModalUI()"> IRS</label><label class="chip-opt"><input type="checkbox" id="mTransferIVA" onchange="atualizarTransferModalUI()"> IVA</label><label class="chip-opt"><input type="checkbox" id="mTransferSS" onchange="atualizarTransferModalUI()"> SS</label></div></div>
       <div class="trajeto-hint" id="mTrajetoHint">&#9989; Sem taxa do operador e sem impostos: este valor fica registado como <strong>Trajeto Transfer</strong> e aparece &agrave; parte no saldo real.</div>
     </div>
     <div id="mEnergiaSection"></div>
-    <div class="sub-h"><span>&#128205;</span> KMs rodados</div>
-    <div class="fld"><div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="mKms" placeholder="0" min="0" step="1"></div></div>
+    <div class="gastos-grid">
+      <div class="fld"><div class="fld-lbl">&#128205; KMs rodados</div><div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="mKms" placeholder="0" min="0" step="1"></div></div>
+      <div class="fld"><div class="fld-lbl">&#127828; Alimenta&ccedil;&atilde;o</div><div class="iw"><div class="ipfx" id="mpfxComida">&euro;</div><input type="number" inputmode="decimal" id="mComida" placeholder="0.00" min="0" step="0.01"></div></div>
+    </div>
+    <div class="fld"><div class="fld-lbl">&#128179; Outros gastos <span style="color:var(--muted)">(pessoal)</span></div><div class="iw"><div class="ipfx" id="mpfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="mOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
     <div class="sub-h"><span>&#9203;&#65039;</span> Horas de trabalho</div>
-    <div class="horas-row" style="gap:8px;display:grid;grid-template-columns:1fr 1fr;margin-bottom:9px">
+    <div class="horas-row" style="margin-bottom:9px">
       <div class="fld" style="margin-bottom:0"><div class="fld-lbl">&#128994; In&iacute;cio</div>
         <div class="iw"><div class="ipfx">&#128336;</div><input type="time" id="mHoraInicio"></div>
       </div>
@@ -698,13 +817,28 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
       <input type="checkbox" id="mAlmoco">
       <span class="almoco-check-lbl">&#127828; Pausa para almo&ccedil;o <span>(desconta 1h)</span></span>
     </label>
-    <div class="sub-h"><span>&#127828;</span> Alimenta&ccedil;&atilde;o <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none">(pessoal)</span></div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxComida">&euro;</div><input type="number" inputmode="decimal" id="mComida" placeholder="0.00" min="0" step="0.01"></div></div>
-    <div class="sub-h"><span>&#128179;</span> Outros gastos <span style="font-size:9px;color:var(--muted);font-weight:400;text-transform:none">(pessoal)</span></div>
-    <div class="fld"><div class="iw"><div class="ipfx" id="mpfxOutroG2">&euro;</div><input type="number" inputmode="decimal" id="mOutroG2" placeholder="0.00" min="0" step="0.01"></div></div>
     <div style="display:flex;gap:10px;margin-top:14px">
       <button class="btn btn-red" id="btnModalDel" style="flex:1;margin-top:0">&#128465;&#65039; Apagar</button>
       <button class="btn btn-cyan" id="btnModalSave" style="flex:2;margin-top:0">&#9989; Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmação (substitui confirm/prompt nativos) -->
+<div class="modal-overlay confirm-overlay" id="confirmOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="confTitulo"></div>
+      <button class="modal-close" id="confClose" aria-label="Fechar">&#10005;</button>
+    </div>
+    <div class="confirm-msg" id="confMsg"></div>
+    <div class="fld" id="confInputWrap" style="display:none">
+      <div class="fld-lbl" id="confInputLbl"></div>
+      <div class="iw"><input type="text" id="confInput" autocomplete="off" autocapitalize="characters" style="font-size:16px"></div>
+    </div>
+    <div class="confirm-acoes">
+      <button class="btn btn-outline" id="confCancel">Cancelar</button>
+      <button class="btn btn-cyan" id="confOk">Confirmar</button>
     </div>
   </div>
 </div>
@@ -715,35 +849,35 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
     <div class="nov-header">
       <div class="nov-icon">&#128640;</div>
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.9.3</div>
+      <div class="nov-versao">Finance Drive v3.10.0</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
-        <div class="nov-item-ic">&#128664;</div>
+        <div class="nov-item-ic">&#128142;</div>
         <div class="nov-item-txt">
-          <strong>Trajeto Transfer</strong>
-          <span>Saldo frota (Uber, Bolt e Transfers normais) &rarr; Trajeto Transfer &rarr; Saldo real. O Trajeto Transfer fica fora das metas e aparece numa barra informativa pr&oacute;pria.</span>
+          <strong>Saldo real em destaque</strong>
+          <span>O saldo do dia aparece grande no topo, com a meta logo abaixo. Toca para ver o detalhe frota &rarr; Trajeto &rarr; real.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">&#128176;</div>
+        <div class="nov-item-ic">&#9989;</div>
         <div class="nov-item-txt">
-          <strong>L&oacute;gica financeira correta</strong>
-          <span>Saldo = ganhos &minus; energia (kWh frota) &minus; aluguer. Alimenta&ccedil;&atilde;o e gastos pessoais n&atilde;o entram no c&aacute;lculo operacional.</span>
+          <strong>Guardar sempre &agrave; m&atilde;o</strong>
+          <span>O bot&atilde;o Guardar dia fica fixo no fundo do ecr&atilde;, com o total de ganhos ao lado.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">&#9203;&#65039;</div>
+        <div class="nov-item-ic">&#9997;&#65039;</div>
         <div class="nov-item-txt">
-          <strong>Ganho/hora real</strong>
-          <span>Calculado sobre o lucro l&iacute;quido real (ap&oacute;s impostos quando ativos), n&atilde;o sobre ganhos brutos.</span>
+          <strong>Registo mais r&aacute;pido</strong>
+          <span>Campos lado a lado, Transfer com bot&otilde;es Sim/N&atilde;o e o Enter do teclado salta para o pr&oacute;ximo campo.</span>
         </div>
       </div>
       <div class="nov-item">
-        <div class="nov-item-ic">&#128203;</div>
+        <div class="nov-item-ic">&#128737;&#65039;</div>
         <div class="nov-item-txt">
-          <strong>Fiscal PT mais preciso</strong>
-          <span>Base fiscal configur&aacute;vel: Transfers podem ser tributados individualmente por IRS, IVA e/ou SS.</span>
+          <strong>Sem perder dados</strong>
+          <span>Puxar para atualizar j&aacute; n&atilde;o apaga o que estavas a escrever. Configura&ccedil;&otilde;es organizadas em sec&ccedil;&otilde;es.</span>
         </div>
       </div>
     </div>
@@ -784,7 +918,7 @@ body{font-family:'DM Mono',monospace;color:var(--text);overflow:hidden;height:10
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='3.9.3';
+var APP_VERSION='3.10.0';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
@@ -950,8 +1084,8 @@ function atualizarBadgePais(){
 }
 function selecionarIdioma(l){
   CFG.idioma=l; salvarLocal();
-  ['PT','EN'].forEach(function(x){ document.getElementById('lang-'+x).classList.remove('on'); });
-  document.getElementById('lang-'+l).classList.add('on');
+  ['PT','EN'].forEach(function(x){ var el=document.getElementById('lang-'+x); if(el)el.classList.remove('on'); });
+  var on=document.getElementById('lang-'+l); if(on)on.classList.add('on');
 }
 function atualizarPrefixos(){
   var s=sim();
@@ -979,22 +1113,19 @@ function renderVeiculoExtraCfg(){
 function renderEnergiaSection(){
   var el=document.getElementById('energiaSection'); if(!el)return;
   if(isEletrico()){
-    el.innerHTML='<div class="sub-h"><span>\u26a1</span> Energia / Carregamento</div>'+
-    '<div class="energia-box">'+
-      '<div class="energia-box-title">\u26a1 Registar energia</div>'+
+    el.innerHTML='<div class="energia-box">'+
+      '<div class="energia-box-title">\u26a1 Energia / Carregamento</div>'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor gasto</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor gasto (bolso)</div>'+
         '<div class="iw"><div class="ipfx" id="pfxEnergia">'+sim()+'</div><input type="number" inputmode="decimal" id="iEnergia" placeholder="0.00" min="0" step="0.01" oninput="atualizarEnergiaTotal()"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 Ou kWh direto</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 kWh frota</div>'+
         '<div class="iw"><div class="ipfx">kWh</div><input type="number" inputmode="decimal" id="iEnergiaKwh" placeholder="0.00" min="0" step="0.01" oninput="atualizarEnergiaTotal()"></div></div>'+
       '</div>'+
-      '<div class="energia-sep">kWh autom\u00e1tico se s\u00f3 indicares \u20ac</div>'+
       '<div class="energia-total"><span class="energia-total-lbl">\u26a1 Total energia</span><span class="energia-total-val" id="energiaTotal">'+sim()+'0,00</span></div>'+
-      '<div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">Pre\u00e7o: <span style="color:var(--violet)" id="precoKwhBadge">'+sim()+CFG.precoKwh.toFixed(2)+'/kWh</span> &mdash; <span style="color:var(--violet)" id="kwhAutoLabel">0 kWh</span></div>'+
+      '<div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">Pre\u00e7o: <span style="color:var(--violet)" id="precoKwhBadge">'+sim()+CFG.precoKwh.toFixed(2)+'/kWh</span> &mdash; <span style="color:var(--violet)" id="kwhAutoLabel">0 kWh</span></div>'+
     '</div>';
   } else {
-    el.innerHTML='<div class="sub-h"><span>\u26fd</span> Combust\u00edvel</div>'+
-    '<div class="combustao-box">'+
+    el.innerHTML='<div class="combustao-box">'+
       '<div class="combustao-box-title">\u26fd Abastecimento de hoje</div>'+
       '<div class="energia-row">'+
         '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">Litros</div>'+
@@ -1011,13 +1142,13 @@ function renderMEnergiaSection(){
     el.innerHTML='<div class="sub-h"><span>\u26a1</span> Energia</div>'+
     '<div class="energia-box">'+
       '<div class="energia-row">'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u20ac Valor (bolso)</div>'+
         '<div class="iw"><div class="ipfx" id="mpfxEnergia">'+sim()+'</div><input type="number" inputmode="decimal" id="mEnergia" placeholder="0.00" min="0" step="0.01" oninput="atualizarMEnergiaTotal()"></div></div>'+
-        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 kWh direto</div>'+
+        '<div class="fld" style="margin-bottom:0"><div class="fld-lbl">\u26a1 kWh frota</div>'+
         '<div class="iw"><div class="ipfx">kWh</div><input type="number" inputmode="decimal" id="mEnergiaKwh" placeholder="0.00" min="0" step="0.01" oninput="atualizarMEnergiaTotal()"></div></div>'+
       '</div>'+
       '<div class="energia-total" style="margin-top:8px"><span class="energia-total-lbl">\u26a1 Total</span><span class="energia-total-val" id="mEnergiaTotal">'+sim()+'0,00</span></div>'+
-      '<div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:center"><span id="mKwhAutoLabel"></span></div>'+
+      '<div style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center"><span id="mKwhAutoLabel"></span></div>'+
     '</div>';
   } else {
     el.innerHTML='<div class="sub-h"><span>\u26fd</span> Combust\u00edvel</div>'+
@@ -1144,7 +1275,8 @@ function saldoReal(r,iso){
 }
 function segunda(iso){ var d=new Date(iso+'T12:00:00'),wd=d.getDay(),diff=wd===0?-6:1-wd; d.setDate(d.getDate()+diff); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function diasSemana(seg){ var arr=[],d=new Date(seg+'T12:00:00'); for(var i=0;i<7;i++){ arr.push(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())); d.setDate(d.getDate()+1); } return arr; }
-function toast(msg,tipo){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+(tipo||'ok'); setTimeout(function(){ t.classList.add('show'); },10); setTimeout(function(){ t.classList.remove('show'); },2500); }
+var _toastTimer=null;
+function toast(msg,tipo){ var t=document.getElementById('toast'); clearTimeout(_toastTimer); t.textContent=msg; t.className='toast '+(tipo||'ok'); setTimeout(function(){ t.classList.add('show'); },10); _toastTimer=setTimeout(function(){ t.classList.remove('show'); },2800); }
 function calcHoras(inicio,fim,almoco){
   if(!inicio||!fim)return null;
   var p1=inicio.split(':'),p2=fim.split(':');
@@ -1223,7 +1355,7 @@ function htmlImpostos(imp,trajeto){
   if(!linhas)linhas='<div class="impostos-row"><span class="impostos-lbl">Nenhum imposto selecionado</span><span class="impostos-val">-'+moeda(0)+'</span></div>';
   var ativos=[]; if(imp.usarSS)ativos.push('SS'); if(imp.usarIRS)ativos.push('IRS'); if(imp.usarIVA)ativos.push('IVA');
   return '<div class="impostos-box">'+
-    '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:9px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
+    '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:11px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
     htmlBlocoSaldos(imp.real-(trajeto||0),trajeto||0,imp.real)+
     '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'. Base fiscal conforme configurações gerais e Transfers tributáveis. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+
   '</div>';
@@ -1297,7 +1429,7 @@ function compCard(lbl,a,b,isMoeda,inverter){
   var fA=isMoeda?moeda(a):a.toFixed(0)+'km'; var fB=isMoeda?moeda(b):b.toFixed(0)+'km';
   var melhor=inverter ? a<=b : a>=b;
   var cor=melhor?'color:var(--green)':'color:var(--red)';
-  return '<div class="comp-card"><div class="comp-lbl">'+lbl+'</div><div class="comp-val" style="'+cor+'">'+fA+'</div>'+deltaStr(a,b,inverter)+'<div style="font-size:9px;color:var(--muted);margin-top:2px">Ant: '+fB+'</div></div>';
+  return '<div class="comp-card"><div class="comp-lbl">'+lbl+'</div><div class="comp-val" style="'+cor+'">'+fA+'</div>'+deltaStr(a,b,inverter)+'<div style="font-size:11px;color:var(--muted);margin-top:2px">Ant: '+fB+'</div></div>';
 }
 function renderComparativo(){
   var stit=document.getElementById('compStit'); var box=document.getElementById('comparativoBox');
@@ -1310,19 +1442,30 @@ function renderComparativo(){
     compCard('Saldo',c.saldo.a,c.saldo.b,true,false)+
     (c.gph.b>0?compCard('Lucro/hora',c.gph.a,c.gph.b,true,false):'')+
     (c.kms.b>0?compCard('KMs',c.kms.a,c.kms.b,false,true):'')+
-  '</div><div style="font-size:9px;color:var(--muted);text-align:center;margin-bottom:4px">vs semana anterior &mdash; KMs em vermelho quando aumentam, pois indicam mais desgaste</div>';
+  '</div><div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:4px">vs semana anterior &mdash; KMs em vermelho quando aumentam, pois indicam mais desgaste</div>';
 }
 
-// ── Pull to refresh ───────────────────────────────────────────────────
+// ── Pull to refresh (v3.10: atualiza o ecrã sem recarregar a página) ──
 var ptrStartY=0,ptrDist=0,ptrActive=false;
 var content=document.getElementById('mainContent');
 content.addEventListener('touchstart',function(e){ if(content.scrollTop===0){ ptrStartY=e.touches[0].clientY; ptrActive=true; } },{passive:true});
 content.addEventListener('touchmove',function(e){ if(!ptrActive)return; ptrDist=e.touches[0].clientY-ptrStartY; if(ptrDist>0&&ptrDist<120){ document.getElementById('ptr').classList.add('visible'); document.getElementById('ptrText').textContent=ptrDist>70?'Soltar para atualizar':'Puxar para atualizar'; document.getElementById('ptrSpin').style.transform='rotate('+Math.round(ptrDist*3)+'deg)'; } },{passive:true});
-content.addEventListener('touchend',function(){ if(!ptrActive)return; ptrActive=false; if(ptrDist>70){ document.getElementById('ptrSpin').classList.add('spin'); setTimeout(function(){ location.reload(); },800); } else { document.getElementById('ptr').classList.remove('visible'); } ptrDist=0; });
+content.addEventListener('touchend',function(){ if(!ptrActive)return; ptrActive=false; if(ptrDist>70){ document.getElementById('ptrSpin').classList.add('spin'); setTimeout(refreshAtual,450); } else { document.getElementById('ptr').classList.remove('visible'); } ptrDist=0; });
+// Volta a desenhar os dados sem tocar nos campos que estão a ser preenchidos.
+function refreshAtual(){
+  renderHeader();
+  if(document.getElementById('pg-hoje').classList.contains('on')){ renderKPIs(); renderResumoDia(); }
+  else if(document.getElementById('pg-semana').classList.contains('on')){ renderSemana(); }
+  else if(document.getElementById('pg-hist').classList.contains('on')){ renderHist(); }
+  var sp=document.getElementById('ptrSpin'); sp.classList.remove('spin'); sp.style.transform='';
+  document.getElementById('ptr').classList.remove('visible');
+  toast('🔄 Atualizado','ok');
+}
 
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
 var pages=['hoje','semana','hist','cfg'];
-function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
+function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
+function ajustarNavH(){ var n=document.getElementById('navBar'); if(n)document.documentElement.style.setProperty('--nav-h',n.offsetHeight+'px'); }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
@@ -1330,10 +1473,17 @@ function atualizarBadgeVeiculo(){
   if(CFG.veiculo&&CFG.veiculo.modelo){ var ic=isEletrico()?'🔋':'\u26fd'; txt.textContent='🚘 '+CFG.veiculo.modelo+' '+ic; bar.classList.add('show'); }
   else { bar.classList.remove('show'); txt.textContent=''; }
 }
+function semanaDoAno(d){
+  var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  var dia=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-dia);
+  var ini=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  return Math.ceil(((t-ini)/86400000+1)/7);
+}
 function renderHeader(){
   var now=new Date();
   document.getElementById('hdrDate').textContent=DIAS_FULL[now.getDay()]+', '+now.getDate()+' '+MESES_S[now.getMonth()];
-  document.getElementById('hdrWeek').textContent=now.getFullYear();
+  var regs=diasSemana(segunda(hoje())).filter(function(d){ return DB[d]; }).length;
+  document.getElementById('hdrWeek').textContent='Semana '+semanaDoAno(now)+' · '+regs+'/'+diasTrabalhoMeta()+' dias';
   document.getElementById('chipAl').textContent=sim()+alDia().toFixed(2)+'/dia';
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
   atualizarPrefixos(); atualizarBadgeVeiculo(); atualizarBadgePais();
@@ -1343,8 +1493,8 @@ function renderBarraMeta(containerId,label,atual,meta,nota,detalhesMeta,trajeto)
   if(!meta||meta<=0){ el.innerHTML=''; return; }
   var pct=Math.min(100,Math.max(0,Math.round((atual/meta)*100))),atingiu=atual>=meta;
   var cor=atingiu?'var(--green)':pct>=70?'var(--amber)':'var(--cyan)';
-  var detalhesHtml=detalhesMeta?'<div style="font-size:10px;color:var(--sub);line-height:1.6;margin-bottom:8px">'+detalhesMeta+'</div>':'';
-  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div>'+detalhesHtml+'<div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' ')+'</div>'+htmlMetaTrajeto(trajeto,meta)+'</div>'+(nota?'<div style="font-size:10px;color:var(--muted);font-style:italic;margin-top:5px;padding:0 2px;line-height:1.5;margin-bottom:8px">'+nota+'</div>':'<div style="margin-bottom:12px"></div>');
+  var detalhesHtml=detalhesMeta?'<div style="font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:8px">'+detalhesMeta+'</div>':'';
+  el.innerHTML='<div class="meta-box"><div class="meta-row"><span class="meta-lbl">🎯 '+label+'</span><span class="meta-vals" style="color:'+cor+'">'+moeda(atual)+' / '+moeda(meta)+'</span></div>'+detalhesHtml+'<div class="meta-bar"><div class="meta-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div><div class="meta-pct" style="color:'+cor+'">'+pct+'%'+(atingiu?' 🏆':' · faltam '+moeda(meta-atual))+'</div>'+htmlMetaTrajeto(trajeto,meta)+'</div>'+(nota?'<div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:-4px;padding:0 2px;line-height:1.5;margin-bottom:12px">'+nota+'</div>':'');
 }
 
 function htmlMetaTrajeto(traj,meta){
@@ -1355,23 +1505,34 @@ function htmlMetaTrajeto(traj,meta){
     '<div class="meta-traj-nota">Informativo: não conta para a meta. Entra só no saldo real.</div></div>';
 }
 // ── KPIs / Hoje ───────────────────────────────────────────────────────
+// v3.10: mesmos valores de antes, reorganizados num card principal + KPIs compactos.
 function renderKPIs(){
-  var h=hoje(),r=DB[h]||{},g=ganhos(r),sl=saldo(r,h);
+  var h=hoje(),r=DB[h]||{},g=ganhos(r);
   var seg=segunda(h),ds=diasSemana(seg).filter(function(d){ return d<=h; });
   var tg=ds.reduce(function(a,d){ return a+ganhos(DB[d]||{}); },0);
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
-  var imp=calcImpostos(r,h),slMeta=saldoReal(r,h),slLbl=imp?'Saldo real':'Saldo hoje';
+  var imp=calcImpostos(r,h),slMeta=saldoReal(r,h);
   var gph=horas&&horas>0?slMeta/horas:0;
   var traj=trajetoValor(r),slFrota=slMeta-traj;
-  var subSaldo=[]; if(imp)subSaldo.push('após '+impostosSelecionadosLabel()); if(traj>0)subSaldo.push('Frota '+moeda(slFrota)+' + 🚘 '+moeda(traj));
-  document.getElementById('kpiGrid').innerHTML=
+  var subs=[];
+  if(!DB[h])subs.push('Ainda sem registo hoje');
+  else if(imp)subs.push('Após '+impostosSelecionadosLabel()+' e gastos do bolso');
+  else subs.push('Após energia, aluguer e gastos do bolso');
+  var hero='<div class="hero '+(slMeta>=0?'pos':'neg')+'">'+
+    '<div class="hero-lbl">💎 Saldo real de hoje</div>'+
+    '<div class="hero-val">'+moeda(slMeta)+'</div>'+
+    '<div class="hero-sub">'+subs.join('<br>')+'</div>'+
+    (DB[h]?'<details class="hero-det"><summary>Frota '+moeda(slFrota)+(traj>0?' + Trajeto '+moeda(traj):'')+'</summary>'+htmlBlocoSaldos(slFrota,traj,slMeta)+'</details>':'')+
+  '</div>';
+  document.getElementById('kpiGrid').innerHTML=hero;
+  document.getElementById('kpiMini').innerHTML=
     kpi('💰','Ganhos hoje',moeda(g),'color:var(--cyan)')+
-    kpi(slMeta>=0?'🏆':'⚠️',slLbl,moeda(slMeta),'color:var(--'+(slMeta>=0?'green':'red')+')',subSaldo.join('<br>'))+
     kpi('⏱️','Lucro/hora',gph>0?moeda(gph):'-','color:var(--amber)')+
+    kpi('🕒','Turno',horas>0?fmtHoras(horas):'-','color:var(--sub)')+
     kpi('📆','Ganhos semana',moeda(tg),'color:var(--violet)');
   renderBarraMeta('metaDiariaBox','Meta diária',slFrota,metaDiariaEfetiva(),(taxaOperadorValor(r)>0?'🏢 Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'⚡ Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':''),'',traj);
 }
-function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:8px;color:var(--muted);margin-top:3px;font-weight:400;font-family:DM Mono,monospace;line-height:1.4">'+sub+'</div>':'')+'</div>'; }
+function kpi(ic,lb,vl,st,sub){ return '<div class="kpi"><div class="kpi-ic">'+ic+'</div><div class="kpi-lbl">'+lb+'</div><div class="kpi-val" style="'+st+'">'+vl+'</div>'+(sub?'<div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:400;font-family:var(--fd-mono);line-height:1.4">'+sub+'</div>':'')+'</div>'; }
 function rl(lb,vl,st,sub){ return '<div class="rl'+(sub?' sub':'')+'"><span class="lb">'+lb+'</span><span class="vl"'+(st?' style="'+st+'"':'')+'>'+vl+'</span></div>'; }
 
 function atualizarHorasTotal(){
@@ -1397,7 +1558,7 @@ function renderResumoDia(){
         rl('\u26a1 '+plat2(),moeda(r.bolt||0),'color:#34d186',true)+
         rl(transferRowLabel(r),moeda(r.outroG||0),traj>0?'color:var(--green)':'color:var(--orange)',true)+
         '<div class="div"></div>';
-      html+='<div style="margin:8px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>';
+      html+='<div style="margin:8px 0 3px;font-size:11px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>';
       if(isEletrico()){
         var eKd=r.energiaKwh||0;
         html+=rl('\u26a1 Energia kWh frota',moeda(eT),'color:var(--violet)');
@@ -1408,7 +1569,7 @@ function renderResumoDia(){
       html+=rl('Aluguer (dia)',moeda(al),'color:var(--violet)');
       var eDin=energiaDinheiro(r);
       if(eDin>0||(r.comida||0)>0||(r.outroG2||0)>0){
-        html+='<div style="margin:8px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>';
+        html+='<div style="margin:8px 0 3px;font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>';
         if(eDin>0)html+=rl('\u26a1 Energia (bolso)',moeda(eDin),'color:var(--amber)');
         if((r.comida||0)>0)html+=rl('Alimenta\u00e7\u00e3o',moeda(r.comida||0),'color:var(--muted)');
         if((r.outroG2||0)>0)html+=rl('Outros gastos',moeda(r.outroG2||0),'color:var(--muted)');
@@ -1420,7 +1581,7 @@ function renderResumoDia(){
         else if(!isEletrico()&&(r.litros||0)>0){ var effL=(r.litros/kms*100); html+=rl('\u26fd Consumo',effL.toFixed(1)+' L/100km','color:var(--amber)',true)+rl('📍 Custo/km',moeda(eT/kms),'',true); }
       }
       var slOpFrota=sl-traj,posOp=slOpFrota>=0;
-      html+='<div class="rl tot"><span class="lb">'+(posOp?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(posOp?'green':'red')+')">'+moeda(slOpFrota)+'</span></div>';
+      html+='<div class="rl tot"><span class="lb">'+(posOp?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:11px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(posOp?'green':'red')+')">'+moeda(slOpFrota)+'</span></div>';
       if(imp)html+=htmlImpostos(imp,traj);
       else html+=htmlBlocoSaldos(slRealFinal-traj,traj,slRealFinal);
       document.getElementById('resumoDia').innerHTML=html;
@@ -1530,9 +1691,15 @@ function guardar(){
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
   var hojeKey=hoje();
   if(DB[hojeKey]){
-    var substituir=confirm('Já existe um registo guardado para hoje. Queres substituir esse registo?');
-    if(!substituir){ toast('Ação cancelada. O registo de hoje foi mantido.','er'); return; }
+    confirmSheet({titulo:'Substituir o registo de hoje?',msg:'Já existe um registo guardado para hoje. Se continuares, ele é substituído pelos valores que acabaste de inserir.',ok:'Substituir'}).then(function(ok){
+      if(!ok){ toast('Ação cancelada. O registo de hoje foi mantido.','er'); return; }
+      concluirGuardar(hojeKey,rec);
+    });
+    return;
   }
+  concluirGuardar(hojeKey,rec);
+}
+function concluirGuardar(hojeKey,rec){
   DB[hojeKey]=rec;
   salvarLocal();
   var dadosEventoDia={
@@ -1556,19 +1723,29 @@ function guardar(){
   limparCampos(); renderKPIs(); renderResumoDia(); renderHeader();
   toast('\u2705 Dia guardado!','ok');
   if(document.activeElement)document.activeElement.blur();
+  document.getElementById('mainContent').scrollTop=0;
   verificarConquistas(hojeKey);
 }
 function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSection(); renderKPIs(); renderResumoDia(); atualizarPlat2Labels(); }
 
 // ── Semana ────────────────────────────────────────────────────────────
+var _semInfo=null;
+function infoBarra(i){
+  if(!_semInfo)return;
+  var d=_semInfo.ds[i],v=_semInfo.vals[i];
+  if(!DB[d]){ toast(diaNome(d)+': sem registo','er'); return; }
+  toast(diaNome(d)+' · ganhos '+moeda(v.g)+' · gastos '+moeda(v.gs+v.gd),'ok');
+}
 function renderSemana(){
       renderComparativo();
       var h=hoje(),seg=segunda(h),ds=diasSemana(seg),wHTML='';
       ds.forEach(function(d){
         var r=DB[d]||{},isTod=d===h,isFut=d>h;
         var slW=DB[d]?saldoReal(DB[d],d):null;
-        var cls=isFut?'ft':((DB[d]?'hd':'')+(isTod?' td':''));
-        wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(DB[d]?'<div class="ds '+(slW>=0?'p':'n')+'">'+(slW>=0?'+':'')+slW.toFixed(2)+'</div>':'<div class="ds z">'+(isFut?'':'-')+'</div>')+'<div class="dd '+(DB[d]?'h':'e')+'"></div>'+(DB[d]&&isTrajetoTransfer(DB[d])?'<div style="font-size:8px;margin-top:2px">🚘</div>':'')+'</div>';
+        var cls=isFut&&!DB[d]?'ft':(DB[d]?(slW>=0?'pos':'neg'):'');
+        if(isTod)cls+=' td';
+        var slTxt=DB[d]?(slW>=0?'+':'')+Math.round(slW):'';
+        wHTML+='<div class="dc '+cls+'"><div class="dn">'+diaNome(d)+'</div>'+(DB[d]?'<div class="ds '+(slW>=0?'p':'n')+'">'+slTxt+'</div>':'<div class="ds z">'+(isFolgaISO(d)?'folga':(isFut?'&nbsp;':'-'))+'</div>')+'<div class="dd '+(DB[d]?'h':'e')+'"></div>'+(DB[d]&&isTrajetoTransfer(DB[d])?'<div style="font-size:11px;margin-top:2px">🚘</div>':'')+'</div>';
       });
       document.getElementById('weekRow').innerHTML=wHTML;
       var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
@@ -1577,9 +1754,10 @@ function renderSemana(){
       document.getElementById('platGrid').innerHTML=
         '<div class="plat-c"><div class="plat-ic">🖤</div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:#fff">'+moeda(tu)+'</div></div>'+
         '<div class="plat-c"><div class="plat-ic" style="color:#34d186">\u26a1</div><div class="plat-nm">'+plat2()+'</div><div class="plat-vl" style="color:#34d186">'+moeda(tb)+'</div></div>'+
-        '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Transfer</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div>'+(trajSem>0?'<div style="font-size:9px;color:var(--green);margin-top:3px">Trajeto: '+moeda(trajSem)+'</div>':'')+'</div>';
+        '<div class="plat-c"><div class="plat-ic">🚘</div><div class="plat-nm">Transfer</div><div class="plat-vl" style="color:var(--orange)">'+moeda(to)+'</div>'+(trajSem>0?'<div style="font-size:11px;color:var(--green);margin-top:3px">Trajeto: '+moeda(trajSem)+'</div>':'')+'</div>';
       // gr\u00e1fico: gastos operacionais = energia + aluguer (sem pessoal)
       var vals=ds.map(function(d){ if(d>h||!DB[d])return{g:0,gs:0,gd:0}; var r=DB[d]||{}; return{g:ganhos(r),gs:energiaFrota(r)+alDiaISO(d),gd:energiaDinheiro(r)+(r.comida||0)+(r.outroG2||0)}; });
+      _semInfo={ds:ds,vals:vals};
       var mx=Math.max.apply(null,vals.map(function(v){ return Math.max(v.g,v.gs+v.gd); }).concat([1]));
       var bHTML='';
       ds.forEach(function(d,i){
@@ -1588,7 +1766,7 @@ function renderSemana(){
         var gsh=Math.round((v.gs/mx)*88);
         var gdh=v.gd>0?Math.round((v.gd/mx)*88):0;
         var totalH=gsh+gdh;
-        bHTML+='<div class="bc-col">'+
+        bHTML+='<div class="bc-col" onclick="infoBarra('+i+')">'+
           '<div class="bc-grp">'+
             '<div class="bar g" style="height:'+gh+'px"></div>'+
             '<div style="position:relative;flex:1;height:'+totalH+'px;align-self:flex-end">'+
@@ -1659,12 +1837,15 @@ function renderSemana(){
       // O saldo real já desconta a energia do bolso uma única vez; a meta permanece a configurada.
       renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?'⚡ A energia do bolso foi recuperada antes de contar o lucro da meta.':'📌 Meta conta o saldo frota: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal,trajSem);
 
-      var notaSemana='<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
+      var notaSemana='<div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
 
       var fiscalSemanaEl=document.getElementById('fiscalSemanaBox');
-    if(fiscalSemanaEl)fiscalSemanaEl.innerHTML=impSemHtml?'<div class="stit">&#128203; Estimativa fiscal PT</div><div class="card" style="border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)"><div class="card-top ct-violet"></div>'+impSemHtml.replace('<div class="impostos-box">','<div style="margin-top:0">')+'</div>':'';
+      if(fiscalSemanaEl){
+        fiscalSemanaEl.innerHTML=impSemHtml||'';
+        var accF=document.getElementById('accSemFiscal'); if(accF)accF.style.display=impSemHtml?'':'none';
+      }
     var slRealSemanaFinal=impSemObj?impSemObj.real:slSemanalReal;
-    document.getElementById('resumoSemana').innerHTML='<div class="card-top ct-violet"></div>'+
+    document.getElementById('resumoSemana').innerHTML=
         (!reais.length?'<div class="empty"><div class="empty-ic">📤</div>Sem dados esta semana</div>':
         rl('📅 Dias registados',reais.length+'/'+diasTrabalhoMeta())+
         rl('💰 Ganhos totais',moeda(tg),'color:var(--cyan)')+
@@ -1672,16 +1853,16 @@ function renderSemana(){
         rl('🖤 Uber',moeda(tu),'',true)+rl('\u26a1 '+plat2(),moeda(tb),'color:#34d186',true)+rl('🚘 Transfer',moeda(to),'color:var(--orange)',true)+
         (trajSem>0?rl('\u21b3 Trajeto Transfer',moeda(trajSem),'color:var(--green)',true):'')+
         '<div class="div"></div>'+
-        '<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
+        '<div style="margin:6px 0 3px;font-size:11px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
         rl(isEletrico()?'\u26a1 Energia kWh frota':'\u26fd Combust\u00edvel',moeda(te))+
         rl('Aluguer semanal',moeda(tal),'color:var(--violet)')+
-        (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
+        (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
         (teDinheiro>0?rl('\u26a1 Energia (bolso)',moeda(teDinheiro),'color:var(--amber)'):'')+
         (tc>0?rl('Alimenta\u00e7\u00e3o',moeda(tc),'color:var(--muted)'):'')+
         (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
         (totalHoras>0?rl('\u23f1\ufe0f Horas totais',fmtHoras(totalHoras)):'')+
         rl('KMs totais',totalKms>0?totalKms+'km':'-')+
-        '<div class="rl tot"><span class="lb">'+(sl2-trajSem>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(sl2-trajSem>=0?'green':'red')+')">'+ moeda(sl2-trajSem)+'</span></div>'+
+        '<div class="rl tot"><span class="lb">'+(sl2-trajSem>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:11px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(sl2-trajSem>=0?'green':'red')+')">'+ moeda(sl2-trajSem)+'</span></div>'+
         htmlBlocoSaldos(slRealSemanaFinal-trajSem,trajSem,slRealSemanaFinal)+
         notaSemana);
     }
@@ -1740,14 +1921,17 @@ function salvarModal(){
     saldo_operacional:Math.round(saldo(rec,isoEditado)),
     saldo_real:Math.round(saldoReal(rec,isoEditado))
   });
-  fecharModal(); renderHist();
+  fecharModal(); renderHist(); renderHeader();
   if(isoEditado===hoje()){ renderKPIs(); renderResumoDia(); }
   toast('\u2705 Dia atualizado!','ok');
 }
 function apagarDiaModal(){
   if(!editingISO)return;
   var isoApagar=editingISO;
-  if(confirm('Apagar o registo de '+fmtData(isoApagar)+'?')){ trackEvent('apagar_dia',{origem:'modal'}); delete DB[isoApagar]; salvarLocal(); fecharModal(); renderHist(); if(isoApagar===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑\ufe0f Dia apagado!','ok'); }
+  confirmSheet({titulo:'Apagar este registo?',msg:'O registo de '+fmtData(isoApagar)+' vai ser apagado. Esta ação não pode ser desfeita.',ok:'Apagar',perigo:true}).then(function(ok){
+    if(!ok)return;
+    trackEvent('apagar_dia',{origem:'modal'}); delete DB[isoApagar]; salvarLocal(); fecharModal(); renderHist(); renderHeader(); if(isoApagar===hoje()){ renderKPIs(); renderResumoDia(); } toast('🗑\ufe0f Dia apagado!','ok');
+  });
 }
 
 // ── Hist\u00f3rico ──────────────────────────────────────────────────────────
@@ -1776,9 +1960,9 @@ function renderAnaliseConsumo(chaves){
   var unidade=isEletrico()?'kWh':'L';
   var barras=dados.map(function(d){ var pct=maxVal>0?Math.round((d.val/maxVal)*72):0; return '<div class="kwh-col">'+(d.val>0?'<div class="kwh-val">'+d.val.toFixed(1)+'</div>':'<div class="kwh-val" style="color:var(--muted)">-</div>')+'<div class="kwh-bar" style="height:'+pct+'px;background:'+cor+';opacity:'+(d.val>0?'0.85':'0.15')+'"></div><div class="kwh-lbl">'+d.dia+'</div></div>'; }).join('');
   el.innerHTML='<div class="stit">'+titulo+'</div><div class="card"><div class="kwh-chart">'+barras+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">'+
-    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+totalVal.toFixed(1)+unidade+'</div></div>'+
-    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">M\u00e9dia/dia</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:'+cor+'">'+mediaVal.toFixed(1)+unidade+'</div></div>'+
-    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Custo total</div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:var(--red)">'+moeda(totalCusto)+'</div></div>'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Total</div><div style="font-family:var(--fd-head);font-size:13px;font-weight:700;color:'+cor+'">'+totalVal.toFixed(1)+unidade+'</div></div>'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">M\u00e9dia/dia</div><div style="font-family:var(--fd-head);font-size:13px;font-weight:700;color:'+cor+'">'+mediaVal.toFixed(1)+unidade+'</div></div>'+
+    '<div style="background:var(--surface);border-radius:8px;padding:8px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Custo total</div><div style="font-family:var(--fd-head);font-size:13px;font-weight:700;color:var(--red)">'+moeda(totalCusto)+'</div></div>'+
   '</div></div>';
 }
 
@@ -1825,7 +2009,7 @@ function renderHist(){
       var basesHist=chaves.reduce(function(a,d){ var rr=r0(d); a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
 
       if(!chaves.length){
-        var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📤</div>Sem dados neste período</div>';
+        var semDados=histFiltro==='dia'&&periodo.isoRef?'<div class="empty"><div class="empty-ic">📤</div>Sem registo neste dia</div><button class="btn btn-outline" onclick="abrirModal(\''+periodo.isoRef+'\')">\u2795 Adicionar registo</button>':'<div class="empty"><div class="empty-ic">📤</div>Sem registos neste período</div>';
         document.getElementById('resumoPeriodo').innerHTML='<div style="padding:8px;text-align:center;color:var(--muted);font-size:12px">Sem dados</div>';
         document.getElementById('histList').innerHTML=semDados;
         return;
@@ -1852,12 +2036,12 @@ function renderHist(){
 
       document.getElementById('resumoPeriodo').innerHTML=
         '<div class="rp-grid">'+
+        '<div class="rp-item" style="grid-column:1/-1;border:1px solid rgba(34,211,238,.25)"><div class="rp-lbl">💎 Saldo real</div><div class="rp-val" style="font-size:22px;color:var(--'+(slRealPeriodo>=0?'green':'red')+')">'+moeda(slRealPeriodo)+'</div></div>'+
         '<div class="rp-item"><div class="rp-lbl">💰 Ganhos</div><div class="rp-val" style="color:var(--cyan)">'+moeda(tg)+'</div></div>'+
         (taxaOperadorPeriodo>0?'<div class="rp-item"><div class="rp-lbl">🏢 Taxa operador</div><div class="rp-val" style="color:var(--red)">-'+moeda(taxaOperadorPeriodo)+'</div></div>':'')+
         '<div class="rp-item"><div class="rp-lbl">📊 Saldo operac. frota</div><div class="rp-val" style="color:var(--'+(slTotal-trajHist>=0?'green':'red')+')">'+moeda(slTotal-trajHist)+'</div></div>'+
         '<div class="rp-item"><div class="rp-lbl">🏆 Saldo frota</div><div class="rp-val" style="color:var(--'+(slRealPeriodo-trajHist>=0?'green':'red')+')">'+moeda(slRealPeriodo-trajHist)+'</div></div>'+
         '<div class="rp-item" style="border:1px solid rgba(74,222,128,.25)"><div class="rp-lbl">🚘 Trajeto Transfer</div><div class="rp-val" style="color:var(--green)">+'+moeda(trajHist)+'</div></div>'+
-        '<div class="rp-item" style="grid-column:1/-1;border:1px solid rgba(34,211,238,.25)"><div class="rp-lbl">💎 Saldo real</div><div class="rp-val" style="color:var(--'+(slRealPeriodo>=0?'green':'red')+')">'+moeda(slRealPeriodo)+'</div></div>'+
         '<div class="rp-item"><div class="rp-lbl">&#9889; Gasto OP Frota</div><div class="rp-val" style="color:var(--red)">'+moeda(gastos)+'</div></div>'+
         (teDinheiro>0?'<div class="rp-item"><div class="rp-lbl">&#128181; Gasto Dinheiro</div><div class="rp-val" style="color:var(--amber)">'+moeda(teDinheiro)+'</div></div>':'')+
         '<div class="rp-item"><div class="rp-lbl">📅 Dias</div><div class="rp-val">'+nDias+'</div></div>'+
@@ -1867,13 +2051,13 @@ function renderHist(){
         (!isEletrico()&&consumoHist>0?'<div class="rp-item"><div class="rp-lbl">⛽ Consumo</div><div class="rp-val" style="color:var(--amber)">'+consumoHist.toFixed(1)+' L/100km</div></div>':'')+
         (custoKmHist>0?'<div class="rp-item"><div class="rp-lbl">📍 Custo/km</div><div class="rp-val" style="color:var(--cyan)">'+moeda(custoKmHist)+'</div></div>':'')+
         '</div>'+
-        (tc>0||tou>0?'<div style="font-size:10px;color:var(--muted);margin-bottom:8px">📌 Pessoal (não incluso): '+(tc>0?'🍔 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'💳 '+moeda(tou):'')+'</div>':'')+
+        (tc>0||tou>0?'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">📌 Pessoal (não incluso): '+(tc>0?'🍔 '+moeda(tc):'')+(tc>0&&tou>0?' \u00b7 ':'')+(tou>0?'💳 '+moeda(tou):'')+'</div>':'')+
         '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-        '<span style="font-size:10px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span>'+
-        '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
-        '<span style="font-size:10px;color:var(--muted)">\u26a1 '+plat2()+': <strong style="color:#34d186">'+moeda(tb)+'</strong></span>'+
-        '<span style="font-size:10px;color:var(--muted);margin:0 4px">\u00b7</span>'+
-        '<span style="font-size:10px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span>'+
+        '<span style="font-size:11px;color:var(--muted)">🖤 <strong style="color:#fff">'+moeda(tu)+'</strong></span>'+
+        '<span style="font-size:11px;color:var(--muted);margin:0 4px">\u00b7</span>'+
+        '<span style="font-size:11px;color:var(--muted)">\u26a1 '+plat2()+': <strong style="color:#34d186">'+moeda(tb)+'</strong></span>'+
+        '<span style="font-size:11px;color:var(--muted);margin:0 4px">\u00b7</span>'+
+        '<span style="font-size:11px;color:var(--muted)">🚘 <strong style="color:var(--orange)">'+moeda(to)+'</strong></span>'+
         '</div>';
 
       var diasHtml='';
@@ -1898,7 +2082,7 @@ function renderHist(){
             '<div class="hi-g">Ganhos: '+moeda(g)+' \u00b7 Frota: '+moeda(eT)+(eDin>0?' \u00b7 Bolso: '+moeda(eDin):'')+'</div>'+
             (parts.length||extra?'<div class="hi-pl">'+parts.join(' \u00b7 ')+extra+'</div>':'')+
           '</div>'+
-          '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div>'+(traj>0?'<div style="font-size:9px;color:var(--muted);margin-top:2px">frota '+moeda(sl2-traj)+' + <span style="color:var(--green)">🚘 '+moeda(traj)+'</span></div>':'')+'<div class="hi-edit">\u270f\ufe0f editar</div></div>'+
+          '<div class="hi-r"><div class="hi-sl '+(pos2?'p':'n')+'">'+moeda(sl2)+'</div>'+(traj>0?'<div style="font-size:11px;color:var(--muted);margin-top:2px">frota '+moeda(sl2-traj)+' + <span style="color:var(--green)">🚘 '+moeda(traj)+'</span></div>':'')+'<div class="hi-edit">\u270f\ufe0f editar</div></div>'+
         '</div>';
       });
 
@@ -1911,10 +2095,10 @@ function renderHist(){
         rl('🚘 Transfer',moeda(to),'color:var(--orange)',true)+
         (trajHist>0?rl('\u21b3 Trajeto Transfer',moeda(trajHist),'color:var(--green)',true):'')+
         '<div class="div"></div>'+
-        '<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
+        '<div style="margin:6px 0 3px;font-size:11px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">&#9889; Gasto OP Frota</div>'+
         rl(isEletrico()?'\u26a1 Energia kWh frota':'\u26fd Combustível',moeda(te))+
         rl(histFiltro==='semana'?'Aluguer semanal':'Aluguer proporcional',moeda(alTotal),'color:var(--violet)')+
-        (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
+        (teDinheiro>0||tc>0||tou>0?'<div style="margin:6px 0 3px;font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em">&#128181; Gasto OP Dinheiro <span style="font-weight:400;color:var(--muted)">(bolso)</span></div>':'')+
         (teDinheiro>0?rl('\u26a1 Energia (bolso)',moeda(teDinheiro),'color:var(--amber)'):'')+
         (tc>0?rl('Alimentação',moeda(tc),'color:var(--muted)'):'')+
         (tou>0?rl('Outros gastos',moeda(tou),'color:var(--muted)'):'')+
@@ -1924,7 +2108,7 @@ function renderHist(){
         (isEletrico()&&eficienciaHist>0?rl('⚡ Eficiência energética',eficienciaHist.toFixed(1)+' kWh/100km','color:var(--violet)'):'')+
         (!isEletrico()&&consumoHist>0?rl('⛽ Consumo médio',consumoHist.toFixed(1)+' L/100km','color:var(--amber)'):'')+
         (custoKmHist>0?rl('📍 Custo/km energia',moeda(custoKmHist),'color:var(--cyan)'):'')+
-        '<div class="rl tot"><span class="lb">'+(slTotal-trajHist>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:9px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(slTotal-trajHist>=0?'green':'red')+')">'+ moeda(slTotal-trajHist)+'</span></div>'+
+        '<div class="rl tot"><span class="lb">'+(slTotal-trajHist>=0?'📊':'\u26a0\ufe0f')+' Saldo operacional frota <span style="font-size:11px;color:var(--muted)">(antes de impostos)</span></span><span class="vl" style="color:var(--'+(slTotal-trajHist>=0?'green':'red')+')">'+ moeda(slTotal-trajHist)+'</span></div>'+
         htmlBlocoSaldos(slRealPeriodo-trajHist,trajHist,slRealPeriodo)+
         '<div class="hist-acc-note">\u2139\ufe0f Saldo operacional: energia + aluguer descontados. Alimentação e gastos pessoais não entram.</div>';
 
@@ -1985,7 +2169,7 @@ function salvarVeiculo(){
   var kwhRow=document.getElementById('kwh-cfg-row'),kwhHint=document.getElementById('kwh-hint');
   if(kwhRow)kwhRow.style.display=isEletrico()?'':'none';
   if(kwhHint)kwhHint.style.display=isEletrico()?'':'none';
-  document.getElementById('iVeiculoModelo').value=''; document.getElementById('iVeiculoAno').value='';
+  // v3.10: os campos continuam preenchidos depois de guardar, para confirmar visualmente o que ficou salvo.
   toast('\u2705 Ve\u00edculo guardado!','ok');
 }
 function exportCSV(){
@@ -2108,16 +2292,68 @@ function verificarConquistas(iso){
   processarFilaConquistas();
 }
 function limpar(){
-  var ok=confirm('Isto vai apagar todos os registos deste aparelho e não pode ser desfeito. Queres continuar?');
-  if(!ok){ toast('Ação cancelada.','er'); return; }
-  var txt=prompt('Para confirmar, escreve APAGAR');
-  if((txt||'').trim().toUpperCase()!=='APAGAR'){ toast('Ação cancelada. Nada foi apagado.','er'); return; }
-  trackEvent('apagar_todos_dados',{total_dias:Object.keys(DB).length}); clearData(); toast('🗑️ Registos apagados!','ok'); renderHoje(); renderSemana(); renderHist();
+  confirmSheet({titulo:'Apagar todos os dados?',msg:'Isto apaga todos os registos deste aparelho e não pode ser desfeito. Exporta um CSV antes, se quiseres guardar uma cópia.',ok:'Apagar tudo',perigo:true,exigirTexto:'APAGAR'}).then(function(ok){
+    if(!ok){ toast('Ação cancelada. Nada foi apagado.','er'); return; }
+    trackEvent('apagar_todos_dados',{total_dias:Object.keys(DB).length}); clearData(); toast('🗑️ Registos apagados!','ok'); renderHoje(); renderSemana(); renderHist();
+  });
 }
 function mostrarOnboarding(){ trackEvent('mostrar_onboarding'); document.getElementById('onboardOverlay').classList.add('show'); }
 function fecharOnboarding(irConfig){ trackEvent('fechar_onboarding',{ir_config:!!irConfig}); document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
 function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.add('show'); }
 function fecharNovidades(){ trackEvent('fechar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
+
+// ── Confirmação no estilo da app (substitui confirm/prompt) ───────────
+var _confResolve=null,_confOpts={};
+function confirmSheet(o){
+  return new Promise(function(resolve){
+    if(_confResolve){ var antigo=_confResolve; _confResolve=null; antigo(false); }
+    _confOpts=o||{}; _confResolve=resolve;
+    document.getElementById('confTitulo').textContent=_confOpts.titulo||'Confirmar';
+    document.getElementById('confMsg').textContent=_confOpts.msg||'';
+    var okBtn=document.getElementById('confOk');
+    okBtn.textContent=_confOpts.ok||'Confirmar';
+    okBtn.className='btn '+(_confOpts.perigo?'btn-red':'btn-cyan');
+    var wrap=document.getElementById('confInputWrap'),inp=document.getElementById('confInput');
+    inp.value='';
+    if(_confOpts.exigirTexto){ wrap.style.display=''; document.getElementById('confInputLbl').textContent='Para confirmar, escreve '+_confOpts.exigirTexto; }
+    else wrap.style.display='none';
+    document.getElementById('confirmOverlay').classList.add('show');
+  });
+}
+function fecharConfirm(valor){
+  document.getElementById('confirmOverlay').classList.remove('show');
+  if(document.activeElement)document.activeElement.blur();
+  if(_confResolve){ var r=_confResolve; _confResolve=null; r(valor); }
+}
+function confirmarOk(){
+  if(_confOpts.exigirTexto){
+    var v=(document.getElementById('confInput').value||'').trim().toUpperCase();
+    if(v!==_confOpts.exigirTexto){ toast('Escreve '+_confOpts.exigirTexto+' para confirmar.','er'); return; }
+  }
+  fecharConfirm(true);
+}
+
+// ── Teclado: Enter salta para o próximo campo ─────────────────────────
+var ORDEM_HOJE=['iUber','iBolt','iOutroG','iEnergia','iEnergiaKwh','iLitros','iCombustivel','iKms','iComida','iOutroG2'];
+var ORDEM_MODAL=['mUber','mBolt','mOutroG','mEnergia','mEnergiaKwh','mLitros','mCombustivel','mKms','mComida','mOutroG2'];
+function listaDoCampo(id){ return ORDEM_HOJE.indexOf(id)>=0?ORDEM_HOJE:(ORDEM_MODAL.indexOf(id)>=0?ORDEM_MODAL:null); }
+function proximoCampo(lista,id){
+  for(var j=lista.indexOf(id)+1;j<lista.length;j++){ var n=document.getElementById(lista[j]); if(n&&n.offsetParent!==null)return n; }
+  return null;
+}
+document.addEventListener('focusin',function(e){
+  var t=e.target; if(!t||t.tagName!=='INPUT')return;
+  var lista=listaDoCampo(t.id); if(!lista)return;
+  t.setAttribute('enterkeyhint',proximoCampo(lista,t.id)?'next':'done');
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  var t=e.target; if(!t||t.tagName!=='INPUT')return;
+  var lista=listaDoCampo(t.id); if(!lista)return;
+  e.preventDefault();
+  var n=proximoCampo(lista,t.id);
+  if(n)n.focus(); else t.blur();
+});
 
 // ── Event listeners ───────────────────────────────────────────────────
 document.getElementById('btnGuardar').addEventListener('click',guardar);
@@ -2160,7 +2396,15 @@ document.getElementById('btnFecharNovidades').addEventListener('click',fecharNov
 document.getElementById('novidadesOverlay').addEventListener('click',function(e){ if(e.target===this)fecharNovidades(); });
 document.getElementById('btnOnboard').addEventListener('click',function(){ fecharOnboarding(true); });
 document.getElementById('btnOnboardSkip').addEventListener('click',function(){ fecharOnboarding(false); });
+document.getElementById('confOk').addEventListener('click',confirmarOk);
+document.getElementById('confCancel').addEventListener('click',function(){ fecharConfirm(false); });
+document.getElementById('confClose').addEventListener('click',function(){ fecharConfirm(false); });
+document.getElementById('confirmOverlay').addEventListener('click',function(e){ if(e.target===this)fecharConfirm(false); });
+document.getElementById('confInput').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); confirmarOk(); } });
+window.addEventListener('resize',ajustarNavH);
+window.addEventListener('orientationchange',function(){ setTimeout(ajustarNavH,300); });
 
+ajustarNavH();
 atualizarTransferUI();
 trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
