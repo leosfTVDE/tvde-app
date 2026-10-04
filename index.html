@@ -22,8 +22,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overscroll-behavior:none;background:var(--bg)}
-body{font-family:var(--fd-mono);color:var(--text);overflow:hidden;height:100vh;position:fixed;width:100%;font-size:14px}
-.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+body{font-family:var(--fd-mono);color:var(--text);overflow:hidden;position:fixed;top:0;right:0;bottom:0;left:0;font-size:14px}
+.app{display:flex;flex-direction:column;height:100%}
 .hdr{padding:calc(var(--safe-top) + 10px) 18px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:8px}
 .hdr-logo-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0}
@@ -36,16 +36,16 @@ body{font-family:var(--fd-mono);color:var(--text);overflow:hidden;height:100vh;p
 .ptr-spin{font-size:18px;display:inline-block}
 .ptr-spin.spin{animation:spin .6s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--nav-h,64px) + 16px);position:relative}
-body.on-hoje .content{padding-bottom:calc(var(--nav-h,64px) + 90px)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:var(--safe-bot);z-index:200}
+.content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 18px;position:relative}
+.dock{flex-shrink:0;position:relative;z-index:200;background:var(--surface)}
+.nav{background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:var(--safe-bot)}
 .nb{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:var(--fd-mono);font-size:11px;cursor:pointer}
 .nb.on{color:var(--cyan)}
 .nb.on::before{content:'';position:absolute;top:0;left:28%;right:28%;height:3px;border-radius:0 0 3px 3px;background:var(--cyan)}
 .nb-ic{font-size:23px;line-height:1}
 
 /* Barra fixa de guardar (aba Hoje) */
-.savebar{display:none;position:fixed;left:0;right:0;bottom:var(--nav-h,64px);z-index:190;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px;align-items:center;gap:12px}
+.savebar{display:none;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px;align-items:center;gap:12px}
 body.on-hoje .savebar{display:flex}
 .savebar-info{flex:1;min-width:0}
 .savebar-lbl{font-size:11px;color:var(--muted)}
@@ -751,20 +751,20 @@ body.on-hoje .savebar{display:flex}
     </div>
   </div>
 
-  <nav class="nav" id="navBar">
-    <button class="nb on" id="nb-hoje"><span class="nb-ic">&#127968;</span>Hoje</button>
-    <button class="nb" id="nb-semana"><span class="nb-ic">&#128198;</span>Semana</button>
-    <button class="nb" id="nb-hist"><span class="nb-ic">&#128194;</span>Hist&oacute;rico</button>
-    <button class="nb" id="nb-cfg"><span class="nb-ic">&#9881;&#65039;</span>Config</button>
-  </nav>
-
-  <!-- Barra fixa: total + guardar -->
-  <div class="savebar" id="saveBar">
+  <div class="dock">
+    <div class="savebar" id="saveBar">
     <div class="savebar-info">
       <div class="savebar-lbl">&#128176; Total ganhos</div>
       <div class="savebar-val" id="gTotal">&euro;0,00</div>
     </div>
     <button class="btn btn-cyan" id="btnGuardar">&#9989; Guardar dia</button>
+  </div>
+    <nav class="nav" id="navBar">
+    <button class="nb on" id="nb-hoje"><span class="nb-ic">&#127968;</span>Hoje</button>
+    <button class="nb" id="nb-semana"><span class="nb-ic">&#128198;</span>Semana</button>
+    <button class="nb" id="nb-hist"><span class="nb-ic">&#128194;</span>Hist&oacute;rico</button>
+    <button class="nb" id="nb-cfg"><span class="nb-ic">&#9881;&#65039;</span>Config</button>
+  </nav>
   </div>
 </div>
 
@@ -1465,7 +1465,6 @@ function refreshAtual(){
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
 var pages=['hoje','semana','hist','cfg'];
 function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
-function ajustarNavH(){ var n=document.getElementById('navBar'); if(n)document.documentElement.style.setProperty('--nav-h',n.offsetHeight+'px'); }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
@@ -2401,10 +2400,6 @@ document.getElementById('confCancel').addEventListener('click',function(){ fecha
 document.getElementById('confClose').addEventListener('click',function(){ fecharConfirm(false); });
 document.getElementById('confirmOverlay').addEventListener('click',function(e){ if(e.target===this)fecharConfirm(false); });
 document.getElementById('confInput').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); confirmarOk(); } });
-window.addEventListener('resize',ajustarNavH);
-window.addEventListener('orientationchange',function(){ setTimeout(ajustarNavH,300); });
-
-ajustarNavH();
 atualizarTransferUI();
 trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
