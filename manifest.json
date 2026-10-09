@@ -1,0 +1,21 @@
+{
+  "name": "Finance Drive",
+  "short_name": "Finance Drive",
+  "description": "Gestão financeira para motoristas TVDE: ganhos, gastos, metas e estimativa fiscal.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080d1a",
+  "theme_color": "#0f172a",
+  "lang": "pt-PT",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
