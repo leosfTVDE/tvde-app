@@ -584,20 +584,54 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .toast{font-family:var(--fd-head);font-weight:600}
 .toast.ok{background:var(--navy)}
 
+/* Login, conta e aviso de estatísticas (v3.12) */
+.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:800;display:flex;align-items:center;justify-content:center;padding:calc(var(--safe-top) + 20px) 20px calc(var(--safe-bot) + 20px);opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto}
+.login-overlay.show{opacity:1;pointer-events:all}
+.login-box{width:100%;max-width:420px;text-align:center;margin:auto 0}
+.login-titulo{font-family:var(--fd-head);font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.login-sub{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 18px}
+.login-tabs{display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:18px;padding:4px;gap:4px;margin-bottom:14px}
+.login-tabs button{border:none;background:none;border-radius:14px;padding:11px;font-family:var(--fd-head);font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
+.login-tabs button.on{background:var(--navy);color:#fff}
+.login-box .fld{text-align:left}
+.login-box .iw{background:#fff}
+.login-box .iw input{font-size:16px;font-weight:500}
+.login-box .login-check{text-align:left}
+.login-box .login-check a,.cookie-txt a,.link-priv{color:var(--green);font-weight:600}
+.login-erro{min-height:18px;font-size:12px;color:var(--red);margin:4px 0 8px;line-height:1.4}
+.login-link{display:block;width:100%;background:none;border:none;color:var(--green);font-family:var(--fd-head);font-size:13px;font-weight:600;padding:12px;cursor:pointer}
+.login-link.sec{color:var(--muted);font-weight:500;padding-top:2px}
+.cookie-bar{position:fixed;left:12px;right:12px;bottom:calc(var(--safe-bot) + 150px);z-index:450;background:#fff;border-radius:20px;padding:14px;box-shadow:0 10px 30px rgba(11,31,58,.18);display:none;max-width:480px;margin:0 auto}
+.cookie-bar.show{display:block}
+.cookie-txt{font-size:12px;color:var(--sub);line-height:1.5}
+.cookie-acoes{display:flex;gap:8px;margin-top:10px}
+.cookie-acoes .btn{margin-top:0;padding:11px}
+.conta-linha{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.conta-av{width:42px;height:42px;border-radius:21px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;flex-shrink:0}
+.conta-email{font-weight:600;font-size:14px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conta-sync{font-size:11px;color:var(--muted);margin-top:2px}
+.conta-apagar{display:block;width:100%;background:none;border:none;color:var(--red);font-family:var(--fd-head);font-size:13px;font-weight:600;padding:14px 0 2px;cursor:pointer}
+.link-priv{display:block;font-size:13px;margin-top:6px;text-decoration:none}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L8KNNFQ1T0"></script>
+<!-- Google Analytics: só é carregado depois de o utilizador aceitar (RGPD) -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-L8KNNFQ1T0');
+  var _gaLoaded=false;
+  function fdAnalyticsOK(){ try{ return localStorage.getItem('fd_cookies')==='sim'; }catch(e){ return false; } }
+  function carregarAnalytics(){
+    if(_gaLoaded)return; _gaLoaded=true;
+    var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-L8KNNFQ1T0'; document.head.appendChild(s);
+    gtag('js', new Date()); gtag('config', 'G-L8KNNFQ1T0');
+  }
+  if(fdAnalyticsOK())carregarAnalytics();
 
   function trackEvent(nome, parametros){
     try{
-      if(typeof gtag === 'function'){
+      if(_gaLoaded&&fdAnalyticsOK()&&typeof gtag === 'function'){
         gtag('event', nome, parametros || {});
       }
     }catch(e){}
@@ -757,6 +791,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <!-- CONFIG -->
     <div class="pg" id="pg-cfg">
       <div class="stit">Configura&ccedil;&otilde;es</div>
+
+      <div class="hist-acc cfg-acc open" id="cfgConta" style="display:none">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgConta')"><span>Conta e sincroniza&ccedil;&atilde;o</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body"><div class="card" id="contaBox"></div></div>
+      </div>
 
       <div class="hist-acc cfg-acc open" id="cfgFin">
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgFin')"><span>Financeiro, pa&iacute;s e impostos</span><span class="hist-acc-arrow">&#8964;</span></button>
@@ -927,6 +966,14 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div class="plan-item">Espaço reservado, hoje sem cobrança e sem anúncios ativos</div>
         </div>
       </div>
+      <div class="stit">Privacidade</div>
+      <div class="card">
+        <div class="toggle-wrap" onclick="toggleCookies()">
+          <span class="toggle-lbl">Estat&iacute;sticas an&oacute;nimas de utiliza&ccedil;&atilde;o (Google Analytics)</span>
+          <button class="toggle" id="toggleCookies" type="button" aria-label="Estat&iacute;sticas an&oacute;nimas"></button>
+        </div>
+        <a class="link-priv" href="privacidade.html" target="_blank">Ver a Pol&iacute;tica de Privacidade</a>
+      </div>
       <div class="stit">Feedback &amp; Suporte</div>
       <div class="card">
         <div class="card-top ct-violet"></div>
@@ -943,10 +990,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.11.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.12.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
+        <a href="privacidade.html" target="_blank">Privacidade</a>
       </div>
     </div>
   </div>
@@ -1045,35 +1093,35 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="nov-header">
       <img class="onboard-logo" src="icon.png" alt="" onerror="this.style.display='none'">
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.11.0</div>
+      <div class="nov-versao">Finance Drive v3.12.0</div>
     </div>
     <div class="nov-lista">
       <div class="nov-item">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>Visual novo, claro e s&oacute;brio</strong>
-          <span>Cores do &iacute;cone da app: azul-marinho, verde e um toque de dourado. Mais f&aacute;cil de ler ao sol dentro do carro.</span>
+          <strong>Conta e nuvem</strong>
+          <span>Cria uma conta e os teus registos ficam guardados na nuvem. Trocaste de telem&oacute;vel? Entras e est&aacute; tudo l&aacute;.</span>
         </div>
       </div>
       <div class="nov-item">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>Saldo e meta juntos</strong>
-          <span>O saldo real do dia aparece num cart&atilde;o em destaque, com a barra da meta di&aacute;ria logo por baixo.</span>
+          <strong>V&aacute;rios aparelhos</strong>
+          <span>Regista no telem&oacute;vel e consulta no tablet: tudo sincroniza sozinho.</span>
         </div>
       </div>
       <div class="nov-item">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>Navega&ccedil;&atilde;o flutuante</strong>
-          <span>Menu em p&iacute;lula no fundo do ecr&atilde; e bot&atilde;o Guardar dia em verde, sempre com o total ao lado.</span>
+          <strong>Os teus dados passam para a conta</strong>
+          <span>Ao criares conta, os registos que j&aacute; tens neste telem&oacute;vel sobem automaticamente. N&atilde;o perdes nada.</span>
         </div>
       </div>
       <div class="nov-item">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>Tudo o resto igual</strong>
-          <span>Os c&aacute;lculos, metas, impostos, Trajeto Transfer e os teus dados guardados n&atilde;o mudaram.</span>
+          <strong>Privacidade</strong>
+          <span>Nova Pol&iacute;tica de Privacidade e as estat&iacute;sticas de utiliza&ccedil;&atilde;o s&oacute; ligam se aceitares.</span>
         </div>
       </div>
     </div>
@@ -1111,13 +1159,42 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
   </div>
 </div>
 
+<!-- Entrar / criar conta (v3.12) -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <img class="onboard-logo" src="icon.png" alt="Finance Drive" onerror="this.style.display='none'">
+    <div class="login-titulo" id="lgTitulo">Entrar na tua conta</div>
+    <div class="login-sub">Os teus registos ficam guardados na nuvem e aparecem em qualquer telem&oacute;vel.</div>
+    <div class="login-tabs"><button type="button" id="lgTabEntrar" class="on">Entrar</button><button type="button" id="lgTabCriar">Criar conta</button></div>
+    <div class="fld"><div class="fld-lbl">Email</div><div class="iw"><input type="email" id="lgEmail" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="o.teu@email.com"></div></div>
+    <div class="fld"><div class="fld-lbl">Palavra-passe</div><div class="iw"><input type="password" id="lgSenha" autocomplete="current-password" placeholder="m&iacute;nimo 6 caracteres"></div></div>
+    <div class="fld" id="lgSenha2Wrap" style="display:none"><div class="fld-lbl">Repetir palavra-passe</div><div class="iw"><input type="password" id="lgSenha2" autocomplete="new-password"></div></div>
+    <label class="login-check" id="lgTermosWrap" style="display:none"><input type="checkbox" id="lgTermos"><span>Li e aceito a <a href="privacidade.html" target="_blank">Pol&iacute;tica de Privacidade</a></span></label>
+    <div class="login-erro" id="lgErro"></div>
+    <button class="btn btn-green" type="button" id="lgBtn">Entrar</button>
+    <button class="login-link" type="button" id="lgEsqueci">Esqueci-me da palavra-passe</button>
+    <button class="login-link sec" type="button" id="lgSemConta">Continuar sem conta (s&oacute; neste telem&oacute;vel)</button>
+  </div>
+</div>
+
+<!-- Aviso de estatísticas (cookies) -->
+<div class="cookie-bar" id="cookieBar">
+  <div class="cookie-txt">Usamos estat&iacute;sticas an&oacute;nimas (Google Analytics) para perceber como a app &eacute; usada e melhor&aacute;-la. S&oacute; ligamos se aceitares. <a href="privacidade.html" target="_blank">Saber mais</a></div>
+  <div class="cookie-acoes"><button class="btn btn-outline" type="button" id="ckNao">Recusar</button><button class="btn btn-green" type="button" id="ckSim">Aceitar</button></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
+<!-- Firebase (login e nuvem) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-var APP_VERSION='3.11.0';
+var APP_VERSION='3.12.0';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
-function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} }
+function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} agendarSync(); }
 function loadData(){ try{var s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){DB={};} try{var c=localStorage.getItem(CFG_KEY);if(c){var cc=JSON.parse(c);CFG=Object.assign(CFG,cc);}}catch(e){} }
 function clearData(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} DB={}; }
 function salvarLocal(){ saveData(); }
@@ -1577,7 +1654,7 @@ function salvarImpostosCfg(){
 function restaurarImpostosPadrao(){
   normalizarImpostosCfg();
   CFG.impostos.usarSS=true; CFG.impostos.usarIRS=true; CFG.impostos.usarIVA=true;
-  mostrarImpostosCfg(); salvarImpostosCfg(); toast(' Impostos padrão restaurados','ok');
+  mostrarImpostosCfg(); salvarImpostosCfg(); toast('Impostos padrão restaurados','ok');
 }
 function mostrarImpostosCfg(){
   normalizarImpostosCfg();
@@ -1649,13 +1726,14 @@ content.addEventListener('touchmove',function(e){ if(!ptrActive)return; ptrDist=
 content.addEventListener('touchend',function(){ if(!ptrActive)return; ptrActive=false; if(ptrDist>70){ document.getElementById('ptrSpin').classList.add('spin'); setTimeout(refreshAtual,450); } else { document.getElementById('ptr').classList.remove('visible'); } ptrDist=0; });
 // Volta a desenhar os dados sem tocar nos campos que estão a ser preenchidos.
 function refreshAtual(){
+  if(fbUser&&_syncPronto)puxarNuvem();
   renderHeader();
   if(document.getElementById('pg-hoje').classList.contains('on')){ renderKPIs(); renderResumoDia(); }
   else if(document.getElementById('pg-semana').classList.contains('on')){ renderSemana(); }
   else if(document.getElementById('pg-hist').classList.contains('on')){ renderHist(); }
   var sp=document.getElementById('ptrSpin'); sp.classList.remove('spin'); sp.style.transform='';
   document.getElementById('ptr').classList.remove('visible');
-  toast(' Atualizado','ok');
+  toast('Atualizado','ok');
 }
 
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
@@ -1923,13 +2001,7 @@ function concluirGuardar(hojeKey,rec){
     tem_kms:rec.kms>0,
     tem_particular:rec.outroG>0,
     tem_trajeto_transfer:isTrajetoTransfer(rec),
-    impostos_ativos:!!(CFG.impostos&&CFG.impostos.ativo),
-    total_ganhos:Math.round(ganhos(rec)),
-    taxa_operador:Math.round(taxaOperadorValor(rec)),
-    energia_frota:Math.round(energiaFrota(rec)),
-    energia_bolso:Math.round(energiaDinheiro(rec)),
-    saldo_operacional:Math.round(saldo(rec,hojeKey)),
-    saldo_real:Math.round(saldoReal(rec,hojeKey))
+    impostos_ativos:!!(CFG.impostos&&CFG.impostos.ativo)
   };
   trackEvent('salvar_dia',dadosEventoDia);
   trackEvent('registrar_dia',dadosEventoDia);
@@ -2127,12 +2199,7 @@ function salvarModal(){
     veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:'',
     tem_horas:!!(rec.horaInicio&&rec.horaFim),
     tem_kms:rec.kms>0,
-    tem_trajeto_transfer:isTrajetoTransfer(rec),
-    total_ganhos:Math.round(ganhos(rec)),
-    energia_frota:Math.round(energiaFrota(rec)),
-    energia_bolso:Math.round(energiaDinheiro(rec)),
-    saldo_operacional:Math.round(saldo(rec,isoEditado)),
-    saldo_real:Math.round(saldoReal(rec,isoEditado))
+    tem_trajeto_transfer:isTrajetoTransfer(rec)
   });
   fecharModal(); renderHist(); renderHeader();
   if(isoEditado===hoje()){ renderKPIs(); renderResumoDia(); }
@@ -2370,7 +2437,7 @@ function salvarMetas(){
   CFG.metaDia=metaDiariaEfetiva();
   salvarLocal();
   trackEvent('salvar_metas',{tem_meta_dia:CFG.metaDia>0, tem_meta_semana:CFG.metaSem>0, dias_folga:(CFG.folgasSemana||[]).length, dias_trabalho:diasTrabalhoMeta()});
-  toast(' Metas guardadas!','ok');
+  toast('Metas guardadas!','ok');
   renderFolgasCfg(); renderKPIs(); renderSemana();
 }
 function salvarVeiculo(){
@@ -2402,7 +2469,7 @@ function exportCSV(){
   });
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download='financedrive_pwa_registos.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  trackEvent('exportar_csv',{total_dias:keys.length,pais:CFG.pais,veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''}); toast(' CSV exportado!','ok');
+  trackEvent('exportar_csv',{total_dias:keys.length,pais:CFG.pais,veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''}); toast('CSV exportado!','ok');
 }
 function importCSV(e){
   var file=e.target.files[0]; if(!file)return;
@@ -2505,9 +2572,9 @@ function verificarConquistas(iso){
   processarFilaConquistas();
 }
 function limpar(){
-  confirmSheet({titulo:'Apagar todos os dados?',msg:'Isto apaga todos os registos deste aparelho e não pode ser desfeito. Exporta um CSV antes, se quiseres guardar uma cópia.',ok:'Apagar tudo',perigo:true,exigirTexto:'APAGAR'}).then(function(ok){
+  confirmSheet({titulo:'Apagar todos os dados?',msg:(fbUser?'Isto apaga todos os registos da tua conta, neste e nos outros telemóveis, e não pode ser desfeito.':'Isto apaga todos os registos deste aparelho e não pode ser desfeito.')+' Exporta um CSV antes, se quiseres guardar uma cópia.',ok:'Apagar tudo',perigo:true,exigirTexto:'APAGAR'}).then(function(ok){
     if(!ok){ toast('Ação cancelada. Nada foi apagado.','er'); return; }
-    trackEvent('apagar_todos_dados',{total_dias:Object.keys(DB).length}); clearData(); toast(' Registos apagados!','ok'); renderHoje(); renderSemana(); renderHist();
+    trackEvent('apagar_todos_dados',{total_dias:Object.keys(DB).length}); clearData(); agendarSync(); toast('Registos apagados!','ok'); renderHoje(); renderSemana(); renderHist();
   });
 }
 function mostrarOnboarding(){ trackEvent('mostrar_onboarding'); document.getElementById('onboardOverlay').classList.add('show'); }
@@ -2527,8 +2594,9 @@ function confirmSheet(o){
     okBtn.textContent=_confOpts.ok||'Confirmar';
     okBtn.className='btn '+(_confOpts.perigo?'btn-red':'btn-cyan');
     var wrap=document.getElementById('confInputWrap'),inp=document.getElementById('confInput');
-    inp.value='';
-    if(_confOpts.exigirTexto){ wrap.style.display=''; document.getElementById('confInputLbl').textContent='Para confirmar, escreve '+_confOpts.exigirTexto; }
+    inp.value=''; inp.type=_confOpts.campoSenha?'password':'text'; inp.setAttribute('autocapitalize',_confOpts.campoSenha?'off':'characters');
+    if(_confOpts.campoSenha){ wrap.style.display=''; document.getElementById('confInputLbl').textContent='Palavra-passe'; }
+    else if(_confOpts.exigirTexto){ wrap.style.display=''; document.getElementById('confInputLbl').textContent='Para confirmar, escreve '+_confOpts.exigirTexto; }
     else wrap.style.display='none';
     document.getElementById('confirmOverlay').classList.add('show');
   });
@@ -2539,6 +2607,11 @@ function fecharConfirm(valor){
   if(_confResolve){ var r=_confResolve; _confResolve=null; r(valor); }
 }
 function confirmarOk(){
+  if(_confOpts.campoSenha){
+    var pw=document.getElementById('confInput').value||'';
+    if(!pw){ toast('Escreve a palavra-passe.','er'); return; }
+    fecharConfirm(pw); return;
+  }
   if(_confOpts.exigirTexto){
     var v=(document.getElementById('confInput').value||'').trim().toUpperCase();
     if(v!==_confOpts.exigirTexto){ toast('Escreve '+_confOpts.exigirTexto+' para confirmar.','er'); return; }
@@ -2614,9 +2687,280 @@ document.getElementById('confCancel').addEventListener('click',function(){ fecha
 document.getElementById('confClose').addEventListener('click',function(){ fecharConfirm(false); });
 document.getElementById('confirmOverlay').addEventListener('click',function(e){ if(e.target===this)fecharConfirm(false); });
 document.getElementById('confInput').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); confirmarOk(); } });
+
+// ══ Conta e nuvem (v3.12) ═════════════════════════════════════════════
+// Cola aqui a configuração do teu projeto Firebase
+// (Consola Firebase > Definições do projeto > As tuas apps > Configuração do SDK).
+// Enquanto estiver vazio, a app funciona como antes: só neste telemóvel.
+var FIREBASE_CONFIG={
+  apiKey:'',
+  authDomain:'',
+  projectId:'',
+  storageBucket:'',
+  messagingSenderId:'',
+  appId:''
+};
+// Os registos continuam a ser guardados primeiro no telemóvel (localStorage), como sempre.
+// A nuvem é uma cópia sincronizada: users/{uid} guarda as configurações e
+// users/{uid}/dias/{data} guarda cada dia. Os cálculos não mudam.
+var SYNC_META_KEY='fd_sync_meta',SYNC_OWNER_KEY='fd_sync_owner',LOCAL_ONLY_KEY='fd_local_only',LAST_SYNC_KEY='fd_last_sync';
+var fbAuth=null,fbDB=null,fbUser=null,_syncPronto=false,_syncSnap={},_cfgSnap='',_pushTimer=null,_aplicandoNuvem=false,_ultimoPull=0,_lgModo='entrar';
+function nuvemConfigurada(){ return !!(FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.projectId&&window.firebase&&firebase.initializeApp); }
+function lerMeta(){ var m; try{ m=JSON.parse(localStorage.getItem(SYNC_META_KEY)||'{}'); }catch(e){ m={}; } if(!m||typeof m!=='object')m={}; if(!m.days||typeof m.days!=='object')m.days={}; if(typeof m.cfg!=='number')m.cfg=0; return m; }
+function gravarMeta(m){ try{ localStorage.setItem(SYNC_META_KEY,JSON.stringify(m)); }catch(e){} }
+function refUser(){ return fbDB.collection('users').doc(fbUser.uid); }
+function marcarSync(){ try{ localStorage.setItem(LAST_SYNC_KEY,String(Date.now())); }catch(e){} }
+
+// Chamado sempre que a app grava (saveData). Junta as alterações e envia-as.
+function agendarSync(){
+  if(!fbUser||!_syncPronto||_aplicandoNuvem)return;
+  clearTimeout(_pushTimer); _pushTimer=setTimeout(enviarAlteracoes,700);
+}
+function enviarAlteracoes(){
+  if(!fbUser||!_syncPronto||!fbDB)return Promise.resolve();
+  var meta=lerMeta(),ops=[],agora=Date.now();
+  Object.keys(DB).forEach(function(iso){
+    var s=JSON.stringify(DB[iso]);
+    if(_syncSnap[iso]!==s){ ops.push({iso:iso,dado:{d:s,ts:agora}}); _syncSnap[iso]=s; meta.days[iso]=agora; }
+  });
+  Object.keys(_syncSnap).forEach(function(iso){
+    if(!DB[iso]){ ops.push({iso:iso,dado:{del:true,ts:agora}}); delete _syncSnap[iso]; meta.days[iso]=agora; }
+  });
+  var cfgTxt=JSON.stringify(CFG),cfgMudou=cfgTxt!==_cfgSnap;
+  if(cfgMudou){ _cfgSnap=cfgTxt; meta.cfg=agora; }
+  if(!ops.length&&!cfgMudou)return Promise.resolve();
+  gravarMeta(meta);
+  var base=refUser(),lotes=[],lote=fbDB.batch(),n=0;
+  if(cfgMudou){ lote.set(base,{c:cfgTxt,ts:agora},{merge:true}); n++; }
+  ops.forEach(function(o){ if(n>=450){ lotes.push(lote); lote=fbDB.batch(); n=0; } lote.set(base.collection('dias').doc(o.iso),o.dado); n++; });
+  lotes.push(lote);
+  return Promise.all(lotes.map(function(l){ return l.commit(); })).then(function(){
+    marcarSync(); atualizarContaUI();
+  }).catch(function(e){ console.warn('sync:',e); toast('Não foi possível sincronizar agora.','er'); });
+}
+// Traz da nuvem o que mudou noutros aparelhos. Em cada dia ganha a versão mais recente.
+function puxarNuvem(){
+  if(!fbUser||!fbDB)return Promise.resolve(false);
+  var base=refUser();
+  return Promise.all([base.get(),base.collection('dias').get()]).then(function(res){
+    var perfil=res[0],meta=lerMeta(),snap={},nuvem={};
+    var tipoAntes=CFG.veiculo&&CFG.veiculo.tipo,paisAntes=CFG.pais;
+    res[1].forEach(function(doc){ nuvem[doc.id]=doc.data()||{}; });
+    _aplicandoNuvem=true;
+    Object.keys(nuvem).forEach(function(iso){
+      var v=nuvem[iso],ts=v.ts||0,lts=meta.days[iso]||0;
+      if(ts>lts){
+        if(v.del)delete DB[iso];
+        else { try{ DB[iso]=JSON.parse(v.d); }catch(e){} }
+        meta.days[iso]=ts;
+      }
+      if(!v.del&&typeof v.d==='string')snap[iso]=v.d;
+    });
+    _syncSnap=snap; _cfgSnap='';
+    if(perfil.exists){
+      var p=perfil.data()||{};
+      if(typeof p.c==='string'){
+        if((p.ts||0)>meta.cfg){ try{ var cc=JSON.parse(p.c); Object.keys(cc).forEach(function(k){ CFG[k]=cc[k]; }); meta.cfg=p.ts||0; }catch(e){} }
+        _cfgSnap=p.c;
+      }
+    }
+    gravarMeta(meta);
+    normalizarImpostosCfg();
+    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(DB)); localStorage.setItem(CFG_KEY,JSON.stringify(CFG)); }catch(e){}
+    _aplicandoNuvem=false; _syncPronto=true; _ultimoPull=Date.now(); marcarSync();
+    redesenharDepoisDaNuvem((CFG.veiculo&&CFG.veiculo.tipo)!==tipoAntes||CFG.pais!==paisAntes);
+    return enviarAlteracoes().then(function(){ return true; });
+  }).catch(function(e){
+    _aplicandoNuvem=false; console.warn('pull:',e);
+    toast('Sem ligação à nuvem. Os dados ficam neste telemóvel.','er');
+    return false;
+  });
+}
+function redesenharDepoisDaNuvem(mudouTipo){
+  try{
+    if(mudouTipo){ renderEnergiaSection(); renderMEnergiaSection(); atualizarPlat2Labels(); }
+    renderHeader();
+    if(document.getElementById('pg-hoje').classList.contains('on')){ renderKPIs(); renderResumoDia(); }
+    else if(document.getElementById('pg-semana').classList.contains('on'))renderSemana();
+    else if(document.getElementById('pg-hist').classList.contains('on'))renderHist();
+    else if(document.getElementById('pg-cfg').classList.contains('on'))renderCfg();
+  }catch(e){ console.warn(e); }
+  atualizarContaUI();
+}
+
+function iniciarNuvem(){
+  if(!nuvemConfigurada()){ atualizarContaUI(); return; }
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fbAuth=firebase.auth(); fbAuth.languageCode='pt';
+    fbDB=firebase.firestore();
+    fbDB.enablePersistence({synchronizeTabs:true}).catch(function(){});
+  }catch(e){ console.warn('firebase:',e); fbAuth=null; fbDB=null; atualizarContaUI(); return; }
+  fbAuth.onAuthStateChanged(function(u){
+    fbUser=u||null; _syncPronto=false; _syncSnap={}; _cfgSnap='';
+    if(u){
+      try{
+        localStorage.removeItem(LOCAL_ONLY_KEY);
+        var dono=localStorage.getItem(SYNC_OWNER_KEY);
+        // Dados de outra conta neste telemóvel não se misturam com esta.
+        if(dono&&dono!==u.uid){ DB={}; localStorage.removeItem(SYNC_META_KEY); }
+        localStorage.setItem(SYNC_OWNER_KEY,u.uid);
+      }catch(e){}
+      fecharLogin();
+      puxarNuvem();
+    } else {
+      var soLocal=null; try{ soLocal=localStorage.getItem(LOCAL_ONLY_KEY); }catch(e){}
+      if(soLocal!=='1')mostrarLogin();
+    }
+    atualizarContaUI();
+  });
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible'&&fbUser&&_syncPronto&&Date.now()-_ultimoPull>30000)puxarNuvem(); });
+  window.addEventListener('online',function(){ if(fbUser&&_syncPronto)enviarAlteracoes(); });
+}
+
+// ── Ecrã de entrada ──
+function mostrarLogin(){ var o=document.getElementById('loginOverlay'); if(!o||!fbAuth)return; definirModoLogin(_lgModo); o.classList.add('show'); }
+function fecharLogin(){ var o=document.getElementById('loginOverlay'); if(o)o.classList.remove('show'); }
+function definirModoLogin(m){
+  _lgModo=m; var criar=m==='criar';
+  document.getElementById('lgTabEntrar').classList.toggle('on',!criar);
+  document.getElementById('lgTabCriar').classList.toggle('on',criar);
+  document.getElementById('lgSenha2Wrap').style.display=criar?'':'none';
+  document.getElementById('lgTermosWrap').style.display=criar?'':'none';
+  document.getElementById('lgEsqueci').style.display=criar?'none':'';
+  document.getElementById('lgBtn').textContent=criar?'Criar conta':'Entrar';
+  document.getElementById('lgTitulo').textContent=criar?'Criar a tua conta':'Entrar na tua conta';
+  document.getElementById('lgSenha').setAttribute('autocomplete',criar?'new-password':'current-password');
+  document.getElementById('lgErro').textContent='';
+}
+function erroAuth(e){
+  var c=(e&&e.code)||'';
+  var m={'auth/invalid-email':'Email inválido.','auth/user-not-found':'Email ou palavra-passe incorretos.','auth/wrong-password':'Email ou palavra-passe incorretos.','auth/invalid-credential':'Email ou palavra-passe incorretos.','auth/invalid-login-credentials':'Email ou palavra-passe incorretos.','auth/email-already-in-use':'Já existe uma conta com este email. Usa "Entrar".','auth/weak-password':'A palavra-passe precisa de pelo menos 6 caracteres.','auth/missing-password':'Escreve a palavra-passe.','auth/network-request-failed':'Sem ligação à internet. Tenta de novo.','auth/too-many-requests':'Demasiadas tentativas. Espera uns minutos e tenta de novo.','auth/requires-recent-login':'Por segurança, termina sessão, volta a entrar e repete.'};
+  return m[c]||('Não foi possível concluir'+(c?' ('+c+')':'')+'.');
+}
+function submeterLogin(){
+  if(!fbAuth)return;
+  var email=(document.getElementById('lgEmail').value||'').trim(),senha=document.getElementById('lgSenha').value||'';
+  var erro=document.getElementById('lgErro'),btn=document.getElementById('lgBtn'),criar=_lgModo==='criar';
+  erro.textContent='';
+  if(!email||!senha){ erro.textContent='Preenche o email e a palavra-passe.'; return; }
+  if(criar){
+    if(senha!==(document.getElementById('lgSenha2').value||'')){ erro.textContent='As palavras-passe não coincidem.'; return; }
+    if(!document.getElementById('lgTermos').checked){ erro.textContent='Para criar conta, aceita a Política de Privacidade.'; return; }
+  }
+  btn.disabled=true; btn.style.opacity='.6';
+  var p=criar?fbAuth.createUserWithEmailAndPassword(email,senha):fbAuth.signInWithEmailAndPassword(email,senha);
+  p.then(function(){
+    document.getElementById('lgSenha').value=''; document.getElementById('lgSenha2').value='';
+    toast(criar?'Conta criada! Os teus registos já estão na nuvem.':'Sessão iniciada','ok');
+    trackEvent(criar?'criar_conta':'entrar_conta',{});
+  }).catch(function(e){ erro.textContent=erroAuth(e); })
+    .then(function(){ btn.disabled=false; btn.style.opacity=''; });
+}
+function recuperarSenha(){
+  var email=(document.getElementById('lgEmail').value||'').trim(),erro=document.getElementById('lgErro');
+  if(!email){ erro.textContent='Escreve o teu email em cima e toca outra vez em "Esqueci-me da palavra-passe".'; return; }
+  fbAuth.sendPasswordResetEmail(email).then(function(){ erro.textContent=''; toast('Enviámos um email para redefinires a palavra-passe.','ok'); }).catch(function(e){ erro.textContent=erroAuth(e); });
+}
+function continuarSemConta(){ try{ localStorage.setItem(LOCAL_ONLY_KEY,'1'); }catch(e){} fecharLogin(); atualizarContaUI(); trackEvent('continuar_sem_conta',{}); }
+
+// ── Conta nas Configurações ──
+function escHtml(t){ return String(t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function atualizarContaUI(){
+  var acc=document.getElementById('cfgConta'),box=document.getElementById('contaBox'); if(!acc||!box)return;
+  if(!fbAuth){ acc.style.display='none'; return; }
+  acc.style.display='';
+  if(!fbUser){
+    box.innerHTML='<p class="import-info">Cria uma conta para guardar os teus registos na nuvem e usá-los em qualquer telemóvel. Sem conta, os dados ficam só neste aparelho.</p><button class="btn btn-green" type="button" onclick="mostrarLogin()">Entrar ou criar conta</button>';
+    return;
+  }
+  var ult=0; try{ ult=parseInt(localStorage.getItem(LAST_SYNC_KEY)||'0',10); }catch(e){}
+  var q=ult?new Date(ult):null,txtUlt=q?pad(q.getDate())+'/'+pad(q.getMonth()+1)+' às '+pad(q.getHours())+':'+pad(q.getMinutes()):'ainda não';
+  box.innerHTML='<div class="conta-linha"><div class="conta-av">'+escHtml((fbUser.email||'?').charAt(0).toUpperCase())+'</div><div style="min-width:0"><div class="conta-email">'+escHtml(fbUser.email||'')+'</div><div class="conta-sync">Última sincronização: '+txtUlt+'</div></div></div>'+
+    '<button class="btn btn-outline" type="button" onclick="sincronizarAgora()">Sincronizar agora</button>'+
+    '<button class="btn btn-outline" type="button" onclick="terminarSessao()" style="margin-top:8px">Terminar sessão</button>'+
+    '<button class="conta-apagar" type="button" onclick="apagarConta()">Apagar conta e dados da nuvem</button>';
+}
+function sincronizarAgora(){ if(!fbUser)return; toast('A sincronizar…','ok'); puxarNuvem().then(function(ok){ if(ok)toast('Tudo sincronizado','ok'); }); }
+function esperarEnvios(ms){
+  if(!fbDB||!fbDB.waitForPendingWrites)return Promise.resolve(true);
+  return Promise.race([fbDB.waitForPendingWrites().then(function(){ return true; }),new Promise(function(r){ setTimeout(function(){ r(false); },ms); })]);
+}
+function limparAparelho(){
+  ['tvde_v3','tvde_cfg',SYNC_META_KEY,SYNC_OWNER_KEY,LAST_SYNC_KEY,'fd_conquistas_vistas'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+}
+function terminarSessao(){
+  if(!fbUser)return;
+  confirmSheet({titulo:'Terminar sessão?',msg:'Os teus registos ficam guardados na conta. Este telemóvel fica limpo até voltares a entrar.',ok:'Terminar sessão'}).then(function(ok){
+    if(!ok)return;
+    clearTimeout(_pushTimer); enviarAlteracoes();
+    esperarEnvios(5000).then(function(enviado){
+      if(enviado)return true;
+      return confirmSheet({titulo:'Há alterações por enviar',msg:'Parece que estás sem rede e algumas alterações ainda não chegaram à nuvem. Se terminares sessão agora, podes perdê-las.',ok:'Terminar mesmo assim',perigo:true});
+    }).then(function(seguir){
+      if(!seguir)return;
+      trackEvent('terminar_sessao',{});
+      _syncPronto=false;
+      fbAuth.signOut().then(function(){ limparAparelho(); location.reload(); });
+    });
+  });
+}
+function apagarDadosNuvem(uid){
+  var base=fbDB.collection('users').doc(uid);
+  return base.collection('dias').get().then(function(snap){
+    var lotes=[],lote=fbDB.batch(),n=0;
+    snap.forEach(function(doc){ if(n>=450){ lotes.push(lote); lote=fbDB.batch(); n=0; } lote.delete(doc.ref); n++; });
+    lote.delete(base); lotes.push(lote);
+    return Promise.all(lotes.map(function(l){ return l.commit(); }));
+  });
+}
+function apagarConta(){
+  if(!fbUser)return;
+  confirmSheet({titulo:'Apagar a conta?',msg:'Isto apaga a tua conta e todos os registos guardados na nuvem, em todos os aparelhos. Não pode ser desfeito. Se quiseres uma cópia, exporta um CSV antes.',ok:'Continuar',perigo:true,exigirTexto:'APAGAR'}).then(function(ok){
+    if(!ok)return null;
+    return confirmSheet({titulo:'Confirma a palavra-passe',msg:'Por segurança, escreve a palavra-passe da conta '+(fbUser.email||'')+'.',ok:'Apagar conta',perigo:true,campoSenha:true});
+  }).then(function(senha){
+    if(!senha)return;
+    var u=fbUser,cred=firebase.auth.EmailAuthProvider.credential(u.email,senha);
+    toast('A apagar a conta…','ok');
+    u.reauthenticateWithCredential(cred).then(function(){
+      _syncPronto=false; clearTimeout(_pushTimer);
+      return apagarDadosNuvem(u.uid);
+    }).then(function(){ return u.delete(); }).then(function(){
+      trackEvent('apagar_conta',{});
+      limparAparelho(); location.reload();
+    }).catch(function(e){ toast(erroAuth(e),'er'); });
+  });
+}
+
+// ── Estatísticas (Google Analytics) só com autorização ──
+function atualizarCookieUI(){
+  var v=null; try{ v=localStorage.getItem('fd_cookies'); }catch(e){}
+  var bar=document.getElementById('cookieBar'); if(bar)bar.classList.toggle('show',v!=='sim'&&v!=='nao');
+  var t=document.getElementById('toggleCookies'); if(t)t.className='toggle'+(v==='sim'?' on':'');
+}
+function definirCookies(sim){
+  try{ localStorage.setItem('fd_cookies',sim?'sim':'nao'); }catch(e){}
+  window['ga-disable-G-L8KNNFQ1T0']=!sim;
+  if(sim)carregarAnalytics();
+  atualizarCookieUI();
+}
+function toggleCookies(){ var v=null; try{ v=localStorage.getItem('fd_cookies'); }catch(e){} definirCookies(v!=='sim'); }
+
+document.getElementById('lgTabEntrar').addEventListener('click',function(){ definirModoLogin('entrar'); });
+document.getElementById('lgTabCriar').addEventListener('click',function(){ definirModoLogin('criar'); });
+document.getElementById('lgBtn').addEventListener('click',submeterLogin);
+document.getElementById('lgEsqueci').addEventListener('click',recuperarSenha);
+document.getElementById('lgSemConta').addEventListener('click',continuarSemConta);
+['lgEmail','lgSenha','lgSenha2'].forEach(function(id){ document.getElementById(id).addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); submeterLogin(); } }); });
+document.getElementById('ckSim').addEventListener('click',function(){ definirCookies(true); });
+document.getElementById('ckNao').addEventListener('click',function(){ definirCookies(false); });
+
 atualizarTransferUI();
 trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
+atualizarCookieUI();
+iniciarNuvem();
 </script>
 </body>
 </html>
