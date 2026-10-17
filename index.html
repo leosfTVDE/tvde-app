@@ -613,6 +613,21 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .conta-apagar{display:block;width:100%;background:none;border:none;color:var(--red);font-family:var(--fd-head);font-size:13px;font-weight:600;padding:14px 0 2px;cursor:pointer}
 .link-priv{display:block;font-size:13px;margin-top:6px;text-decoration:none}
 
+/* Ligação ao Trajeto Transfer (v3.13) */
+.traj-auto{background:var(--gold-bg);border:1px solid var(--gold-bd);border-radius:16px;padding:12px;margin-top:10px}
+.traj-auto-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-weight:700;font-size:13px;color:#7A5A0E}
+.traj-auto-h b{font-family:var(--fd-head);font-size:17px;color:var(--gold);white-space:nowrap}
+.traj-auto-h small{display:block;font-size:11px;font-weight:400;color:#8A6510;margin-top:2px}
+.traj-auto-tag{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:var(--gold);border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:1px}
+.traj-auto ul{list-style:none;margin:8px 0 0;padding:6px 0 0;border-top:1px solid var(--gold-bd)}
+.traj-auto li{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:#5a4a1e;padding:3px 0}
+.traj-auto li span:first-child{min-width:0;overflow-wrap:anywhere}
+.traj-ok{display:flex;gap:10px;align-items:center;background:var(--tint);border-radius:14px;padding:12px;margin-bottom:10px}
+.traj-ok-i{width:36px;height:36px;border-radius:18px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.traj-ok b{display:block;font-size:13.5px;color:var(--text)} .traj-ok span{font-size:11.5px;color:var(--sub);overflow-wrap:anywhere}
+.traj-info{background:var(--well);border-radius:14px;padding:10px 12px;font-size:12px;color:var(--sub);line-height:1.55;margin-bottom:8px}
+.cfg-acc .card .traj-info{background:#fff}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 </style>
@@ -708,6 +723,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div id="iTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div class="chips"><label class="chip-opt"><input type="checkbox" id="iTransferIRS" onchange="atualizarTransferUI()"> IRS</label><label class="chip-opt"><input type="checkbox" id="iTransferIVA" onchange="atualizarTransferUI()"> IVA</label><label class="chip-opt"><input type="checkbox" id="iTransferSS" onchange="atualizarTransferUI()"> SS</label></div></div>
           <div class="trajeto-hint" id="iTrajetoHint">Sem taxa do operador e sem impostos: este valor fica registado como <strong>Trajeto Transfer</strong> e aparece &agrave; parte no saldo real.</div>
         </div>
+        <div id="trajetoAutoHoje"></div>
       </div>
       <div class="stit">Gastos de hoje</div>
       <div class="card">
@@ -795,6 +811,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <div class="hist-acc cfg-acc open" id="cfgConta" style="display:none">
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgConta')"><span>Conta e sincroniza&ccedil;&atilde;o</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body"><div class="card" id="contaBox"></div></div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgTrajeto">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgTrajeto')"><span>Liga&ccedil;&atilde;o ao Trajeto Transfer</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body"><div class="card" id="trajetoBox"></div></div>
       </div>
 
       <div class="hist-acc cfg-acc open" id="cfgFin">
@@ -990,7 +1011,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.12.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.13.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1042,6 +1063,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <div id="mTransferImpostosWrap" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)"><div class="fld-lbl">Quais impostos devem ser descontados?</div><div class="chips"><label class="chip-opt"><input type="checkbox" id="mTransferIRS" onchange="atualizarTransferModalUI()"> IRS</label><label class="chip-opt"><input type="checkbox" id="mTransferIVA" onchange="atualizarTransferModalUI()"> IVA</label><label class="chip-opt"><input type="checkbox" id="mTransferSS" onchange="atualizarTransferModalUI()"> SS</label></div></div>
       <div class="trajeto-hint" id="mTrajetoHint">Sem taxa do operador e sem impostos: este valor fica registado como <strong>Trajeto Transfer</strong> e aparece &agrave; parte no saldo real.</div>
     </div>
+    <div id="mTrajetoAuto"></div>
     <div id="mEnergiaSection"></div>
     <div class="gastos-grid">
       <div class="fld"><div class="fld-lbl">KMs rodados</div><div class="iw"><div class="ipfx">km</div><input type="number" inputmode="decimal" id="mKms" placeholder="0" min="0" step="1"></div></div>
@@ -1483,7 +1505,10 @@ var DIAS_FULL=['Domingo','Segunda','Ter\u00e7a','Quarta','Quinta','Sexta','S\u00
 var MESES=['Janeiro','Fevereiro','Mar\u00e7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var MESES_S=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function diaNome(iso){ return DIAS[new Date(iso+'T12:00:00').getDay()]; }
-function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0); }
+// v3.13: r.trajetoAuto = serviços recebidos no app Trajeto Transfer (preenchido pela ligação; sem taxa do operador e sem impostos)
+function trajetoAutoValor(r){ var t=r&&r.trajetoAuto; var v=t?parseFloat(t.total):0; return (isNaN(v)||v<0)?0:v; }
+function temRegistoManual(r){ if(!r)return false; return Object.keys(r).some(function(k){ return k!=='trajetoAuto'; }); }
+function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0)+trajetoAutoValor(r); }
 function taxaOperadorPercentual(){ var v=parseFloat(CFG.taxaOperador); return (isNaN(v)||v<0)?0:Math.min(100,v); }
 function transferOperadorAplicavel(r){ return !r||typeof r.transferOperador==='undefined'?true:!!r.transferOperador; }
 function taxaOperadorBase(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(transferOperadorAplicavel(r)?(r.outroG||0):0); }
@@ -1499,7 +1524,7 @@ function transferTomadorLabel(r){ if(!r)return ''; var v=(r.transferTomador||'')
 function isTrajetoTransfer(r){
   return !!(r&&(r.outroG||0)>0&&!transferOperadorAplicavel(r)&&transferImpostosSelecionados(r).length===0);
 }
-function trajetoValor(r){ return isTrajetoTransfer(r)?(r.outroG||0):0; }
+function trajetoValor(r){ return (isTrajetoTransfer(r)?(r.outroG||0):0)+trajetoAutoValor(r); }
 function somaTrajeto(chaves){ return chaves.reduce(function(a,d){ return a+trajetoValor(DB[d]||{}); },0); }
 function transferRowLabel(r){ return isTrajetoTransfer(r)?' Trajeto Transfer':' Transfer / Outros'; }
 // Saldo frota = saldo real sem o Trajeto Transfer (Uber, Bolt e Transfers normais, após todos os descontos).
@@ -1530,7 +1555,7 @@ function saldo(r,iso){
 function baseFiscalSemTransfer(r,iso,tipo){
   if(!r)return 0;
   var base=(tipo==='IVA')?ganhosAposOperador(r):saldo(r,iso);
-  return Math.max(0,base-(r.outroG||0));
+  return Math.max(0,base-(r.outroG||0)-trajetoAutoValor(r));
 }
 function transferBaseFiscalPorImposto(r,tipo){
   if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
@@ -1755,7 +1780,7 @@ function semanaDoAno(d){
 function renderHeader(){
   var now=new Date();
   document.getElementById('hdrDate').textContent=DIAS_FULL[now.getDay()]+', '+now.getDate()+' '+MESES_S[now.getMonth()];
-  var regs=diasSemana(segunda(hoje())).filter(function(d){ return DB[d]; }).length;
+  var regs=diasSemana(segunda(hoje())).filter(function(d){ return DB[d]&&temRegistoManual(DB[d]); }).length;
   document.getElementById('hdrWeek').textContent='Semana '+semanaDoAno(now)+' · '+regs+'/'+diasTrabalhoMeta()+' dias';
   document.getElementById('chipAl').textContent=sim()+alDia().toFixed(2)+'/dia';
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
@@ -1847,7 +1872,8 @@ function renderResumoDia(){
         (taxaOp>0?rl(' Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(taxaOp),'color:var(--red)',true):'')+
         rl(' Uber',moeda(r.uber||0),'',true)+
         rl(''+plat2(),moeda(r.bolt||0),'color:var(--bolt)',true)+
-        rl(transferRowLabel(r),moeda(r.outroG||0),traj>0?'color:var(--green)':'color:var(--orange)',true)+
+        rl(transferRowLabel(r),moeda(r.outroG||0),isTrajetoTransfer(r)?'color:var(--green)':'color:var(--orange)',true)+
+        (trajetoAutoValor(r)>0?rl(' Trajeto Transfer (automático)',moeda(trajetoAutoValor(r)),'color:var(--gold)',true):'')+
         '<div class="div"></div>';
       html+='<div style="margin:8px 0 3px;font-size:11px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em">Gasto OP Frota</div>';
       if(isEletrico()){
@@ -1876,6 +1902,7 @@ function renderResumoDia(){
       if(imp)html+=htmlImpostos(imp,traj);
       else html+=htmlBlocoSaldos(slRealFinal-traj,traj,slRealFinal);
       document.getElementById('resumoDia').innerHTML=html;
+      renderTrajetoAutoHoje();
     }
 
 function atualizarEnergiaTotal(){
@@ -1981,7 +2008,7 @@ function guardar(){
   }
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
   var hojeKey=hoje();
-  if(DB[hojeKey]){
+  if(DB[hojeKey]&&temRegistoManual(DB[hojeKey])){
     confirmSheet({titulo:'Substituir o registo de hoje?',msg:'Já existe um registo guardado para hoje. Se continuares, ele é substituído pelos valores que acabaste de inserir.',ok:'Substituir'}).then(function(ok){
       if(!ok){ toast('Ação cancelada. O registo de hoje foi mantido.','er'); return; }
       concluirGuardar(hojeKey,rec);
@@ -1991,6 +2018,7 @@ function guardar(){
   concluirGuardar(hojeKey,rec);
 }
 function concluirGuardar(hojeKey,rec){
+  if(DB[hojeKey]&&DB[hojeKey].trajetoAuto)rec.trajetoAuto=DB[hojeKey].trajetoAuto;
   DB[hojeKey]=rec;
   salvarLocal();
   var dadosEventoDia={
@@ -2034,7 +2062,7 @@ function renderSemana(){
       });
       document.getElementById('weekRow').innerHTML=wHTML;
       var reais=ds.filter(function(d){ return d<=h&&DB[d]; });
-      var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0); },0);
+      var tu=reais.reduce(function(a,d){ return a+(DB[d].uber||0); },0),tb=reais.reduce(function(a,d){ return a+(DB[d].bolt||0); },0),to=reais.reduce(function(a,d){ return a+(DB[d].outroG||0)+trajetoAutoValor(DB[d]); },0);
       var trajSem=somaTrajeto(reais);
       document.getElementById('platGrid').innerHTML=
         '<div class="plat-c"><div class="plat-ic"></div><div class="plat-nm">Uber</div><div class="plat-vl" style="color:var(--text)">'+moeda(tu)+'</div></div>'+
@@ -2174,6 +2202,7 @@ function abrirModal(iso){
       if(ml)ml.value=r.litros||''; if(mc)mc.value=r.combustivel||'';
     }
   },50);
+  var mta=document.getElementById('mTrajetoAuto'); if(mta)mta.innerHTML=htmlTrajetoAuto(r,'Recebidos neste dia no app Trajeto · muda-se no Trajeto');
   document.getElementById('modalOverlay').classList.add('show');
 }
 function fecharModal(){ document.getElementById('modalOverlay').classList.remove('show'); editingISO=''; }
@@ -2193,6 +2222,7 @@ function salvarModal(){
   }
   if(!u&&!b&&!og&&!(rec.energia||0)&&!(rec.energiaKwh||0)&&!(rec.combustivel||0)&&!c&&!o2){ trackEvent('erro_guardar_dia',{motivo:'sem_valores'}); toast('Insere pelo menos um valor!','er'); return; }
   var isoEditado=editingISO;
+  if(DB[isoEditado]&&DB[isoEditado].trajetoAuto)rec.trajetoAuto=DB[isoEditado].trajetoAuto;
   DB[isoEditado]=rec; salvarLocal();
   trackEvent('salvar_edicao_dia',{
     pais:CFG.pais,
@@ -2210,7 +2240,7 @@ function apagarDiaModal(){
   var isoApagar=editingISO;
   confirmSheet({titulo:'Apagar este registo?',msg:'O registo de '+fmtData(isoApagar)+' vai ser apagado. Esta ação não pode ser desfeita.',ok:'Apagar',perigo:true}).then(function(ok){
     if(!ok)return;
-    trackEvent('apagar_dia',{origem:'modal'}); delete DB[isoApagar]; salvarLocal(); fecharModal(); renderHist(); renderHeader(); if(isoApagar===hoje()){ renderKPIs(); renderResumoDia(); } toast('Dia apagado!','ok');
+    trackEvent('apagar_dia',{origem:'modal'}); if(DB[isoApagar]&&DB[isoApagar].trajetoAuto)DB[isoApagar]={trajetoAuto:DB[isoApagar].trajetoAuto}; else delete DB[isoApagar]; salvarLocal(); fecharModal(); renderHist(); renderHeader(); if(isoApagar===hoje()){ renderKPIs(); renderResumoDia(); } toast('Dia apagado!','ok');
   });
 }
 
@@ -2271,7 +2301,7 @@ function renderHist(){
       var tg=chaves.reduce(function(a,d){ return a+ganhos(r0(d)); },0);
       var tu=chaves.reduce(function(a,d){ return a+(r0(d).uber||0); },0);
       var tb=chaves.reduce(function(a,d){ return a+(r0(d).bolt||0); },0);
-      var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0); },0);
+      var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0)+trajetoAutoValor(r0(d)); },0);
       var trajHist=somaTrajeto(chaves);
       var taxaOperadorPeriodo=chaves.reduce(function(a,d){ return a+taxaOperadorValor(r0(d)); },0);
       var te=chaves.reduce(function(a,d){ return a+energiaFrota(r0(d)); },0);
@@ -2346,6 +2376,7 @@ function renderHist(){
         var sl2=saldoReal(r,iso),pos2=sl2>=0,g=ganhos(r),eT=energiaFrota(r),eDin=energiaDinheiro(r),parts=[];
         if(r.uber)parts.push(' '+moeda(r.uber));
         if(r.bolt)parts.push(''+plat2()+': '+moeda(r.bolt));
+        if(trajetoAutoValor(r)>0)parts.push('<span style="color:var(--gold)"> Trajeto (auto): '+moeda(trajetoAutoValor(r))+'</span>');
         if(r.outroG){
           if(isTrajetoTransfer(r))parts.push('<span style="color:var(--green)"> Trajeto Transfer: '+moeda(r.outroG)+'</span>');
           else parts.push(' '+(transferTomadorLabel(r)?transferTomadorLabel(r)+' · ':'')+moeda(r.outroG));
@@ -2769,7 +2800,7 @@ function puxarNuvem(){
     try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(DB)); localStorage.setItem(CFG_KEY,JSON.stringify(CFG)); }catch(e){}
     _aplicandoNuvem=false; _syncPronto=true; _ultimoPull=Date.now(); marcarSync();
     redesenharDepoisDaNuvem((CFG.veiculo&&CFG.veiculo.tipo)!==tipoAntes||CFG.pais!==paisAntes);
-    return enviarAlteracoes().then(function(){ return true; });
+    return enviarAlteracoes().then(function(){ trajetoSincronizar(false); return true; });
   }).catch(function(e){
     _aplicandoNuvem=false; console.warn('pull:',e);
     toast('Sem ligação à nuvem. Os dados ficam neste telemóvel.','er');
@@ -2867,6 +2898,7 @@ function continuarSemConta(){ try{ localStorage.setItem(LOCAL_ONLY_KEY,'1'); }ca
 // ── Conta nas Configurações ──
 function escHtml(t){ return String(t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function atualizarContaUI(){
+  renderTrajetoCfg();
   var acc=document.getElementById('cfgConta'),box=document.getElementById('contaBox'); if(!acc||!box)return;
   if(!fbAuth){ acc.style.display='none'; return; }
   acc.style.display='';
@@ -2901,6 +2933,8 @@ function terminarSessao(){
       if(!seguir)return;
       trackEvent('terminar_sessao',{});
       _syncPronto=false;
+      if(trajAuth)trajAuth.signOut();
+      try{ localStorage.removeItem(TRAJ_ULTIMA_KEY); }catch(e){}
       fbAuth.signOut().then(function(){ limparAparelho(); location.reload(); });
     });
   });
@@ -2928,8 +2962,196 @@ function apagarConta(){
       return apagarDadosNuvem(u.uid);
     }).then(function(){ return u.delete(); }).then(function(){
       trackEvent('apagar_conta',{});
+      if(trajAuth)trajAuth.signOut();
       limparAparelho(); location.reload();
     }).catch(function(e){ toast(erroAuth(e),'er'); });
+  });
+}
+
+// ══ Ligação ao Trajeto Transfer (v3.13) ═══════════════════════════════
+// Opcional. Lê no app Trajeto Transfer os serviços marcados como recebidos e põe o total de cada dia em r.trajetoAuto.
+// Segurança: a ligação fica presa à conta do Finance Drive que a fez (fdUid) e à conta do Trajeto (trajetoUid).
+// Só entram serviços recebidos a partir do dia da ligação (desde) e que tenham a data de recebimento (Trajeto v9.19+).
+var TRAJETO_FB_CONFIG={
+  apiKey:'AIzaSyCqJBnzZh5MWP9G3ZP1nOThb4W2KCLf2a4',
+  authDomain:'trajeto-app.firebaseapp.com',
+  projectId:'trajeto-app',
+  storageBucket:'trajeto-app.firebasestorage.app',
+  messagingSenderId:'149828521686',
+  appId:'1:149828521686:web:255f9dd3f9056be451c377'
+};
+var TRAJ_ULTIMA_KEY='fd_trajeto_ultima';
+var trajApp=null,trajAuth=null,trajDB=null,trajUser=null,_trajSyncing=false;
+function trajetoLink(){ var l=CFG.trajetoLink; return (l&&typeof l==='object'&&l.trajetoUid&&l.desde)?l:null; }
+function trajetoLigadoAqui(){ var l=trajetoLink(); return !!(l&&fbUser&&l.fdUid===fbUser.uid&&trajUser&&trajUser.uid===l.trajetoUid); }
+function trajetoIniciar(){
+  if(!window.firebase||!firebase.initializeApp){ renderTrajetoCfg(); return; }
+  try{
+    trajApp=firebase.initializeApp(TRAJETO_FB_CONFIG,'trajeto');
+    trajAuth=trajApp.auth(); trajDB=trajApp.firestore();
+    trajAuth.onAuthStateChanged(function(u){ trajUser=u||null; renderTrajetoCfg(); if(u)trajetoSincronizar(false); });
+  }catch(e){ console.warn('trajeto:',e); trajApp=null; trajAuth=null; trajDB=null; }
+  renderTrajetoCfg();
+}
+// Agrupa os serviços recebidos por dia de recebimento (função pura, sem ligação à internet)
+function trajetoCalcularMapa(ags,desde){
+  var mapa={};
+  (Array.isArray(ags)?ags:[]).forEach(function(a){
+    if(!a||!a.realizado||a.pagamento!=='recebido')return;
+    var d=String(a.recebidoEm||'');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||d<desde)return;
+    var v=parseFloat(String(a.valor==null?'':a.valor).replace(',','.'));
+    if(!(v>0))return;
+    var forn=String(a.fornecedor||'').trim(); if(/^(site|trajeto)|particular/i.test(forn))forn='';
+    (mapa[d]=mapa[d]||[]).push({id:String(a.id||''),cliente:String(a.cliente||'').slice(0,60),valor:Math.round(v*100)/100,hora:String(a.hora||'').slice(0,5),data:String(a.data||'').slice(0,10),parceiro:forn.slice(0,40)});
+  });
+  var out={};
+  Object.keys(mapa).forEach(function(d){
+    var itens=mapa[d].sort(function(x,y){ return (x.data+x.hora).localeCompare(y.data+y.hora); });
+    var total=Math.round(itens.reduce(function(s,i){ return s+i.valor; },0)*100)/100;
+    out[d]={total:total,itens:itens};
+  });
+  return out;
+}
+// Aplica o mapa ao DB: só mexe em r.trajetoAuto. Devolve true se algo mudou.
+function trajetoAplicar(mapa){
+  var mudou=false;
+  Object.keys(DB).forEach(function(iso){
+    var r=DB[iso];
+    if(r&&r.trajetoAuto&&!mapa[iso]){ delete r.trajetoAuto; if(!temRegistoManual(r))delete DB[iso]; mudou=true; }
+  });
+  Object.keys(mapa).forEach(function(iso){
+    var r=DB[iso],novo=mapa[iso];
+    if(!r||!r.trajetoAuto||JSON.stringify(r.trajetoAuto)!==JSON.stringify(novo)){
+      if(!r){ DB[iso]={}; r=DB[iso]; }
+      r.trajetoAuto=novo; mudou=true;
+    }
+  });
+  return mudou;
+}
+function trajetoRedesenhar(){
+  try{
+    renderHeader();
+    if(document.getElementById('pg-hoje').classList.contains('on')){ renderKPIs(); renderResumoDia(); }
+    else if(document.getElementById('pg-semana').classList.contains('on'))renderSemana();
+    else if(document.getElementById('pg-hist').classList.contains('on'))renderHist();
+  }catch(e){ console.warn(e); }
+  renderTrajetoCfg();
+}
+function trajetoSincronizar(avisar){
+  if(_trajSyncing||!trajDB||!trajetoLigadoAqui()||!_syncPronto)return Promise.resolve(false);
+  _trajSyncing=true;
+  var l=trajetoLink();
+  return trajDB.collection('trajeto_utilizadores').doc(trajUser.uid).get().then(function(snap){
+    _trajSyncing=false;
+    if(!trajetoLigadoAqui())return false;               // a conta mudou entretanto: não mexe em nada
+    var dados=snap.exists?(snap.data()||{}):{};
+    var mapa=trajetoCalcularMapa(dados.agendamentos,l.desde);
+    var mudou=trajetoAplicar(mapa);
+    var n=Object.keys(mapa).reduce(function(s,d){ return s+mapa[d].itens.length; },0);
+    try{ localStorage.setItem(TRAJ_ULTIMA_KEY,JSON.stringify({ts:Date.now(),n:n,uid:fbUser.uid})); }catch(e){}
+    if(mudou)salvarLocal();
+    trajetoRedesenhar();
+    if(avisar)toast(mudou?'Trajeto sincronizado':'Trajeto: sem novidades','ok');
+    return true;
+  }).catch(function(e){
+    _trajSyncing=false; console.warn('trajeto sync:',e);
+    if(avisar)toast('Não foi possível ler o Trajeto agora.','er');
+    return false;
+  });
+}
+function htmlTrajetoAuto(r,titulo){
+  var t=r&&r.trajetoAuto; if(!t||!(trajetoAutoValor(r)>0))return '';
+  var itens=(Array.isArray(t.itens)?t.itens:[]).map(function(i){
+    return '<li><span>'+escHtml(i.hora||'')+(i.hora?' · ':'')+escHtml(i.cliente||'Cliente')+(i.parceiro?' ('+escHtml(i.parceiro)+')':'')+'</span><span>'+moeda(parseFloat(i.valor)||0)+'</span></li>';
+  }).join('');
+  return '<div class="traj-auto"><div class="traj-auto-h"><span>Trajeto Transfer<span class="traj-auto-tag">AUTOMÁTICO</span><small>'+titulo+' · sem taxa e sem impostos</small></span><b>'+moeda(trajetoAutoValor(r))+'</b></div>'+(itens?'<ul>'+itens+'</ul>':'')+'</div>';
+}
+function renderTrajetoAutoHoje(){
+  var el=document.getElementById('trajetoAutoHoje'); if(!el)return;
+  el.innerHTML=htmlTrajetoAuto(DB[hoje()],'Recebidos hoje no app Trajeto');
+}
+function fmtDataCurta(iso){ var p=String(iso||'').split('-'); return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:''; }
+function renderTrajetoCfg(){
+  var box=document.getElementById('trajetoBox'),acc=document.getElementById('cfgTrajeto'); if(!box||!acc)return;
+  acc.style.display=trajApp?'':'none';
+  if(!trajApp)return;
+  var intro='<p class="import-info">Se usas o app <b>Trajeto Transfer</b>, os serviços que marcares como <b>recebidos</b> entram aqui sozinhos, no dia em que os recebeste.</p>';
+  var priv='<div class="traj-info">🔒 A ligação fica presa à tua conta do Finance Drive. Outros motoristas não recebem nada.</div>';
+  if(!fbUser){ box.innerHTML=intro+'<div class="traj-info">Para ligar, entra primeiro na tua conta do Finance Drive (em <b>Conta e sincronização</b>).</div>'; return; }
+  var l=trajetoLink(),meu=l&&l.fdUid===fbUser.uid;
+  if(!meu){
+    box.innerHTML=intro+priv+
+      '<div class="fld"><div class="fld-lbl">Email do Trajeto</div><div class="iw"><input type="email" id="trajEmail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="o.teu@email.com" style="font-size:16px;font-weight:500"></div></div>'+
+      '<div class="fld"><div class="fld-lbl">Palavra-passe do Trajeto</div><div class="iw"><input type="password" id="trajSenha" autocomplete="off" style="font-size:16px;font-weight:500"></div></div>'+
+      '<div class="login-erro" id="trajErro"></div>'+
+      '<button class="btn btn-green" type="button" onclick="trajetoLigar()">Ligar ao Trajeto</button>';
+    return;
+  }
+  var desdeTxt='<div class="traj-info">📅 Só entram serviços recebidos <b>a partir de '+fmtDataCurta(l.desde)+'</b>. Os anteriores não entram, porque já os registaste à mão.</div>';
+  if(!trajetoLigadoAqui()){
+    box.innerHTML='<div class="traj-ok"><div class="traj-ok-i">✓</div><div><b>Ligado ao Trajeto</b><span>'+escHtml(l.email||'')+' · desde '+fmtDataCurta(l.desde)+'</span></div></div>'+desdeTxt+
+      '<div class="traj-info">Neste aparelho ainda não entraste no Trajeto. Escreve a palavra-passe do Trajeto para sincronizar aqui.</div>'+
+      '<div class="fld"><div class="fld-lbl">Palavra-passe do Trajeto</div><div class="iw"><input type="password" id="trajSenha" autocomplete="off" style="font-size:16px;font-weight:500"></div></div>'+
+      '<div class="login-erro" id="trajErro"></div>'+
+      '<button class="btn btn-green" type="button" onclick="trajetoEntrarAqui()">Entrar no Trajeto neste aparelho</button>'+
+      '<button class="btn btn-outline" type="button" onclick="trajetoDesligar()" style="margin-top:8px;color:var(--red)">Desligar do Trajeto</button>';
+    return;
+  }
+  var ult=null; try{ ult=JSON.parse(localStorage.getItem(TRAJ_ULTIMA_KEY)||'null'); }catch(e){}
+  var txtUlt='ainda não';
+  if(ult&&ult.ts&&ult.uid===fbUser.uid){ var q=new Date(ult.ts); txtUlt=pad(q.getDate())+'/'+pad(q.getMonth()+1)+' às '+pad(q.getHours())+':'+pad(q.getMinutes())+' · '+(ult.n||0)+' serviço'+((ult.n||0)===1?'':'s'); }
+  box.innerHTML='<div class="traj-ok"><div class="traj-ok-i">✓</div><div><b>Ligado ao Trajeto</b><span>'+escHtml(l.email||'')+' · desde '+fmtDataCurta(l.desde)+'</span></div></div>'+desdeTxt+
+    '<div class="traj-info">🔄 Última sincronização: '+txtUlt+'</div>'+
+    '<button class="btn btn-outline" type="button" onclick="trajetoSincronizar(true)">Sincronizar agora</button>'+
+    '<button class="btn btn-outline" type="button" onclick="trajetoDesligar()" style="margin-top:8px;color:var(--red)">Desligar do Trajeto</button>';
+}
+function trajetoLigar(){
+  if(!trajAuth||!fbUser)return;
+  var email=((document.getElementById('trajEmail')||{}).value||'').trim(),senha=(document.getElementById('trajSenha')||{}).value||'',erro=document.getElementById('trajErro');
+  if(erro)erro.textContent='';
+  if(!email||!senha){ if(erro)erro.textContent='Preenche o email e a palavra-passe do Trajeto.'; return; }
+  var fdUid=fbUser.uid;
+  trajAuth.signInWithEmailAndPassword(email,senha).then(function(cred){
+    var u=cred.user;
+    return trajDB.collection('trajeto_utilizadores').doc(u.uid).get().then(function(snap){
+      if(!snap.exists){ trajAuth.signOut(); throw {code:'trajeto/sem-dados'}; }
+      if(!fbUser||fbUser.uid!==fdUid){ trajAuth.signOut(); throw {code:'trajeto/conta-mudou'}; }
+      CFG.trajetoLink={trajetoUid:u.uid,email:u.email||email,desde:hoje(),fdUid:fdUid};
+      salvarLocal(); trackEvent('ligar_trajeto',{});
+      toast('Ligado ao Trajeto','ok');
+      return trajetoSincronizar(false);
+    });
+  }).catch(function(e){
+    var c=(e&&e.code)||'';
+    var msg=c==='trajeto/sem-dados'?'Esta conta não tem dados no app Trajeto Transfer.':c==='trajeto/conta-mudou'?'A conta do Finance Drive mudou. Tenta de novo.':erroAuth(e);
+    if(erro)erro.textContent=msg; renderTrajetoCfgErro(msg);
+  });
+}
+function renderTrajetoCfgErro(msg){ var e=document.getElementById('trajErro'); if(e&&!e.textContent)e.textContent=msg; }
+function trajetoEntrarAqui(){
+  var l=trajetoLink(); if(!trajAuth||!l)return;
+  var senha=(document.getElementById('trajSenha')||{}).value||'',erro=document.getElementById('trajErro');
+  if(!senha){ if(erro)erro.textContent='Escreve a palavra-passe do Trajeto.'; return; }
+  trajAuth.signInWithEmailAndPassword(l.email,senha).then(function(cred){
+    if(cred.user.uid!==l.trajetoUid){ trajAuth.signOut(); if(erro)erro.textContent='Esta não é a conta do Trajeto que foi ligada.'; return; }
+    toast('Entraste no Trajeto','ok');
+  }).catch(function(e){ if(erro)erro.textContent=erroAuth(e); });
+}
+function trajetoRemoverAutomaticos(){
+  var mudou=false;
+  Object.keys(DB).forEach(function(iso){ var r=DB[iso]; if(r&&r.trajetoAuto){ delete r.trajetoAuto; if(!temRegistoManual(r))delete DB[iso]; mudou=true; } });
+  return mudou;
+}
+function trajetoDesligar(){
+  confirmSheet({titulo:'Desligar do Trajeto?',msg:'Os valores que vieram automaticamente do Trajeto saem do Finance Drive. Os teus registos manuais ficam como estão.',ok:'Desligar',perigo:true}).then(function(ok){
+    if(!ok)return;
+    trajetoRemoverAutomaticos();
+    delete CFG.trajetoLink;
+    try{ localStorage.removeItem(TRAJ_ULTIMA_KEY); }catch(e){}
+    salvarLocal(); trackEvent('desligar_trajeto',{});
+    if(trajAuth)trajAuth.signOut();
+    trajetoRedesenhar(); toast('Desligado do Trajeto','ok');
   });
 }
 
@@ -2961,6 +3183,7 @@ trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG
 renderHoje();
 atualizarCookieUI();
 iniciarNuvem();
+trajetoIniciar();
 </script>
 </body>
 </html>
