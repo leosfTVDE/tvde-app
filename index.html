@@ -1011,7 +1011,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.13.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.14.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -3050,6 +3050,7 @@ function trajetoSincronizar(avisar){
     var mudou=trajetoAplicar(mapa);
     var n=Object.keys(mapa).reduce(function(s,d){ return s+mapa[d].itens.length; },0);
     try{ localStorage.setItem(TRAJ_ULTIMA_KEY,JSON.stringify({ts:Date.now(),n:n,uid:fbUser.uid})); }catch(e){}
+    trajetoGravarRecibo(mapa);
     if(mudou)salvarLocal();
     trajetoRedesenhar();
     if(avisar)toast(mudou?'Trajeto sincronizado':'Trajeto: sem novidades','ok');
@@ -3059,6 +3060,16 @@ function trajetoSincronizar(avisar){
     if(avisar)toast('Não foi possível ler o Trajeto agora.','er');
     return false;
   });
+}
+// v3.14: deixa no Trajeto um "recibo" desta leitura, para o Trajeto mostrar que está ligado (trajeto_ligacoes/{uid}).
+// Não mexe nos agendamentos do Trajeto. Se a regra do Firebase ainda não existir, falha em silêncio.
+function trajetoGravarRecibo(mapa){
+  if(!trajDB||!trajUser)return;
+  var mes=hoje().slice(0,7);
+  var nMes=Object.keys(mapa||{}).filter(function(d){ return d.slice(0,7)===mes; }).reduce(function(s,d){ return s+mapa[d].itens.length; },0);
+  try{
+    trajDB.collection('trajeto_ligacoes').doc(trajUser.uid).set({financeDrive:{ligado:true,ultimaLeitura:Date.now(),servicosMes:nMes,mes:mes}},{merge:true}).catch(function(e){ console.warn('recibo trajeto:',e&&e.code); });
+  }catch(e){}
 }
 function htmlTrajetoAuto(r,titulo){
   var t=r&&r.trajetoAuto; if(!t||!(trajetoAutoValor(r)>0))return '';
@@ -3150,7 +3161,10 @@ function trajetoDesligar(){
     delete CFG.trajetoLink;
     try{ localStorage.removeItem(TRAJ_ULTIMA_KEY); }catch(e){}
     salvarLocal(); trackEvent('desligar_trajeto',{});
-    if(trajAuth)trajAuth.signOut();
+    var sair=function(){ if(trajAuth)trajAuth.signOut(); };
+    // avisa o Trajeto de que a ligação foi desligada (o indicador lá passa a "Não ligado")
+    if(trajDB&&trajUser){ try{ trajDB.collection('trajeto_ligacoes').doc(trajUser.uid).set({financeDrive:{ligado:false,desligadoEm:Date.now()}},{merge:true}).then(sair,sair); }catch(e){ sair(); } }
+    else sair();
     trajetoRedesenhar(); toast('Desligado do Trajeto','ok');
   });
 }
