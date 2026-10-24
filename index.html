@@ -585,8 +585,9 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .toast.ok{background:var(--navy)}
 
 /* Login, conta e aviso de estatísticas (v3.12) */
-.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:800;display:flex;align-items:center;justify-content:center;padding:calc(var(--safe-top) + 20px) 20px calc(var(--safe-bot) + 20px);opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto}
-.login-overlay.show{opacity:1;pointer-events:all}
+.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:800;display:none;align-items:center;justify-content:center;padding:calc(var(--safe-top) + 20px) 20px calc(var(--safe-bot) + 20px);overflow-y:auto}
+.login-overlay.show{display:flex;animation:lgEntra .25s ease}
+@keyframes lgEntra{from{opacity:0}to{opacity:1}}
 .login-box{width:100%;max-width:420px;text-align:center;margin:auto 0}
 .login-titulo{font-family:var(--fd-head);font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.02em}
 .login-sub{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 18px}
@@ -1011,7 +1012,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.14.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.14.1 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -2982,6 +2983,8 @@ var TRAJETO_FB_CONFIG={
 };
 var TRAJ_ULTIMA_KEY='fd_trajeto_ultima';
 var trajApp=null,trajAuth=null,trajDB=null,trajUser=null,_trajSyncing=false;
+var _trajMostrarCampos=false;   // v3.14.1: só mostra os campos de palavra-passe depois de tocar no botão (evita o aviso de login do iPhone)
+function trajetoMostrarCampos(){ _trajMostrarCampos=true; renderTrajetoCfg(); setTimeout(function(){ var e=document.getElementById('trajEmail')||document.getElementById('trajSenha'); if(e)e.focus(); },50); }
 function trajetoLink(){ var l=CFG.trajetoLink; return (l&&typeof l==='object'&&l.trajetoUid&&l.desde)?l:null; }
 function trajetoLigadoAqui(){ var l=trajetoLink(); return !!(l&&fbUser&&l.fdUid===fbUser.uid&&trajUser&&trajUser.uid===l.trajetoUid); }
 function trajetoIniciar(){
@@ -3093,19 +3096,23 @@ function renderTrajetoCfg(){
   var l=trajetoLink(),meu=l&&l.fdUid===fbUser.uid;
   if(!meu){
     box.innerHTML=intro+priv+
+      (_trajMostrarCampos?
       '<div class="fld"><div class="fld-lbl">Email do Trajeto</div><div class="iw"><input type="email" id="trajEmail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="o.teu@email.com" style="font-size:16px;font-weight:500"></div></div>'+
       '<div class="fld"><div class="fld-lbl">Palavra-passe do Trajeto</div><div class="iw"><input type="password" id="trajSenha" autocomplete="off" style="font-size:16px;font-weight:500"></div></div>'+
       '<div class="login-erro" id="trajErro"></div>'+
-      '<button class="btn btn-green" type="button" onclick="trajetoLigar()">Ligar ao Trajeto</button>';
+      '<button class="btn btn-green" type="button" onclick="trajetoLigar()">Ligar ao Trajeto</button>'
+      : '<button class="btn btn-green" type="button" onclick="trajetoMostrarCampos()">Ligar ao Trajeto</button>');
     return;
   }
   var desdeTxt='<div class="traj-info">📅 Só entram serviços recebidos <b>a partir de '+fmtDataCurta(l.desde)+'</b>. Os anteriores não entram, porque já os registaste à mão.</div>';
   if(!trajetoLigadoAqui()){
     box.innerHTML='<div class="traj-ok"><div class="traj-ok-i">✓</div><div><b>Ligado ao Trajeto</b><span>'+escHtml(l.email||'')+' · desde '+fmtDataCurta(l.desde)+'</span></div></div>'+desdeTxt+
       '<div class="traj-info">Neste aparelho ainda não entraste no Trajeto. Escreve a palavra-passe do Trajeto para sincronizar aqui.</div>'+
+      (_trajMostrarCampos?
       '<div class="fld"><div class="fld-lbl">Palavra-passe do Trajeto</div><div class="iw"><input type="password" id="trajSenha" autocomplete="off" style="font-size:16px;font-weight:500"></div></div>'+
       '<div class="login-erro" id="trajErro"></div>'+
-      '<button class="btn btn-green" type="button" onclick="trajetoEntrarAqui()">Entrar no Trajeto neste aparelho</button>'+
+      '<button class="btn btn-green" type="button" onclick="trajetoEntrarAqui()">Entrar no Trajeto neste aparelho</button>'
+      : '<button class="btn btn-green" type="button" onclick="trajetoMostrarCampos()">Entrar no Trajeto neste aparelho</button>')+
       '<button class="btn btn-outline" type="button" onclick="trajetoDesligar()" style="margin-top:8px;color:var(--red)">Desligar do Trajeto</button>';
     return;
   }
@@ -3128,7 +3135,7 @@ function trajetoLigar(){
     return trajDB.collection('trajeto_utilizadores').doc(u.uid).get().then(function(snap){
       if(!snap.exists){ trajAuth.signOut(); throw {code:'trajeto/sem-dados'}; }
       if(!fbUser||fbUser.uid!==fdUid){ trajAuth.signOut(); throw {code:'trajeto/conta-mudou'}; }
-      CFG.trajetoLink={trajetoUid:u.uid,email:u.email||email,desde:hoje(),fdUid:fdUid};
+      CFG.trajetoLink={trajetoUid:u.uid,email:u.email||email,desde:hoje(),fdUid:fdUid}; _trajMostrarCampos=false;
       salvarLocal(); trackEvent('ligar_trajeto',{});
       toast('Ligado ao Trajeto','ok');
       return trajetoSincronizar(false);
@@ -3146,7 +3153,7 @@ function trajetoEntrarAqui(){
   if(!senha){ if(erro)erro.textContent='Escreve a palavra-passe do Trajeto.'; return; }
   trajAuth.signInWithEmailAndPassword(l.email,senha).then(function(cred){
     if(cred.user.uid!==l.trajetoUid){ trajAuth.signOut(); if(erro)erro.textContent='Esta não é a conta do Trajeto que foi ligada.'; return; }
-    toast('Entraste no Trajeto','ok');
+    _trajMostrarCampos=false; toast('Entraste no Trajeto','ok');
   }).catch(function(e){ if(erro)erro.textContent=erroAuth(e); });
 }
 function trajetoRemoverAutomaticos(){
