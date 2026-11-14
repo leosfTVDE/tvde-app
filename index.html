@@ -629,6 +629,48 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .traj-info{background:var(--well);border-radius:14px;padding:10px 12px;font-size:12px;color:var(--sub);line-height:1.55;margin-bottom:8px}
 .cfg-acc .card .traj-info{background:#fff}
 
+
+/* ===== v3.15: PRO, relatório e acessos ===== */
+.pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
+.rel-abrir{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 12px;padding:13px 14px;border-radius:14px;border:1px solid var(--gold-bd,rgba(251,191,36,.3));background:var(--gold-bg,rgba(251,191,36,.08));color:var(--text);text-align:left;cursor:pointer;font:inherit}
+.rel-abrir-ic{font-size:22px} .rel-abrir-tx{flex:1;min-width:0} .rel-abrir-tx b{display:block;font-size:14px} .rel-abrir-tx small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.rel-modal{max-height:94vh}
+.rel-seg,.ac-seg{display:flex;gap:4px;padding:3px;border-radius:12px;background:var(--well,rgba(255,255,255,.06))}
+.rel-seg button,.ac-seg button{flex:1;padding:9px 4px;border:none;border-radius:9px;background:transparent;color:var(--sub);font:600 13px var(--fd-head);cursor:pointer}
+.rel-seg button.on,.ac-seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.rel-wrap{position:relative;margin-top:10px;min-height:200px}
+.rel-wrap.bloq #relCorpo{filter:blur(5px);opacity:.55;pointer-events:none;user-select:none}
+.rel-cadeado{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:6px}
+.rel-cadeado[hidden]{display:none}
+.rel-cadeado b{font-size:16px;color:var(--text)} .rel-cadeado p{font-size:12.5px;color:var(--sub);line-height:1.5;max-width:300px}
+.rel-sec{font-size:11px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 4px}
+.rel-tot{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 2px;font-weight:800;font-size:15px}
+.rel-tab{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px} .rel-tab th{text-align:left;color:var(--muted);font-weight:600;padding:5px 3px;border-bottom:1px solid var(--border)} .rel-tab td{padding:6px 3px;border-bottom:1px solid var(--border)} .rel-tab .n{text-align:right;white-space:nowrap}
+.rel-acoes{display:flex;gap:8px;margin-top:14px} .rel-acoes .btn{margin:0}
+.rel-nota{font-size:11px;color:var(--muted);line-height:1.5;margin-top:10px}
+.pro-preco{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.pro-op{border:1.5px solid var(--border);border-radius:14px;padding:12px;text-align:center;background:var(--surface);cursor:pointer;font:inherit;color:var(--text)}
+.pro-op b{display:block;font-family:var(--fd-head);font-size:20px} .pro-op small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.pro-op.dest{border-color:#C59A3A;background:var(--gold-bg,rgba(251,191,36,.08))}
+.pro-tab{width:100%;border-collapse:collapse;font-size:12.5px} .pro-tab td{padding:7px 3px;border-bottom:1px solid var(--border)} .pro-tab td.c{text-align:center;width:52px} .pro-tab th{font-size:11px;color:var(--muted);padding:4px 3px;text-align:center}
+.pro-ok{color:var(--green);font-weight:700} .pro-no{color:var(--muted)}
+.plano-ativo{display:flex;align-items:center;gap:10px;padding:13px;border-radius:14px;background:var(--navy,#0f172a);color:#fff;margin-bottom:12px}
+.plano-ativo b{display:block;font-size:14px} .plano-ativo small{display:block;font-size:11.5px;opacity:.8;margin-top:2px}
+.ac-linha{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.ac-linha .em{flex:1;min-width:0} .ac-linha .em b{display:block;overflow-wrap:anywhere;font-size:13px} .ac-linha .em small{color:var(--muted);font-size:11px}
+.ac-tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.ac-of{background:var(--gold-bg,#FBF4E2);color:#8A6510} .ac-pg{background:var(--tint,#E4F2EA);color:#2E8B57} .ac-exp{background:rgba(220,38,38,.1);color:var(--red)}
+.ac-x{width:30px;height:30px;border-radius:50%;border:none;background:var(--well,rgba(0,0,0,.05));color:var(--muted);cursor:pointer;flex-shrink:0}
+#relPrint{display:none}
+@media print{
+  body.imprimindo > *:not(#relPrint){display:none !important}
+  body.imprimindo #relPrint{display:block !important;color:#000;background:#fff;font:12px/1.45 Arial,sans-serif;padding:0}
+  #relPrint h1{font-size:18px;margin:0 0 2px} #relPrint .sub{color:#555;margin:0 0 12px}
+  #relPrint table{width:100%;border-collapse:collapse;margin:6px 0 12px} #relPrint th,#relPrint td{border-bottom:1px solid #ccc;padding:4px 6px;text-align:left} #relPrint .n{text-align:right}
+  #relPrint h2{font-size:13px;margin:12px 0 2px;text-transform:uppercase;letter-spacing:.05em;color:#333}
+  #relPrint .tot td{font-weight:700;border-top:2px solid #000}
+}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 </style>
@@ -789,6 +831,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <!-- HIST&Oacute;RICO -->
     <div class="pg" id="pg-hist">
       <div class="stit">Hist&oacute;rico</div>
+      <button class="rel-abrir" type="button" onclick="abrirRelatorio()"><span class="rel-abrir-ic">📊</span><span class="rel-abrir-tx"><b>Relat&oacute;rio para o contabilista</b><small>M&ecirc;s, trimestre ou ano &middot; PDF e Excel</small></span><span class="pro-tag">PRO</span></button>
       <div class="filtros">
         <button class="filtro-btn on" id="fb-dia">Dia</button>
         <button class="filtro-btn" id="fb-semana">Semana</button>
@@ -812,6 +855,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <div class="hist-acc cfg-acc open" id="cfgConta" style="display:none">
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgConta')"><span>Conta e sincroniza&ccedil;&atilde;o</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body"><div class="card" id="contaBox"></div></div>
+      </div>
+
+      <div class="hist-acc cfg-acc" id="cfgAcessos" style="display:none">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgAcessos')"><span>&#128081; Gerir acessos PRO</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body"><div class="card" id="acessosBox"></div></div>
       </div>
 
       <div class="hist-acc cfg-acc" id="cfgTrajeto">
@@ -976,18 +1024,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgSobre')"><span>Plano, feedback e suporte</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body">
       <div class="stit">Plano &amp; monetiza&ccedil;&atilde;o</div>
-      <div class="plan-card">
-        <div class="plan-head">
-          <div class="plan-title">Finance Drive <span>Free</span></div>
-          <span class="pro-badge">Preparado para Pro</span>
-        </div>
-        <div class="plan-desc">Esta versão continua gratuita. Este espaço fica reservado para futuros recursos Pro, backup, relatórios avançados e sincronização.</div>
-        <div class="plan-list">
-          <div class="plan-item">Registos diários, metas e histórico continuam liberados</div>
-          <div class="plan-item">Futuro Pro: backup em nuvem, relatórios avançados e sincronização</div>
-          <div class="plan-item">Espaço reservado, hoje sem cobrança e sem anúncios ativos</div>
-        </div>
-      </div>
+      <div id="planoBox"></div>
       <div class="stit">Privacidade</div>
       <div class="card">
         <div class="toggle-wrap" onclick="toggleCookies()">
@@ -1012,7 +1049,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.14.1 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.15.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1035,6 +1072,24 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 </div>
 
 <!-- Modal Editar -->
+<div class="modal-overlay" id="relOverlay">
+  <div class="modal rel-modal">
+    <div class="modal-hdr"><div class="modal-title">&#128202; Relat&oacute;rio <span class="pro-tag">PRO</span></div><button class="modal-close" type="button" onclick="fecharRelatorio()" aria-label="Fechar">&#10005;</button></div>
+    <div class="rel-seg" id="relTipo"><button type="button" data-t="mes">M&ecirc;s</button><button type="button" data-t="trimestre">Trimestre</button><button type="button" data-t="ano">Ano</button></div>
+    <div class="periodo-sel" style="margin-top:8px"><button class="periodo-arr" type="button" onclick="relMudar(-1)" aria-label="Anterior">&#8249;</button><div class="periodo-label" id="relLabel"></div><button class="periodo-arr" type="button" onclick="relMudar(1)" aria-label="Seguinte">&#8250;</button></div>
+    <div class="rel-wrap" id="relWrap"><div id="relCorpo"></div><div class="rel-cadeado" id="relCadeado" hidden></div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="proOverlay">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Finance Drive <span class="pro-tag">PRO</span></div><button class="modal-close" type="button" onclick="fecharPro()" aria-label="Fechar">&#10005;</button></div>
+    <div id="proCorpo"></div>
+  </div>
+</div>
+
+<div id="relPrint" aria-hidden="true"></div>
+
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-hdr">
@@ -2830,6 +2885,7 @@ function iniciarNuvem(){
   }catch(e){ console.warn('firebase:',e); fbAuth=null; fbDB=null; atualizarContaUI(); return; }
   fbAuth.onAuthStateChanged(function(u){
     fbUser=u||null; _syncPronto=false; _syncSnap={}; _cfgSnap='';
+    planoAoMudarConta();
     if(u){
       try{
         localStorage.removeItem(LOCAL_ONLY_KEY);
@@ -2900,6 +2956,7 @@ function continuarSemConta(){ try{ localStorage.setItem(LOCAL_ONLY_KEY,'1'); }ca
 function escHtml(t){ return String(t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function atualizarContaUI(){
   renderTrajetoCfg();
+  if(typeof renderPlanoUI==='function'&&document.getElementById('planoBox')&&!document.getElementById('planoBox').innerHTML)renderPlanoUI();
   var acc=document.getElementById('cfgConta'),box=document.getElementById('contaBox'); if(!acc||!box)return;
   if(!fbAuth){ acc.style.display='none'; return; }
   acc.style.display='';
@@ -3094,6 +3151,10 @@ function renderTrajetoCfg(){
   var priv='<div class="traj-info">🔒 A ligação fica presa à tua conta do Finance Drive. Outros motoristas não recebem nada.</div>';
   if(!fbUser){ box.innerHTML=intro+'<div class="traj-info">Para ligar, entra primeiro na tua conta do Finance Drive (em <b>Conta e sincronização</b>).</div>'; return; }
   var l=trajetoLink(),meu=l&&l.fdUid===fbUser.uid;
+  if(!meu&&typeof isPro==='function'&&!isPro()){   // v3.15: ligar ao Trajeto é PRO (quem já está ligado continua)
+    box.innerHTML=intro+'<div class="traj-info">🔒 A ligação ao Trajeto Transfer faz parte do <b>PRO</b>.</div><button class="btn btn-green" type="button" onclick="abrirPro(\'trajeto\')">Ver o PRO</button>';
+    return;
+  }
   if(!meu){
     box.innerHTML=intro+priv+
       (_trajMostrarCampos?
@@ -3176,6 +3237,270 @@ function trajetoDesligar(){
   });
 }
 
+// ══ PRO, relatório e acessos (v3.15) ═════════════════════════════════
+// Quem é PRO fica no Firestore em planos/{email} e só a conta de administrador pode escrever lá (regra do Firebase).
+var PLANO_ADMIN='leonardosf.tvde@gmail.com';
+var STRIPE_LINKS={mensal:'https://buy.stripe.com/dRm6oHfXvbVn0Ctaa9bsc00',anual:'https://buy.stripe.com/eVqbJ1eTr5wZ5WN965bsc01'};
+var PRECOS_PRO={mensal:'€3,99',anual:'€29,99'};
+var SUPORTE_EMAIL='help.financedrive@proton.me';
+var PLANO_CACHE_KEY='fd_plano_cache';
+var _plano=null,_acessos=null,_acOrigem='oferta',_acPrazo='sempre';
+function emailAtual(){ return fbUser&&fbUser.email?String(fbUser.email).trim().toLowerCase():''; }
+function isAdmin(){ return emailAtual()===PLANO_ADMIN; }
+function planoAtivo(p){ return !!(p&&p.pro&&(!p.ate||p.ate>Date.now())); }
+function isPro(){ return isAdmin()||planoAtivo(_plano); }
+function planoAoMudarConta(){
+  _plano=null; _acessos=null;
+  if(fbUser){ try{ var c=JSON.parse(localStorage.getItem(PLANO_CACHE_KEY)||'null'); if(c&&c.uid===fbUser.uid)_plano=c.dados||null; }catch(e){} carregarPlano(); }
+  renderPlanoUI();
+}
+function carregarPlano(){
+  if(!fbDB||!fbUser)return Promise.resolve(null);
+  var uid=fbUser.uid,em=emailAtual(); if(!em)return Promise.resolve(null);
+  return fbDB.collection('planos').doc(em).get().then(function(snap){
+    if(!fbUser||fbUser.uid!==uid)return null;
+    _plano=snap.exists?(snap.data()||null):null;
+    try{ localStorage.setItem(PLANO_CACHE_KEY,JSON.stringify({uid:uid,dados:_plano,ts:Date.now()})); }catch(e){}
+    renderPlanoUI(); return _plano;
+  }).catch(function(e){ console.warn('plano:',e&&e.code); renderPlanoUI(); return null; });
+}
+function fmtDataMs(ms){ var d=new Date(ms); return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); }
+function linhaFuncoesPro(){
+  return '<table class="pro-tab"><tr><th></th><th>Grátis</th><th>PRO</th></tr>'+
+    '<tr><td>Registar o dia, saldo, metas e histórico</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Estimativa de SS, IRS e IVA</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Relatório para o contabilista (mês, trimestre, ano) em PDF e Excel</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Ligação ao Trajeto Transfer</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Novas funções PRO que forem saindo</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr></table>';
+}
+function renderPlanoUI(){
+  var box=document.getElementById('planoBox');
+  if(box){
+    if(isAdmin()){
+      box.innerHTML='<div class="plano-ativo"><div style="font-size:24px">👑</div><div><b>Administrador · PRO completo</b><small>'+escHtml(emailAtual())+' · sem prazo</small></div></div>';
+    } else if(planoAtivo(_plano)){
+      box.innerHTML='<div class="plano-ativo"><div style="font-size:22px">✓</div><div><b>PRO ativo'+(_plano.origem==='oferta'?' · oferta':'')+'</b><small>'+(_plano.ate?'até '+fmtDataMs(_plano.ate):'sem prazo')+'</small></div></div>';
+    } else {
+      box.innerHTML='<div class="plan-card"><div class="plan-head"><div class="plan-title">Finance Drive <span>Grátis</span></div><span class="pro-tag">PRO</span></div>'+
+        '<div class="plan-desc">O essencial continua grátis. O PRO junta o relatório para o contabilista e a ligação ao Trajeto Transfer.</div>'+
+        '<button class="btn btn-green" type="button" onclick="abrirPro(\'config\')" style="margin-top:6px">Ver o PRO · '+PRECOS_PRO.mensal+'/mês</button></div>';
+    }
+  }
+  var acc=document.getElementById('cfgAcessos'); if(acc)acc.style.display=isAdmin()?'':'none';
+  if(isAdmin())renderAcessos();
+  var rel=document.getElementById('relOverlay'); if(rel&&rel.classList.contains('show'))desenharRelatorio();
+  if(typeof renderTrajetoCfg==='function')renderTrajetoCfg();
+}
+// ---- Janela PRO (comprar) ----
+function abrirPro(origem){
+  trackEvent('ver_pro',{origem:origem||''});
+  var c=document.getElementById('proCorpo'),html='';
+  if(isPro()){
+    html='<div class="plano-ativo"><div style="font-size:22px">✓</div><div><b>Já tem o PRO</b><small>'+(isAdmin()?'Administrador':(_plano&&_plano.ate?'até '+fmtDataMs(_plano.ate):'sem prazo'))+'</small></div></div>'+linhaFuncoesPro();
+  } else {
+    html='<p class="import-info" style="margin-bottom:6px">O essencial continua grátis. Com o <b>PRO</b> poupas tempo com o contabilista e junta o Trajeto Transfer.</p>'+linhaFuncoesPro();
+    if(!fbUser){
+      html+='<div class="traj-info" style="margin-top:12px">Para comprar, entra primeiro na tua conta do Finance Drive (em <b>Configurações → Conta e sincronização</b>). O PRO fica ligado à tua conta, em todos os aparelhos.</div>';
+    } else {
+      html+='<div class="pro-preco"><button type="button" class="pro-op" onclick="comprarPro(\'mensal\')"><small>Mensal</small><b>'+PRECOS_PRO.mensal+'</b><small>por mês</small></button>'+
+        '<button type="button" class="pro-op dest" onclick="comprarPro(\'anual\')"><small>Anual · poupa 37%</small><b>'+PRECOS_PRO.anual+'</b><small>por ano</small></button></div>'+
+        '<p class="rel-nota">Pagamento seguro pela Stripe (cartão, Apple Pay e outros). Usa o email <b>'+escHtml(emailAtual())+'</b>. Depois do pagamento, o PRO é ativado na tua conta em até 24 horas. Cancelas quando quiseres. Dúvidas: '+SUPORTE_EMAIL+'</p>';
+    }
+  }
+  c.innerHTML=html;
+  document.getElementById('proOverlay').classList.add('show');
+}
+function fecharPro(){ document.getElementById('proOverlay').classList.remove('show'); }
+function comprarPro(tipo){
+  if(!fbUser||!STRIPE_LINKS[tipo])return;
+  var url=STRIPE_LINKS[tipo]+'?prefilled_email='+encodeURIComponent(emailAtual())+'&client_reference_id='+encodeURIComponent(fbUser.uid);
+  trackEvent('comprar_pro',{plano:tipo});
+  window.open(url,'_blank');
+}
+// ---- Gerir acessos (só administrador) ----
+function renderAcessos(){
+  var box=document.getElementById('acessosBox'); if(!box)return;
+  if(!isAdmin()){ box.innerHTML=''; return; }
+  var emAntes=((document.getElementById('acEmail')||{}).value)||'';
+  var segO='<div class="ac-seg" id="acOrigem">'+[['oferta','🎁 Oferta'],['pago','💳 Pago']].map(function(x){ return '<button type="button" data-v="'+x[0]+'" class="'+(_acOrigem===x[0]?'on':'')+'" onclick="acEscolher(\'o\',\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>';
+  var segP='<div class="ac-seg" id="acPrazo" style="margin-top:6px">'+[['30','1 mês'],['90','3 meses'],['365','1 ano'],['sempre','Sempre']].map(function(x){ return '<button type="button" data-v="'+x[0]+'" class="'+(_acPrazo===x[0]?'on':'')+'" onclick="acEscolher(\'p\',\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>';
+  var lista='';
+  if(_acessos===null){ lista='<p class="rel-nota">A carregar…</p>'; carregarAcessos(); }
+  else if(!_acessos.length) lista='<p class="rel-nota">Ainda ninguém tem o PRO.</p>';
+  else lista=_acessos.map(function(a){
+    var ativo=planoAtivo(a),tag=!ativo?'<span class="ac-tag ac-exp">Expirado</span>':a.origem==='pago'?'<span class="ac-tag ac-pg">💳 Pago</span>':'<span class="ac-tag ac-of">🎁 Oferta</span>';
+    return '<div class="ac-linha"><div class="em"><b>'+escHtml(a.email||a.id)+'</b><small>'+(a.origem==='pago'?'Pago':'Oferta')+' · '+(a.ate?(ativo?'até ':'terminou a ')+fmtDataMs(a.ate):'sem prazo')+'</small></div>'+tag+
+      '<button type="button" class="ac-x" aria-label="Retirar acesso" onclick="retirarAcesso(\''+escHtml(a.id)+'\')">✕</button></div>';
+  }).join('');
+  box.innerHTML='<p class="import-info">Dá o PRO a qualquer motorista pelo email da conta dele. Se ainda não tiver conta, o PRO liga-se quando ele entrar com esse email.</p>'+
+    '<div class="fld"><div class="fld-lbl">Email do motorista</div><div class="iw"><input type="email" id="acEmail" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="email@exemplo.com" style="font-size:16px;font-weight:500"></div></div>'+
+    segO+segP+'<div class="login-erro" id="acErro"></div><button class="btn btn-green" type="button" onclick="darAcesso()" style="margin-top:8px">Dar acesso PRO</button>'+
+    '<div class="rel-sec" style="margin-top:16px">Com PRO</div>'+lista;
+  if(emAntes){ var ei=document.getElementById('acEmail'); if(ei)ei.value=emAntes; }
+}
+function acEscolher(q,v){ if(q==='o')_acOrigem=v; else _acPrazo=v; renderAcessos(); }
+function carregarAcessos(){
+  if(!fbDB||!isAdmin())return;
+  fbDB.collection('planos').get().then(function(snap){
+    var arr=[]; snap.forEach(function(d){ var x=d.data()||{}; x.id=d.id; arr.push(x); });
+    arr.sort(function(a,b){ return (b.dadoEm||0)-(a.dadoEm||0); });
+    _acessos=arr; renderAcessos();
+  }).catch(function(e){ _acessos=[]; renderAcessos(); var er=document.getElementById('acErro'); if(er)er.textContent='Não foi possível ler os acessos ('+((e&&e.code)||'erro')+'). Confirma a regra "planos" no Firebase.'; });
+}
+function darAcesso(){
+  var em=((document.getElementById('acEmail')||{}).value||'').trim().toLowerCase(),er=document.getElementById('acErro');
+  if(er)er.textContent='';
+  if(!/^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(em)){ if(er)er.textContent='Escreve um email válido.'; return; }
+  var dias=_acPrazo==='sempre'?0:parseInt(_acPrazo,10);
+  var dados={pro:true,email:em,origem:_acOrigem,ate:dias?Date.now()+dias*864e5:null,dadoEm:Date.now(),dadoPor:emailAtual()};
+  fbDB.collection('planos').doc(em).set(dados).then(function(){
+    toast('PRO dado a '+em,'ok'); trackEvent('dar_pro',{origem:_acOrigem,prazo:_acPrazo});
+    _acessos=null; if(em===emailAtual())carregarPlano(); renderAcessos();
+  }).catch(function(e){ if(er)er.textContent='Não foi possível guardar ('+((e&&e.code)||'erro')+'). Confirma a regra "planos" no Firebase.'; });
+}
+function retirarAcesso(id){
+  confirmSheet({titulo:'Retirar o PRO?',msg:id+' volta ao plano grátis. Os registos dele não são apagados.',ok:'Retirar',perigo:true}).then(function(ok){
+    if(!ok)return;
+    fbDB.collection('planos').doc(id).delete().then(function(){ toast('Acesso retirado','ok'); _acessos=null; renderAcessos(); }).catch(function(e){ toast('Não foi possível retirar','er'); });
+  });
+}
+// ---- Relatório para o contabilista ----
+var _relTipo='mes',_relOff=0;
+function relIntervalo(tipo,off){
+  var n=new Date(),y=n.getFullYear(),m=n.getMonth(),ini,fim,label;
+  if(tipo==='ano'){ y+=off; ini=new Date(y,0,1); fim=new Date(y,11,31); label='Ano '+y; }
+  else if(tipo==='trimestre'){ var q=Math.floor(m/3)+off; var yy=y+Math.floor(q/4),qq=((q%4)+4)%4; ini=new Date(yy,qq*3,1); fim=new Date(yy,qq*3+3,0); label=(qq+1)+'.º trimestre '+yy; }
+  else { ini=new Date(y,m+off,1); fim=new Date(ini.getFullYear(),ini.getMonth()+1,0); label=MESES[ini.getMonth()]+' '+ini.getFullYear(); }
+  var f=function(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+  return {de:f(ini),ate:f(fim),label:label,ini:ini,fim:fim};
+}
+// Mesmas contas que o resumo do Histórico (renderHist), para os números baterem certo.
+function resumoPeriodo(chaves){
+  var r0=function(d){ return DB[d]||{}; },S=function(fn){ return chaves.reduce(function(a,d){ return a+fn(r0(d),d); },0); };
+  var o={dias:chaves.length};
+  o.uber=S(function(r){ return r.uber||0; }); o.bolt=S(function(r){ return r.bolt||0; });
+  o.outros=S(function(r){ return (r.outroG||0)+trajetoAutoValor(r); }); o.trajeto=somaTrajeto(chaves);
+  o.ganhos=S(function(r){ return ganhos(r); }); o.taxa=S(function(r){ return taxaOperadorValor(r); });
+  o.energia=S(function(r){ return energiaFrota(r); }); o.energiaBolso=S(function(r){ return energiaDinheiro(r); });
+  o.comida=S(function(r){ return r.comida||0; }); o.outrosGastos=S(function(r){ return r.outroG2||0; });
+  o.aluguer=chaves.reduce(function(a,d){ return a+alDiaISO(d); },0);
+  o.saldoOper=o.ganhos-o.taxa-(o.energia+o.aluguer);
+  var bases=chaves.reduce(function(a,d){ var rr=r0(d); a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
+  o.imp=chaves.length?calcImpostosValores(o.saldoOper,bases,o.energiaBolso+o.comida+o.outrosGastos,o.energiaBolso):null;
+  var somaReal=S(function(r,d){ return saldoReal(r,d); });
+  o.saldoReal=o.imp?o.imp.real:somaReal;
+  o.kms=S(function(r){ return r.kms||0; });
+  o.horas=S(function(r){ var h=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return h||0; });
+  return o;
+}
+function relDados(tipo,off){
+  var iv=relIntervalo(tipo,off);
+  var chaves=Object.keys(DB).filter(function(k){ return DB[k]&&k>=iv.de&&k<=iv.ate; }).sort();
+  var d={iv:iv,chaves:chaves,total:resumoPeriodo(chaves),meses:[]};
+  if(tipo!=='mes'){
+    var c=new Date(iv.ini.getFullYear(),iv.ini.getMonth(),1);
+    while(c<=iv.fim){ var pre=c.getFullYear()+'-'+pad(c.getMonth()+1)+'-'; var ch=chaves.filter(function(k){ return k.indexOf(pre)===0; });
+      d.meses.push({label:MESES_S[c.getMonth()]+' '+c.getFullYear(),r:resumoPeriodo(ch)}); c=new Date(c.getFullYear(),c.getMonth()+1,1); }
+  }
+  return d;
+}
+function relLinhas(t){
+  var L=[['Dias registados',String(t.dias),'']];
+  L.push(['__Ganhos']);
+  L.push(['Uber',moeda(t.uber),'']); L.push([plat2(),moeda(t.bolt),'']); L.push(['Transfers / outros',moeda(t.outros),'']);
+  if(t.trajeto>0)L.push(['↳ dos quais Trajeto Transfer',moeda(t.trajeto),'']);
+  L.push(['Ganhos totais',moeda(t.ganhos),'b']);
+  L.push(['__Despesas da atividade']);
+  if(t.taxa>0)L.push(['Taxa do operador','-'+moeda(t.taxa),'']);
+  L.push(['Aluguer da viatura','-'+moeda(t.aluguer),'']);
+  L.push([isEletrico()?'Energia (carregamentos da frota)':'Combustível','-'+moeda(t.energia),'']);
+  L.push(['Saldo operacional',moeda(t.saldoOper),'b']);
+  if(t.imp&&(t.imp.ss+t.imp.irs+t.imp.iva)>0){
+    L.push(['__Estimativa fiscal']);
+    if(t.imp.ss>0)L.push(['Segurança Social (15%)','-'+moeda(t.imp.ss),'']);
+    if(t.imp.irs>0)L.push(['IRS ('+t.imp.taxaIRS.toFixed(1)+'%)','-'+moeda(t.imp.irs),'']);
+    if(t.imp.iva>0)L.push(['IVA (6%)','-'+moeda(t.imp.iva),'']);
+  }
+  if(t.energiaBolso>0||t.comida>0||t.outrosGastos>0){ L.push(['__Gastos do bolso']); if(t.energiaBolso>0)L.push(['Energia paga do bolso','-'+moeda(t.energiaBolso),'']); if(t.comida>0)L.push(['Alimentação','-'+moeda(t.comida),'']); if(t.outrosGastos>0)L.push(['Outros gastos','-'+moeda(t.outrosGastos),'']); }
+  L.push(['@TOT']);
+  L.push(['__Atividade']);
+  L.push(['Quilómetros',t.kms>0?Math.round(t.kms).toLocaleString('pt-PT')+' km':'—','']);
+  if(t.horas>0)L.push(['Horas registadas',fmtHoras(t.horas),'']);
+  return L;
+}
+['relOverlay','proOverlay'].forEach(function(id){ var o=document.getElementById(id); if(o)o.addEventListener('click',function(e){ if(e.target===o)o.classList.remove('show'); }); });
+function abrirRelatorio(){
+  trackEvent('abrir_relatorio',{pro:isPro()?'1':'0'});
+  document.getElementById('relOverlay').classList.add('show'); desenharRelatorio();
+}
+function fecharRelatorio(){ document.getElementById('relOverlay').classList.remove('show'); }
+function relMudar(d){ _relOff+=d; desenharRelatorio(); }
+function desenharRelatorio(){
+  document.querySelectorAll('#relTipo button').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-t')===_relTipo); });
+  var d=relDados(_relTipo,_relOff),t=d.total;
+  document.getElementById('relLabel').textContent=d.iv.label;
+  var html='';
+  if(!t.dias){ html='<div class="empty" style="padding:24px 8px;text-align:center;color:var(--muted)">Sem registos neste período</div>'; }
+  else {
+    relLinhas(t).forEach(function(l){
+      if(l[0]==='@TOT'){ html+='<div class="rel-tot"><span>Rendimento líquido estimado</span><span style="color:var(--'+(t.saldoReal>=0?'green':'red')+')">'+moeda(t.saldoReal)+'</span></div>'; return; }
+      if(l[0].indexOf('__')===0){ html+='<div class="rel-sec">'+escHtml(l[0].slice(2))+'</div>'; return; }
+      html+=rl(escHtml(l[0]),l[1],l[2]==='b'?'font-weight:800':'');
+    });
+    if(d.meses.length){
+      html+='<div class="rel-sec">Mês a mês</div><table class="rel-tab"><tr><th>Mês</th><th class="n">Ganhos</th><th class="n">Despesas</th><th class="n">Líquido</th></tr>'+
+        d.meses.map(function(m){ var r=m.r; return '<tr><td>'+m.label+'</td><td class="n">'+moeda(r.ganhos)+'</td><td class="n">'+moeda(r.taxa+r.aluguer+r.energia)+'</td><td class="n">'+moeda(r.saldoReal)+'</td></tr>'; }).join('')+'</table>';
+    }
+    html+='<div class="rel-acoes"><button class="btn btn-green" type="button" onclick="relPDF()">📄 PDF</button><button class="btn btn-outline" type="button" onclick="relExcel()">📊 Excel</button></div>'+
+      '<p class="rel-nota">Estimativa feita com os teus registos e as tuas configurações, para apoio ao contabilista. Não substitui a declaração de IRS nem os documentos oficiais das plataformas.</p>';
+  }
+  document.getElementById('relCorpo').innerHTML=html;
+  var bloq=!isPro(),wrap=document.getElementById('relWrap'),cad=document.getElementById('relCadeado');
+  wrap.classList.toggle('bloq',bloq); cad.hidden=!bloq;
+  if(bloq)cad.innerHTML='<div style="font-size:30px">🔒</div><b>Relatório para o contabilista</b><p>Tudo o que o contabilista precisa, num PDF ou Excel: ganhos por plataforma, despesas, impostos estimados e mês a mês. Disponível no PRO.</p><button class="btn btn-green" type="button" onclick="abrirPro(\'relatorio\')" style="max-width:280px">Ver o PRO · '+PRECOS_PRO.mensal+'/mês</button>';
+}
+document.querySelectorAll('#relTipo button').forEach(function(b){ b.addEventListener('click',function(){ _relTipo=b.getAttribute('data-t'); _relOff=0; desenharRelatorio(); }); });
+function relHtmlImpressao(d){
+  var t=d.total,tab='<table>';
+  relLinhas(t).forEach(function(l){ if(l[0]==='@TOT'){ tab+='<tr class="tot"><td>Rendimento líquido estimado</td><td class="n">'+escHtml(moeda(t.saldoReal))+'</td></tr>'; return; } if(l[0].indexOf('__')===0){ tab+='</table><h2>'+escHtml(l[0].slice(2))+'</h2><table>'; return; } tab+='<tr><td>'+escHtml(l[0])+'</td><td class="n">'+escHtml(l[1])+'</td></tr>'; });
+  tab+='</table>';
+  var meses=d.meses.length?'<h2>Mês a mês</h2><table><tr><th>Mês</th><th class="n">Ganhos</th><th class="n">Despesas</th><th class="n">Líquido</th></tr>'+d.meses.map(function(m){ var r=m.r; return '<tr><td>'+m.label+'</td><td class="n">'+moeda(r.ganhos)+'</td><td class="n">'+moeda(r.taxa+r.aluguer+r.energia)+'</td><td class="n">'+moeda(r.saldoReal)+'</td></tr>'; }).join('')+'</table>':'';
+  var agora=new Date();
+  return '<h1>Finance Drive · Relatório para o contabilista</h1><p class="sub">'+escHtml(d.iv.label)+' ('+fmtData(d.iv.de)+' a '+fmtData(d.iv.ate)+')'+(fbUser&&fbUser.email?' · '+escHtml(fbUser.email):'')+' · gerado a '+pad(agora.getDate())+'/'+pad(agora.getMonth()+1)+'/'+agora.getFullYear()+'</p>'+tab+meses+
+    '<p class="sub" style="margin-top:14px">Estimativa feita com os registos e as configurações do utilizador no Finance Drive. Não substitui a declaração de IRS nem os documentos oficiais das plataformas.</p>';
+}
+function relPDF(){
+  if(!isPro()){ abrirPro('relatorio'); return; }
+  var d=relDados(_relTipo,_relOff); if(!d.total.dias){ toast('Sem registos neste período','er'); return; }
+  var p=document.getElementById('relPrint'); p.innerHTML=relHtmlImpressao(d);
+  document.body.classList.add('imprimindo'); trackEvent('relatorio_pdf',{tipo:_relTipo});
+  var fim=function(){ document.body.classList.remove('imprimindo'); window.removeEventListener('afterprint',fim); };
+  window.addEventListener('afterprint',fim);
+  try{ window.print(); }catch(e){ toast('Este aparelho não deixou imprimir. Usa o Excel.','er'); }
+  setTimeout(fim,60000);
+}
+function relExcel(){
+  if(!isPro()){ abrirPro('relatorio'); return; }
+  var d=relDados(_relTipo,_relOff),t=d.total; if(!t.dias){ toast('Sem registos neste período','er'); return; }
+  var num=function(v){ return (Math.round(v*100)/100).toFixed(2).replace('.',','); };
+  var cel=function(v){ var s=String(v==null?'':v); return /[;"\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  var linhas=[['Finance Drive - Relatório para o contabilista'],['Período',d.iv.label],['De',fmtData(d.iv.de)],['Até',fmtData(d.iv.ate)],[]];
+  linhas.push(['RESUMO','Valor (€)']);
+  var R=[['Dias registados',t.dias],['Ganhos Uber',num(t.uber)],['Ganhos '+plat2(),num(t.bolt)],['Transfers / outros',num(t.outros)],['dos quais Trajeto Transfer',num(t.trajeto)],['Ganhos totais',num(t.ganhos)],
+    ['Taxa do operador',num(-t.taxa)],['Aluguer da viatura',num(-t.aluguer)],[isEletrico()?'Energia (frota)':'Combustível',num(-t.energia)],['Saldo operacional',num(t.saldoOper)],
+    ['Segurança Social estimada',num(-(t.imp?t.imp.ss:0))],['IRS estimado',num(-(t.imp?t.imp.irs:0))],['IVA estimado',num(-(t.imp?t.imp.iva:0))],['Energia paga do bolso',num(-t.energiaBolso)],['Alimentação',num(-t.comida)],['Outros gastos',num(-t.outrosGastos)],
+    ['Rendimento líquido estimado',num(t.saldoReal)],['Quilómetros',Math.round(t.kms)],['Horas registadas',num(t.horas)]];
+  R.forEach(function(x){ linhas.push(x); });
+  if(d.meses.length){ linhas.push([]); linhas.push(['MÊS A MÊS','Ganhos','Taxa operador','Aluguer','Energia','Rendimento líquido']); d.meses.forEach(function(m){ var r=m.r; linhas.push([m.label,num(r.ganhos),num(r.taxa),num(r.aluguer),num(r.energia),num(r.saldoReal)]); }); }
+  linhas.push([]); linhas.push(['DIA A DIA','Uber',plat2(),'Transfers/outros','Ganhos','Taxa operador','Aluguer','Energia','Km','Rendimento líquido']);
+  d.chaves.forEach(function(iso){ var r=DB[iso]||{}; linhas.push([fmtData(iso),num(r.uber||0),num(r.bolt||0),num((r.outroG||0)+trajetoAutoValor(r)),num(ganhos(r)),num(taxaOperadorValor(r)),num(alDiaISO(iso)),num(energiaFrota(r)),(r.kms||0),num(saldoReal(r,iso))]); });
+  var csv='﻿'+linhas.map(function(l){ return l.map(cel).join(';'); }).join('\r\n');
+  var nome='financedrive_relatorio_'+d.iv.de+'_a_'+d.iv.ate+'.csv';
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url; a.download=nome; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); },2000);
+  trackEvent('relatorio_excel',{tipo:_relTipo}); toast('Relatório exportado','ok');
+}
+
 // ── Estatísticas (Google Analytics) só com autorização ──
 function atualizarCookieUI(){
   var v=null; try{ v=localStorage.getItem('fd_cookies'); }catch(e){}
@@ -3203,6 +3528,7 @@ atualizarTransferUI();
 trackEvent('app_carregado',{version:APP_VERSION, pais:CFG.pais, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''});
 renderHoje();
 atualizarCookieUI();
+renderPlanoUI();
 iniciarNuvem();
 trajetoIniciar();
 </script>
