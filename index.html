@@ -445,6 +445,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .seg-opt+.seg-opt{border-left:none}
 .seg-opt input{accent-color:var(--navy)}
 .seg-opt:has(input:checked){background:var(--navy);color:#fff}
+.hist-acc-btn.acc-fixo{cursor:default}.hist-acc-btn.acc-fixo .hist-acc-arrow{display:none}
 .chip-opt{background:#fff;border-color:transparent;color:var(--sub);font-weight:600}
 .chip-opt input{accent-color:var(--navy)}
 .chip-opt:has(input:checked){border-color:var(--navy);color:var(--navy);background:#fff}
@@ -853,7 +854,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <div class="stit">Configura&ccedil;&otilde;es</div>
 
       <div class="hist-acc cfg-acc open" id="cfgConta" style="display:none">
-        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgConta')"><span>Conta e sincroniza&ccedil;&atilde;o</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <button class="hist-acc-btn acc-fixo" type="button" tabindex="-1"><span>Conta e sincroniza&ccedil;&atilde;o</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body"><div class="card" id="contaBox"></div></div>
       </div>
 
@@ -867,7 +868,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         <div class="hist-acc-body"><div class="card" id="trajetoBox"></div></div>
       </div>
 
-      <div class="hist-acc cfg-acc open" id="cfgFin">
+      <div class="hist-acc cfg-acc" id="cfgFin">
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgFin')"><span>Financeiro, pa&iacute;s e impostos</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body">
       <div class="stit">Aluguer, energia e operador</div>
@@ -886,9 +887,10 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div class="fld-lbl">Taxa do operador TVDE (%)</div>
           <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iTaxaOperador" placeholder="0" min="0" max="100" step="0.01"></div>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin:6px 0 12px;line-height:1.5">
-          Percentagem cobrada pelo operador sobre Uber + Bolt + Transfer. &Eacute; descontada antes dos impostos.
+        <div class="fld" style="margin-top:10px"><div class="fld-lbl">A taxa &eacute; calculada sobre</div>
+          <div class="seg"><label class="seg-opt"><input type="radio" name="iTaxaModo" id="iTaxaModoBruto" value="bruto" onchange="atualizarNotaTaxaModo()"> Bruto</label><label class="seg-opt"><input type="radio" name="iTaxaModo" id="iTaxaModoLiquido" value="liquido" onchange="atualizarNotaTaxaModo()"> L&iacute;quido</label></div>
         </div>
+        <div style="font-size:11px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="notaTaxaModo"></div>
         <button class="btn btn-cyan" id="btnCfg">Guardar configura&ccedil;&atilde;o</button>
       </div>
       <div class="stit">Pa&iacute;s de atua&ccedil;&atilde;o</div>
@@ -977,6 +979,10 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div class="fld-lbl">Meta semanal</div>
           <div class="iw"><div class="ipfx" id="pfxMetaSem">&euro;</div><input type="number" inputmode="decimal" id="iMetaSem" placeholder="0.00" min="0" step="0.01" oninput="sincMetas('sem')"></div>
         </div>
+        <div class="fld" style="margin-top:12px"><div class="fld-lbl">Os Transfers contam para a meta?</div>
+          <div class="seg"><label class="seg-opt"><input type="radio" name="iMetaTransf" id="iMetaTransfSim" value="sim"> Sim</label><label class="seg-opt"><input type="radio" name="iMetaTransf" id="iMetaTransfNao" value="nao"> N&atilde;o</label></div>
+          <div style="font-size:11px;color:var(--muted);margin:6px 0 4px;line-height:1.5">Sim: a meta conta tudo o que ganhaste, incluindo Transfers. N&atilde;o: a meta conta s&oacute; Uber e Bolt.</div>
+        </div>
         <label class="folga-toggle">
           <span>Vou ter folga esta semana</span>
           <input type="checkbox" id="iTemFolga" onchange="toggleTemFolga()">
@@ -1049,7 +1055,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.15.1 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.16.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1382,7 +1388,7 @@ function renderFolgasCfg(){
     }
     box.innerHTML=html;
   }
-  if(msg)msg.textContent=textoMetaFolga();
+  if(msg)msg.innerHTML=textoMetaFolga();
 }
 function toggleTemFolga(){
   var chk=document.getElementById('iTemFolga'),atuais=folgasDaSemana(hoje());
@@ -1404,7 +1410,7 @@ function sincMetas(origem){
   var dias=diasTrabalhoMeta(hoje());
   if(origem==='dia'&&dia.value){var v=parseFloat(dia.value)||0;if(v>0)sem.value=(v*dias).toFixed(2);}
   if(origem==='sem'&&sem.value){var v2=parseFloat(sem.value)||0;if(v2>0)dia.value=(v2/dias).toFixed(2);}
-  var msg=document.getElementById('folgaMetaMsg');if(msg)msg.textContent=textoMetaFolga();
+  var msg=document.getElementById('folgaMetaMsg');if(msg)msg.innerHTML=textoMetaFolga();
 }
 
 
@@ -1568,8 +1574,27 @@ function ganhos(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(r.outroG||0)
 function taxaOperadorPercentual(){ var v=parseFloat(CFG.taxaOperador); return (isNaN(v)||v<0)?0:Math.min(100,v); }
 function transferOperadorAplicavel(r){ return !r||typeof r.transferOperador==='undefined'?true:!!r.transferOperador; }
 function taxaOperadorBase(r){ if(!r)return 0; return (r.uber||0)+(r.bolt||0)+(transferOperadorAplicavel(r)?(r.outroG||0):0); }
-function taxaOperadorValor(r){ return taxaOperadorBase(r)*(taxaOperadorPercentual()/100); }
-function ganhosAposOperador(r){ return ganhos(r)-taxaOperadorValor(r); }
+// v3.16: a taxa do operador pode ser cobrada sobre o bruto (como antes) ou sobre o líquido.
+// Líquido = (Uber + Bolt + Transfers com operador) − aluguer do dia − energia descontada pela frota.
+// Os impostos NÃO entram: o motorista recebe tudo e separa os impostos ele próprio.
+// Sem mínimo por dia: somado na semana dá exatamente taxa × (bruto − aluguer − energia) da semana, como o operador calcula.
+function taxaOperadorModo(){ return CFG.taxaOperadorModo==='liquido'?'liquido':'bruto'; }
+function isoDoRegisto(r){ for(var k in DB){ if(DB[k]===r)return k; } return hoje(); }
+function taxaOperadorBaseCalculo(r,iso){
+  if(!r)return 0;
+  var b=taxaOperadorBase(r);
+  if(taxaOperadorModo()!=='liquido')return b;
+  var d=iso||isoDoRegisto(r);
+  return b-energiaFrota(r)-alDiaISO(d);
+}
+function taxaOperadorValor(r,iso){ if(!r)return 0; var p=taxaOperadorPercentual(); return p>0?taxaOperadorBaseCalculo(r,iso)*(p/100):0; }
+// Parte da taxa que corresponde ao Transfer (proporcional ao peso do Transfer na base do operador)
+function taxaOperadorTransfer(r,iso){
+  if(!r||!((r.outroG||0)>0)||!transferOperadorAplicavel(r))return 0;
+  var b=taxaOperadorBase(r); if(!(b>0))return 0;
+  return taxaOperadorValor(r,iso)*((r.outroG||0)/b);
+}
+function ganhosAposOperador(r,iso){ return ganhos(r)-taxaOperadorValor(r,iso); }
 function transferImpostosSelecionados(r){ return r&&Array.isArray(r.transferImpostos)?r.transferImpostos:[]; }
 function transferTemImposto(r,tipo){ return transferImpostosSelecionados(r).indexOf(tipo)>=0; }
 function transferTomadorLabel(r){ if(!r)return ''; var v=(r.transferTomador||'').trim(); if(!v)return ''; return v==='Outro'?(r.transferTomadorOutro||'Outro'):v; }
@@ -1586,6 +1611,17 @@ function transferRowLabel(r){ return isTrajetoTransfer(r)?' Trajeto Transfer':' 
 // Saldo frota = saldo real sem o Trajeto Transfer (Uber, Bolt e Transfers normais, após todos os descontos).
 // É este valor que conta para as metas diária e semanal.
 function saldoFrota(r,iso){ return saldoReal(r,iso)-trajetoValor(r); }
+// v3.16: o que conta para a meta. "Sim" = saldo real com tudo. "Não" = o mesmo dia sem nenhum Transfer
+// (recalcula taxa do operador e impostos como se o Transfer não existisse; aluguer e energia ficam).
+function metaComTransfers(){ return CFG.metaTransfers!=='nao'; }
+function saldoSemTransfers(r,iso){
+  if(!r)return 0;
+  var c={}; for(var k in r){ if(k!=='trajetoAuto')c[k]=r[k]; }
+  c.outroG=0; c.transferImpostos=[];
+  return saldoReal(c,iso);
+}
+function saldoParaMeta(r,iso){ return metaComTransfers()?saldoReal(r,iso):saldoSemTransfers(r,iso); }
+function rotuloMeta(){ return metaComTransfers()?'saldo real (com Transfers)':'saldo real sem Transfers'; }
 function htmlBlocoSaldos(frota,traj,real){
   var cF=frota>=0?'var(--green)':'var(--red)',cR=real>=0?'var(--green)':'var(--red)';
   return '<div class="saldos-bloco">'+
@@ -1603,23 +1639,24 @@ function htmlTrajetoRow(v){
 // Alimenta&ccedil;&atilde;o e outros gastos pessoais N&Atilde;O entram
 function saldo(r,iso){
   if(!r)return 0;
-  return ganhosAposOperador(r)-energiaFrota(r)-alDiaISO(iso);
+  return ganhosAposOperador(r,iso)-energiaFrota(r)-alDiaISO(iso);
 }
 // v3.9: base do IVA passou a ser o valor bruto (ganhos após taxa do operador,
 // sem descontar energia/aluguer), pois o IVA incide sobre o valor faturado do
 // serviço, não sobre o lucro operacional. SS e IRS continuam sobre o saldo líquido.
 function baseFiscalSemTransfer(r,iso,tipo){
   if(!r)return 0;
-  var base=(tipo==='IVA')?ganhosAposOperador(r):saldo(r,iso);
-  return Math.max(0,base-(r.outroG||0)-trajetoAutoValor(r));
+  var base=(tipo==='IVA')?ganhosAposOperador(r,iso):saldo(r,iso);
+  // v3.16: a parte da taxa que é do Transfer fica com o Transfer (antes saía também daqui)
+  return Math.max(0,base-(r.outroG||0)-trajetoAutoValor(r)+taxaOperadorTransfer(r,iso));
 }
-function transferBaseFiscalPorImposto(r,tipo){
+function transferBaseFiscalPorImposto(r,tipo,iso){
   if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
-  var transferLiquido=(r.outroG||0)-(transferOperadorAplicavel(r)?(r.outroG||0)*(taxaOperadorPercentual()/100):0);
+  var transferLiquido=(r.outroG||0)-taxaOperadorTransfer(r,iso);
   return Math.max(0,transferLiquido);
 }
-function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso,tipo)+transferBaseFiscalPorImposto(r,tipo); }
-function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso,tipo):0)+transferBaseFiscalPorImposto(r,tipo); }
+function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso,tipo)+transferBaseFiscalPorImposto(r,tipo,iso); }
+function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso,tipo):0)+transferBaseFiscalPorImposto(r,tipo,iso); }
 function baseFiscal(r,iso){ return baseFiscalAplicada(r,iso,'IRS'); }
 function saldoReal(r,iso){
   if(!r)return 0;
@@ -1819,7 +1856,7 @@ function refreshAtual(){
 
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
 var pages=['hoje','semana','hist','cfg'];
-function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg')renderCfg(); }
+function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg'){ fecharSeccoesCfg(); renderCfg(); } }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
@@ -1867,7 +1904,7 @@ function renderKPIs(){
   var horas=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0;
   var imp=calcImpostos(r,h),slMeta=saldoReal(r,h);
   var gph=horas&&horas>0?slMeta/horas:0;
-  var traj=trajetoValor(r),slFrota=slMeta-traj;
+  var traj=trajetoValor(r),slFrota=slMeta-traj,slContaMeta=DB[h]?saldoParaMeta(r,h):0;
   var subs=[];
   if(!DB[h])subs.push('Ainda sem registo hoje');
   else if(imp)subs.push('Após '+impostosSelecionadosLabel()+' e gastos do bolso');
@@ -1875,14 +1912,14 @@ function renderKPIs(){
   // v3.11: saldo real em destaque, com a meta diária dentro do mesmo cartão.
   // Usa exatamente os mesmos valores de antes (slMeta, slFrota, traj e metaDiariaEfetiva()).
   var meta=metaDiariaEfetiva();
-  var pct=meta>0?Math.min(100,Math.max(0,Math.round((slFrota/meta)*100))):0;
+  var pct=meta>0?Math.min(100,Math.max(0,Math.round((slContaMeta/meta)*100))):0;
   var valTxt=moeda(slMeta),corte=valTxt.lastIndexOf(',');
   var segs='';
   if(meta>0){ for(var i=0;i<10;i++)segs+='<span class="hero-seg'+(i<Math.floor(pct/10)?' on':'')+'"></span>'; }
   var hero='<div class="hero '+(slMeta>=0?'pos':'neg')+'">'+
     '<div class="hero-top"><span class="hero-lbl">Saldo real de hoje</span>'+(traj>0?'<span class="hero-pill">+ Trajeto '+moeda(traj)+'</span>':'')+'</div>'+
     '<div class="hero-val">'+valTxt.slice(0,corte)+'<span class="hero-cent">'+valTxt.slice(corte)+'</span></div>'+
-    (meta>0?'<div class="hero-segs">'+segs+'</div><div class="hero-meta"><span>Meta diária '+moeda(meta)+'</span><span class="hero-meta-pct">'+pct+'%'+(slFrota>=meta?' · meta batida':' · faltam '+moeda(meta-slFrota))+'</span></div>':'')+
+    (meta>0?'<div class="hero-segs">'+segs+'</div><div class="hero-meta"><span>Meta diária '+moeda(meta)+'</span><span class="hero-meta-pct">'+pct+'%'+(slContaMeta>=meta?' · meta batida':' · faltam '+moeda(meta-slContaMeta))+'</span></div>':'')+
     '<div class="hero-sub">'+subs.join('<br>')+'</div>'+
     (DB[h]?'<details class="hero-det"><summary>Frota '+moeda(slFrota)+(traj>0?' + Trajeto '+moeda(traj):'')+'</summary>'+htmlBlocoSaldos(slFrota,traj,slMeta)+'</details>':'')+
   '</div>';
@@ -1893,7 +1930,7 @@ function renderKPIs(){
     kpi('clock','Turno',horas>0?fmtHoras(horas):'-','')+
     kpi('cal','Ganhos semana',moeda(tg),'');
   // Notas da meta diária (taxa do operador e energia do bolso), como antes.
-  var notaMeta=(taxaOperadorValor(r)>0?'Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'% descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':'');
+  var notaMeta=(taxaOperadorValor(r,h)>0?'Taxa operador de '+taxaOperadorPercentual().toFixed(2)+'%'+(taxaOperadorModo()==='liquido'?' (sobre o líquido)':'')+' descontada antes dos impostos. ':'')+(energiaDinheiro(r)>0?'Energia do bolso descontada uma única vez antes de contar para a meta: '+moeda(energiaDinheiro(r))+'.':'');
   document.getElementById('metaDiariaBox').innerHTML=(meta>0&&notaMeta)?'<div class="hero-nota">'+notaMeta+'</div>':'';
 }
 // v3.11: ícones de linha (SVG) em vez de emojis
@@ -1922,10 +1959,10 @@ function renderResumoDia(){
       var gph=horas&&horas>0?lucroRef/horas:0;
       var kms=r.kms||0;
       var eK=kwhEfetivo(r);
-      var taxaOp=taxaOperadorValor(r);
+      var taxaOp=taxaOperadorValor(r,h);
       var traj=trajetoValor(r);
       var html=rl(' Total ganhos',moeda(g),'color:var(--cyan)')+
-        (taxaOp>0?rl(' Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(taxaOp),'color:var(--red)',true):'')+
+        (taxaOp>0?rl(' Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%'+(taxaOperadorModo()==='liquido'?' s/ líquido':'')+')','-'+moeda(taxaOp),'color:var(--red)',true):'')+
         rl(' Uber',moeda(r.uber||0),'',true)+
         rl(''+plat2(),moeda(r.bolt||0),'color:var(--bolt)',true)+
         rl(transferRowLabel(r),moeda(r.outroG||0),isTrajetoTransfer(r)?'color:var(--green)':'color:var(--orange)',true)+
@@ -2151,7 +2188,7 @@ function renderSemana(){
       var totalKms=reais.reduce(function(a,d){ return a+(DB[d].kms||0); },0);
       var totalHoras=reais.reduce(function(a,d){ var r=DB[d]||{}; var h2=r.horaInicio&&r.horaFim?calcHoras(r.horaInicio,r.horaFim,r.almoco||false):0; return a+(h2||0); },0);
       var tg=tu+tb+to;
-      var taxaOperadorSemanal=reais.reduce(function(a,d){ return a+taxaOperadorValor(DB[d]||{}); },0);
+      var taxaOperadorSemanal=reais.reduce(function(a,d){ return a+taxaOperadorValor(DB[d]||{},d); },0);
       var te=reais.reduce(function(a,d){ return a+energiaGastos(DB[d]||{}); },0);
       // v3.7: lucro/hora = saldo real acumulado \u00f7 horas
       var slRealSem=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
@@ -2198,13 +2235,13 @@ function renderSemana(){
 
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalReal=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
-      var slSemanalMeta=slSemanalReal-trajSem;
+      var slSemanalMeta=reais.reduce(function(a,d){ return a+saldoParaMeta(DB[d]||{},d); },0);
       var metaSemanalBase=CFG.metaSem;
       var detalhesMetaSemanal='';
       if(metaSemanalBase>0)detalhesMetaSemanal+='Meta líquida configurada: <strong>'+moeda(metaSemanalBase)+'</strong>';
       if(teDinheiro>0)detalhesMetaSemanal+=(detalhesMetaSemanal?'<br>':'')+'Energia recuperada antes de contar lucro: <strong style="color:var(--amber)">'+moeda(teDinheiro)+'</strong>';
       // O saldo real já desconta a energia do bolso uma única vez; a meta permanece a configurada.
-      renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?' A energia do bolso foi recuperada antes de contar o lucro da meta.':' Meta conta o saldo frota: após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal,trajSem);
+      renderBarraMeta('metaSemanalBox','Meta semanal',slSemanalMeta,metaSemanalBase,teDinheiro>0?' A energia do bolso foi recuperada antes de contar o lucro da meta.':' Meta conta o '+rotuloMeta()+': após impostos quando ativos e gastos pagos do bolso.',detalhesMetaSemanal,trajSem);
 
       var notaSemana='<div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5">Saldo operacional: energia + aluguer descontados. Alimenta\u00e7\u00e3o e gastos pessoais n\u00e3o entram.</div>';
 
@@ -2218,7 +2255,7 @@ function renderSemana(){
         (!reais.length?'<div class="empty"><div class="empty-ic"></div>Sem dados esta semana</div>':
         rl(' Dias registados',reais.length+'/'+diasTrabalhoMeta())+
         rl(' Ganhos totais',moeda(tg),'color:var(--cyan)')+
-        (taxaOperadorSemanal>0?rl(' Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%)','-'+moeda(taxaOperadorSemanal),'color:var(--red)',true):'')+
+        (taxaOperadorSemanal>0?rl(' Taxa operador ('+taxaOperadorPercentual().toFixed(2)+'%'+(taxaOperadorModo()==='liquido'?' s/ líquido':'')+')','-'+moeda(taxaOperadorSemanal),'color:var(--red)',true):'')+
         rl(' Uber',moeda(tu),'',true)+rl(''+plat2(),moeda(tb),'color:var(--bolt)',true)+rl(' Transfer',moeda(to),'color:var(--orange)',true)+
         (trajSem>0?rl('\u21b3 Trajeto Transfer',moeda(trajSem),'color:var(--green)',true):'')+
         '<div class="div"></div>'+
@@ -2334,7 +2371,7 @@ function renderAnaliseConsumo(chaves){
 
 function toggleHistAcc(id){
       var el=document.getElementById(id);
-      if(!el)return;
+      if(!el||id==='cfgConta')return;
       el.classList.toggle('open');
     }
 function histAcc(id,titulo,conteudo,aberto){
@@ -2359,7 +2396,7 @@ function renderHist(){
       var tb=chaves.reduce(function(a,d){ return a+(r0(d).bolt||0); },0);
       var to=chaves.reduce(function(a,d){ return a+(r0(d).outroG||0)+trajetoAutoValor(r0(d)); },0);
       var trajHist=somaTrajeto(chaves);
-      var taxaOperadorPeriodo=chaves.reduce(function(a,d){ return a+taxaOperadorValor(r0(d)); },0);
+      var taxaOperadorPeriodo=chaves.reduce(function(a,d){ return a+taxaOperadorValor(r0(d),d); },0);
       var te=chaves.reduce(function(a,d){ return a+energiaFrota(r0(d)); },0);
       var teDinheiro=chaves.reduce(function(a,d){ return a+energiaDinheiro(r0(d)); },0);
       var tc=chaves.reduce(function(a,d){ return a+(r0(d).comida||0); },0);
@@ -2490,10 +2527,21 @@ function renderHist(){
     }
 
 // ── Config ────────────────────────────────────────────────────────────
+function fecharSeccoesCfg(){
+  document.querySelectorAll('#pg-cfg .cfg-acc').forEach(function(el){ el.classList.toggle('open',el.id==='cfgConta'); });
+}
+function atualizarNotaTaxaModo(){
+  var n=document.getElementById('notaTaxaModo'); if(!n)return;
+  var liq=document.getElementById('iTaxaModoLiquido'); liq=liq&&liq.checked;
+  n.innerHTML=liq?'Sobre o <b>l&iacute;quido</b>: (Uber + '+escHtml(plat2())+' + Transfer) &minus; aluguer &minus; energia descontada pela frota. Os impostos n&atilde;o entram. A taxa &eacute; descontada antes dos impostos.'
+                 :'Sobre o <b>bruto</b>: Uber + '+escHtml(plat2())+' + Transfer, antes de qualquer desconto. A taxa &eacute; descontada antes dos impostos.';
+}
 function renderCfg(){
   document.getElementById('iAluguer').value=CFG.aluguel;
   document.getElementById('iPrecoKwh').value=CFG.precoKwh;
   var taxaOp=document.getElementById('iTaxaOperador'); if(taxaOp)taxaOp.value=taxaOperadorPercentual()||'';
+  var tmB=document.getElementById('iTaxaModoBruto'),tmL=document.getElementById('iTaxaModoLiquido'); if(tmB&&tmL){ tmB.checked=taxaOperadorModo()==='bruto'; tmL.checked=taxaOperadorModo()==='liquido'; } atualizarNotaTaxaModo();
+  var mtS=document.getElementById('iMetaTransfSim'),mtN=document.getElementById('iMetaTransfNao'); if(mtS&&mtN){ mtS.checked=metaComTransfers(); mtN.checked=!metaComTransfers(); }
   document.getElementById('iMetaDia').value=metaDiariaEfetiva()||'';
   document.getElementById('iMetaSem').value=CFG.metaSem||'';
   document.getElementById('iVeiculoModelo').value=CFG.veiculo.modelo||'';
@@ -2517,10 +2565,12 @@ function salvarCfg(){
   if(op>100){ toast('Taxa do operador deve estar entre 0% e 100%.','er'); return; }
   if(!v||v<=0){ toast('Aluguer inv\u00e1lido!','er'); return; }
   CFG.aluguel=v; CFG.precoKwh=k; CFG.taxaOperador=op;
+  var tmL=document.getElementById('iTaxaModoLiquido'); CFG.taxaOperadorModo=(tmL&&tmL.checked)?'liquido':'bruto';
   salvarLocal(); trackEvent('salvar_config',{pais:CFG.pais, moeda:CFG.moeda, veiculo_tipo:CFG.veiculo&&CFG.veiculo.tipo?CFG.veiculo.tipo:''}); renderHeader(); toast('Configura\u00e7\u00e3o guardada!','ok');
 }
 function salvarMetas(){
   CFG.metaSem=pf(document.getElementById('iMetaSem').value);
+  var mtS=document.getElementById('iMetaTransfSim'); CFG.metaTransfers=(mtS&&mtS.checked)?'sim':'nao';
   CFG.metaDia=metaDiariaEfetiva();
   salvarLocal();
   trackEvent('salvar_metas',{tem_meta_dia:CFG.metaDia>0, tem_meta_semana:CFG.metaSem>0, dias_folga:(CFG.folgasSemana||[]).length, dias_trabalho:diasTrabalhoMeta()});
@@ -2633,9 +2683,9 @@ function verificarConquistas(iso){
   if(metaDia>0){
     var idDia='dia_'+iso;
     if(!vistos[idDia]){
-      var slDia=saldoFrota(r,iso);
+      var slDia=saldoParaMeta(r,iso);
       if(slDia>=metaDia){
-        enfileirarConquista('\ud83c\udf89','Meta di\u00e1ria batida!','Fizeste '+moeda(slDia)+' de saldo frota hoje, acima da meta de '+moeda(metaDia)+'. Bom trabalho!','green');
+        enfileirarConquista('\ud83c\udf89','Meta di\u00e1ria batida!','Fizeste '+moeda(slDia)+' de saldo hoje, acima da meta de '+moeda(metaDia)+'. Bom trabalho!','green');
       } else {
         enfileirarConquista('\ud83d\udcaa','Quase l\u00e1!','Ficaste a '+moeda(metaDia-slDia)+' da meta di\u00e1ria de hoje. Amanh\u00e3 \u00e9 um novo dia para recuperar!','cyan');
       }
@@ -2645,7 +2695,7 @@ function verificarConquistas(iso){
   if(CFG.metaSem&&CFG.metaSem>0){
     var seg=segunda(iso),dias=diasSemana(seg),idSem='sem_'+seg;
     if(!vistos[idSem]){
-      var totalSem=dias.reduce(function(a,d){ return a+(DB[d]?saldoFrota(DB[d],d):0); },0);
+      var totalSem=dias.reduce(function(a,d){ return a+(DB[d]?saldoParaMeta(DB[d],d):0); },0);
       var ehDomingo=(new Date(iso+'T12:00:00')).getDay()===0;
       if(totalSem>=CFG.metaSem){
         enfileirarConquista('\ud83c\udfc6','Meta semanal batida!','J\u00e1 somaste '+moeda(totalSem)+' esta semana, superando a meta de '+moeda(CFG.metaSem)+'!','green');
@@ -3382,7 +3432,7 @@ function resumoPeriodo(chaves){
   var o={dias:chaves.length};
   o.uber=S(function(r){ return r.uber||0; }); o.bolt=S(function(r){ return r.bolt||0; });
   o.outros=S(function(r){ return (r.outroG||0)+trajetoAutoValor(r); }); o.trajeto=somaTrajeto(chaves);
-  o.ganhos=S(function(r){ return ganhos(r); }); o.taxa=S(function(r){ return taxaOperadorValor(r); });
+  o.ganhos=S(function(r){ return ganhos(r); }); o.taxa=S(function(r,d){ return taxaOperadorValor(r,d); });
   o.energia=S(function(r){ return energiaFrota(r); }); o.energiaBolso=S(function(r){ return energiaDinheiro(r); });
   o.comida=S(function(r){ return r.comida||0; }); o.outrosGastos=S(function(r){ return r.outroG2||0; });
   o.aluguer=chaves.reduce(function(a,d){ return a+alDiaISO(d); },0);
@@ -3592,7 +3642,7 @@ function relGerarPDF(d){
   }
   if(_relTipo!=='ano'&&d.chaves.length){
     var cd=[['Data',54,'l'],['Uber',52],[plat2(),52],['Transf.',52],['Ganhos',56],['Taxa op.',48],['Aluguer',52],['Energia',50],['Saldo op.',60],['Km',39]];
-    var rd=d.chaves.map(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r),al=alDiaISO(iso),en=energiaFrota(r);
+    var rd=d.chaves.map(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r,iso),al=alDiaISO(iso),en=energiaFrota(r);
       return [fmtData(iso),relNumPT(r.uber||0),relNumPT(r.bolt||0),relNumPT((r.outroG||0)+trajetoAutoValor(r)),relNumPT(g),relNumPT(tx),relNumPT(al),relNumPT(en),relNumPT(g-tx-al-en),String(Math.round(r.kms||0))]; });
     tabela('Dia a dia (valores em €)',cd,rd,['Total',relNumPT(t.uber),relNumPT(t.bolt),relNumPT(t.outros),relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),String(Math.round(t.kms))]);
   }
@@ -3715,7 +3765,7 @@ function relGerarXLSX(d){
   var cd=['Data','Dia','Uber',plat2(),'Transfers / outros','Ganhos','Taxa operador','Aluguer','Energia','Saldo operacional','Km','Horas'];
   var D=[[T('Dia a dia — '+d.iv.label,1)],[],{alt:22,c:cd.map(function(c){ return T(c,3); })}],j0=4;
   var DIAS=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  d.chaves.forEach(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r),al=alDiaISO(iso),en=energiaFrota(r),h=r.horaInicio&&r.horaFim?(calcHoras(r.horaInicio,r.horaFim,r.almoco||false)||0):0;
+  d.chaves.forEach(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r,iso),al=alDiaISO(iso),en=energiaFrota(r),h=r.horaInicio&&r.horaFim?(calcHoras(r.horaInicio,r.horaFim,r.almoco||false)||0):0;
     D.push([{v:xData(iso),s:10},T(DIAS[diaSemanaISO(iso)]),E(r.uber||0),E(r.bolt||0),E((r.outroG||0)+trajetoAutoValor(r)),E(g),E(tx),E(al),E(en),E(g-tx-al-en),{v:Math.round(r.kms||0),s:9},h>0?{v:h/24,s:13}:T('')]); });
   var j1=D.length,sd=function(c,v,s){ return {f:'SUM('+c+j0+':'+c+j1+')',v:Math.round(v*100)/100,s:s}; };
   D.push([T('Total',6),T('',6),sd('C',t.uber,7),sd('D',t.bolt,7),sd('E',t.outros,7),sd('F',t.ganhos,7),sd('G',t.taxa,7),sd('H',t.aluguer,7),sd('I',t.energia,7),sd('J',t.saldoOper,7),{f:'SUM(K'+j0+':K'+j1+')',v:Math.round(t.kms),s:14},{f:'SUM(L'+j0+':L'+j1+')',v:t.horas/24,s:15}]);
