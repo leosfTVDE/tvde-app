@@ -1049,7 +1049,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.15.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.15.1 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -3259,7 +3259,9 @@ function carregarPlano(){
   var uid=fbUser.uid,em=emailAtual(); if(!em)return Promise.resolve(null);
   return fbDB.collection('planos').doc(em).get().then(function(snap){
     if(!fbUser||fbUser.uid!==uid)return null;
+    var antes=planoAtivo(_plano)||isAdmin();
     _plano=snap.exists?(snap.data()||null):null;
+    if(!antes&&planoAtivo(_plano)&&typeof proAcabouDeAtivar==='function')setTimeout(proAcabouDeAtivar,50);
     try{ localStorage.setItem(PLANO_CACHE_KEY,JSON.stringify({uid:uid,dados:_plano,ts:Date.now()})); }catch(e){}
     renderPlanoUI(); return _plano;
   }).catch(function(e){ console.warn('plano:',e&&e.code); renderPlanoUI(); return null; });
@@ -3304,7 +3306,7 @@ function abrirPro(origem){
     } else {
       html+='<div class="pro-preco"><button type="button" class="pro-op" onclick="comprarPro(\'mensal\')"><small>Mensal</small><b>'+PRECOS_PRO.mensal+'</b><small>por mês</small></button>'+
         '<button type="button" class="pro-op dest" onclick="comprarPro(\'anual\')"><small>Anual · poupa 37%</small><b>'+PRECOS_PRO.anual+'</b><small>por ano</small></button></div>'+
-        '<p class="rel-nota">Pagamento seguro pela Stripe (cartão, Apple Pay e outros). Usa o email <b>'+escHtml(emailAtual())+'</b>. Depois do pagamento, o PRO é ativado na tua conta em até 24 horas. Cancelas quando quiseres. Dúvidas: '+SUPORTE_EMAIL+'</p>';
+        '<p class="rel-nota">Pagamento seguro pela Stripe (cartão, Apple Pay e outros). Usa o email <b>'+escHtml(emailAtual())+'</b>. Depois do pagamento, o PRO fica ativo na tua conta logo a seguir. Cancelas quando quiseres. Dúvidas: '+SUPORTE_EMAIL+'</p>';
     }
   }
   c.innerHTML=html;
@@ -3315,7 +3317,7 @@ function comprarPro(tipo){
   if(!fbUser||!STRIPE_LINKS[tipo])return;
   var url=STRIPE_LINKS[tipo]+'?prefilled_email='+encodeURIComponent(emailAtual())+'&client_reference_id='+encodeURIComponent(fbUser.uid);
   trackEvent('comprar_pro',{plano:tipo});
-  window.open(url,'_blank');
+  _ultChkPlano=0; window.open(url,'_blank');
 }
 // ---- Gerir acessos (só administrador) ----
 function renderAcessos(){
@@ -3399,7 +3401,7 @@ function relDados(tipo,off){
   var d={iv:iv,chaves:chaves,total:resumoPeriodo(chaves),meses:[]};
   if(tipo!=='mes'){
     var c=new Date(iv.ini.getFullYear(),iv.ini.getMonth(),1);
-    while(c<=iv.fim){ var pre=c.getFullYear()+'-'+pad(c.getMonth()+1)+'-'; var ch=chaves.filter(function(k){ return k.indexOf(pre)===0; });
+    while(c<=iv.fim&&c<=new Date()){ var pre=c.getFullYear()+'-'+pad(c.getMonth()+1)+'-'; var ch=chaves.filter(function(k){ return k.indexOf(pre)===0; });
       d.meses.push({label:MESES_S[c.getMonth()]+' '+c.getFullYear(),r:resumoPeriodo(ch)}); c=new Date(c.getFullYear(),c.getMonth()+1,1); }
   }
   return d;
@@ -3469,38 +3471,287 @@ function relHtmlImpressao(d){
   return '<h1>Finance Drive · Relatório para o contabilista</h1><p class="sub">'+escHtml(d.iv.label)+' ('+fmtData(d.iv.de)+' a '+fmtData(d.iv.ate)+')'+(fbUser&&fbUser.email?' · '+escHtml(fbUser.email):'')+' · gerado a '+pad(agora.getDate())+'/'+pad(agora.getMonth()+1)+'/'+agora.getFullYear()+'</p>'+tab+meses+
     '<p class="sub" style="margin-top:14px">Estimativa feita com os registos e as configurações do utilizador no Finance Drive. Não substitui a declaração de IRS nem os documentos oficiais das plataformas.</p>';
 }
+// ---------- Ficheiros do relatório (PDF e Excel feitos no próprio telemóvel, sem internet) ----------
+function relNumPT(v){ var n=Math.round(Math.abs(v)*100)/100,p=n.toFixed(2).split('.'); return (v<0&&n>0?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ')+','+p[1]; }
+function relEur(v){ return (v<0?'-':'')+relNumPT(Math.abs(v))+' €'; }
+function relKm(v){ return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' km'; }
+function relDespesas(r){ return r.taxa+r.aluguer+r.energia; }
+function relImpTot(r){ return r.imp?(r.imp.ss+r.imp.irs+r.imp.iva):0; }
+function relNomeFich(d,ext){ return 'FinanceDrive_Relatorio_'+d.iv.label.replace(/\.º/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/_+$/,'')+'.'+ext; }
+function relGeradoEm(){ var a=new Date(); return pad(a.getDate())+'/'+pad(a.getMonth()+1)+'/'+a.getFullYear(); }
+// Entrega do ficheiro: no telemóvel abre a folha de partilha (Guardar em Ficheiros, WhatsApp, Mail…); senão descarrega.
+function relEntregar(bytes,nome,tipo){
+  var blob=new Blob([bytes],{type:tipo});
+  var toque=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  try{
+    var f=new File([blob],nome,{type:tipo});
+    if(toque&&navigator.canShare&&navigator.canShare({files:[f]})){
+      navigator.share({files:[f],title:nome}).catch(function(e){ if(!e||e.name!=='AbortError')relDescarregar(blob,nome); });
+      return;
+    }
+  }catch(e){}
+  relDescarregar(blob,nome);
+}
+function relDescarregar(blob,nome){
+  var url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url; a.download=nome; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); },30000);
+}
+
+// ===== PDF =====
+var _pdfCtx=null;
+function pdfLarg(t,sz,b){ if(!_pdfCtx)_pdfCtx=document.createElement('canvas').getContext('2d'); _pdfCtx.font=(b?'bold ':'')+'100px Helvetica, Arial, "Liberation Sans", sans-serif'; return _pdfCtx.measureText(t).width*sz/100; }
+var PDF_WIN={'€':128,'‚':130,'„':132,'…':133,'†':134,'‡':135,'‰':137,'‹':139,'‘':145,'’':146,'“':147,'”':148,'•':149,'–':150,'—':151,'™':153,'›':155};
+function pdfTxt(t){ var o=''; t=String(t).replace(/[\u202F\u2009\u2007]/g,' '); for(var i=0;i<t.length;i++){ var ch=t[i],c=t.charCodeAt(i); if(PDF_WIN[ch])c=PDF_WIN[ch]; else if(c>255)c=63; else if(c>=128&&c<160)c=63;
+  var x=String.fromCharCode(c); if(x==='\\'||x==='('||x===')')x='\\'+x; o+=x; } return o; }
+function pdfCor(h){ h=h.replace('#',''); return [parseInt(h.substr(0,2),16)/255,parseInt(h.substr(2,2),16)/255,parseInt(h.substr(4,2),16)/255].map(function(v){ return v.toFixed(3); }).join(' '); }
+function PdfDoc(){ this.W=595.28; this.H=841.89; this.pags=[]; this.ops=null; }
+PdfDoc.prototype.pagina=function(){ this.ops=[]; this.pags.push(this.ops); };
+PdfDoc.prototype.rect=function(x,y,w,h,cor,raio){ var Y=this.H-y-h,o=this.ops; o.push(pdfCor(cor)+' rg');
+  if(!raio){ o.push(x.toFixed(2)+' '+Y.toFixed(2)+' '+w.toFixed(2)+' '+h.toFixed(2)+' re f'); return; }
+  var r=raio,k=0.5523*r,f=function(n){ return n.toFixed(2); };
+  o.push(f(x+r)+' '+f(Y)+' m '+f(x+w-r)+' '+f(Y)+' l '+f(x+w-r+k)+' '+f(Y)+' '+f(x+w)+' '+f(Y+r-k)+' '+f(x+w)+' '+f(Y+r)+' c '+
+    f(x+w)+' '+f(Y+h-r)+' l '+f(x+w)+' '+f(Y+h-r+k)+' '+f(x+w-r+k)+' '+f(Y+h)+' '+f(x+w-r)+' '+f(Y+h)+' c '+
+    f(x+r)+' '+f(Y+h)+' l '+f(x+r-k)+' '+f(Y+h)+' '+f(x)+' '+f(Y+h-r+k)+' '+f(x)+' '+f(Y+h-r)+' c '+
+    f(x)+' '+f(Y+r)+' l '+f(x)+' '+f(Y+r-k)+' '+f(x+r-k)+' '+f(Y)+' '+f(x+r)+' '+f(Y)+' c f'); };
+PdfDoc.prototype.linha=function(x1,y1,x2,y2,cor,esp){ this.ops.push(pdfCor(cor)+' RG '+(esp||0.6)+' w '+x1.toFixed(2)+' '+(this.H-y1).toFixed(2)+' m '+x2.toFixed(2)+' '+(this.H-y2).toFixed(2)+' l S'); };
+PdfDoc.prototype.texto=function(t,x,y,sz,o){ o=o||{}; t=String(t); var b=!!o.b,w=pdfLarg(t,sz,b);
+  if(o.max&&w>o.max){ while(t.length>1&&pdfLarg(t+'…',sz,b)>o.max)t=t.slice(0,-1); t+='…'; w=pdfLarg(t,sz,b); }
+  if(o.al==='r')x-=w; else if(o.al==='c')x-=w/2;
+  this.ops.push('BT '+pdfCor(o.cor||'#0B1F3A')+' rg /'+(b?'F2':'F1')+' '+sz+' Tf '+x.toFixed(2)+' '+(this.H-y).toFixed(2)+' Td ('+pdfTxt(t)+') Tj ET'); };
+PdfDoc.prototype.bytes=function(titulo){
+  var objs=[],add=function(s){ objs.push(s); return objs.length; };
+  add('<< /Type /Catalog /Pages 2 0 R >>'); add('PAGES');
+  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  var info=add('<< /Title ('+pdfTxt(titulo)+') /Producer (Finance Drive) >>'),kids=[],self=this;
+  this.pags.forEach(function(ops){ var c=ops.join('\n'); var ci=add('<< /Length '+c.length+' >>\nstream\n'+c+'\nendstream');
+    kids.push(add('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+self.W+' '+self.H+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+ci+' 0 R >>')+' 0 R'); });
+  objs[1]='<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+kids.length+' >>';
+  var out='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n',offs=[];
+  objs.forEach(function(o,i){ offs.push(out.length); out+=(i+1)+' 0 obj\n'+o+'\nendobj\n'; });
+  var xref=out.length; out+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n';
+  offs.forEach(function(n){ out+=('0000000000'+n).slice(-10)+' 00000 n \n'; });
+  out+='trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R /Info '+info+' 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+  var u=new Uint8Array(out.length); for(var i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255; return u; };
+
+function relGerarPDF(d){
+  var t=d.total,P=new PdfDoc(),M=40,CW=515,y=0,NAVY='#0B1F3A',MUT='#6B7785',LINE='#E3E7EA',ZEB='#F5F7F9',GREEN='#2E8B57',RED='#C0392B',GOLD='#C9971C';
+  var conta=fbUser&&fbUser.email?fbUser.email:'';
+  function novaPag(){ P.pagina(); P.rect(0,0,P.W,34,NAVY); P.texto('Finance Drive',M,21.5,10,{b:1,cor:'#FFFFFF'}); P.texto('Relatório para o contabilista · '+d.iv.label,P.W-M,21.5,8.5,{al:'r',cor:'#C8D1DC'}); y=58; }
+  function espaco(h,cab){ if(y+h>P.H-58){ novaPag(); if(cab)cab(); } }
+  function titulo(tx){ espaco(40); y+=8; P.texto(tx.toUpperCase(),M,y+8,8.5,{b:1,cor:'#4A5A8A'}); P.linha(M,y+13,M+CW,y+13,LINE,0.8); y+=22; }
+  // Capa
+  P.pagina(); P.rect(0,0,P.W,104,NAVY);
+  P.texto('Finance Drive',M,46,24,{b:1,cor:'#FFFFFF'}); P.texto('Relatório para o contabilista',M,67,11.5,{cor:'#E8C977'});
+  P.texto(d.iv.label,P.W-M,46,15,{b:1,cor:'#FFFFFF',al:'r'}); P.texto(fmtData(d.iv.de)+' a '+fmtData(d.iv.ate),P.W-M,64,9.5,{cor:'#C8D1DC',al:'r'});
+  P.texto('Gerado a '+relGeradoEm(),P.W-M,80,8,{cor:'#93A1B2',al:'r'});
+  y=128;
+  if(conta)P.texto('Conta: '+conta,M,y,9,{cor:MUT});
+  P.texto('Dias registados: '+t.dias+'   ·   Km: '+relKm(t.kms)+(t.horas>0?'   ·   Horas: '+fmtHoras(t.horas):''),P.W-M,y,9,{cor:MUT,al:'r'});
+  y+=16;
+  // Cartões
+  var desp=relDespesas(t),imp=relImpTot(t);
+  var cards=[['Ganhos totais',relEur(t.ganhos),NAVY,'#F1F3F4'],['Despesas da atividade',relEur(-desp),NAVY,'#F1F3F4'],
+    imp>0?['Impostos estimados',relEur(-imp),NAVY,'#F1F3F4']:['Saldo operacional',relEur(t.saldoOper),NAVY,'#F1F3F4'],
+    ['Rendimento líquido',relEur(t.saldoReal),t.saldoReal>=0?GREEN:RED,'#E4F2EA']];
+  var cw=(CW-3*8)/4; cards.forEach(function(c,i){ var x=M+i*(cw+8); P.rect(x,y,cw,60,c[3],8); P.texto(c[0],x+10,y+19,8,{cor:MUT,max:cw-16}); P.texto(c[1],x+10,y+43,13.5,{b:1,cor:c[2],max:cw-16}); });
+  y+=72;
+  var mini=[['Ganho médio por dia',relEur(t.dias?t.ganhos/t.dias:0)],['Ganho por km',t.kms>0?relEur(t.ganhos/t.kms):'—'],['Líquido por hora',t.horas>0?relEur(t.saldoReal/t.horas):'—']];
+  var mw=CW/3; mini.forEach(function(m,i){ var x=M+i*mw; P.texto(m[0],x+(i?10:0),y+10,8,{cor:MUT}); P.texto(m[1],x+(i?10:0),y+24,10.5,{b:1}); if(i)P.linha(x,y,x,y+28,LINE,0.8); });
+  y+=40;
+  // Barra das origens dos ganhos
+  var orig=[['Uber',t.uber,NAVY],[plat2(),t.bolt,GREEN],['Transfers / outros',t.outros,GOLD]].filter(function(o){ return o[1]>0; });
+  if(t.ganhos>0&&orig.length){ titulo('De onde vieram os ganhos'); var x=M;
+    orig.forEach(function(o,i){ var w=CW*o[1]/t.ganhos; P.rect(x,y,Math.max(w-(i<orig.length-1?2:0),0.5),12,o[2],i===0||i===orig.length-1?3:0); x+=w; });
+    y+=28; var lx=M; orig.forEach(function(o){ P.rect(lx,y-8,8,8,o[2],2); var tx=o[0]+'  '+relEur(o[1])+'  ('+Math.round(o[1]/t.ganhos*100)+'%)'; P.texto(tx,lx+13,y,8.5,{}); lx+=pdfLarg(tx,8.5)+30; });
+    y+=10; }
+  // Resumo por secções
+  var linhas=relLinhas(t),z=0;
+  linhas.forEach(function(l){
+    if(l[0]==='@TOT'){ espaco(40); y+=6; P.rect(M,y,CW,30,'#E4F2EA',6); P.texto('Rendimento líquido estimado',M+12,y+19.5,11,{b:1}); P.texto(relEur(t.saldoReal),M+CW-12,y+19.5,12.5,{b:1,cor:t.saldoReal>=0?GREEN:RED,al:'r'}); y+=38; return; }
+    if(l[0].indexOf('__')===0){ titulo(l[0].slice(2)); z=0; return; }
+    if(l[0]==='Dias registados')return;
+    if(l[0]==='Quilómetros')l=[l[0],relKm(t.kms),l[2]];
+    espaco(18); var bold=l[2]==='b',sub=l[0].indexOf('↳')===0,lab=sub?'dos quais '+l[0].replace(/^↳\s*dos quais\s*/,''):l[0];
+    if(bold){ P.linha(M,y,M+CW,y,'#C9D2DC',0.8); } else if(z++%2===1)P.rect(M,y,CW,17,ZEB);
+    var val=String(l[1]).replace(/^(-?)€(.*)$/,function(_,s,n){ return relEur((s?-1:1)*parseFloat(n.replace(/\s/g,'').replace(',','.'))); });
+    P.texto(lab,M+(sub?20:8),y+11.8,9.5,{b:bold,cor:sub?MUT:NAVY}); P.texto(val,M+CW-8,y+11.8,9.5,{b:bold,al:'r',cor:sub?MUT:NAVY}); y+=17;
+  });
+  function tabela(tit,cols,rows,tot){
+    espaco(74+15*Math.min(rows.length,6)); titulo(tit);
+    var cab=function(){ var x=M; P.rect(M,y,CW,18,NAVY,3); cols.forEach(function(c){ P.texto(c[0],c[2]==='l'?x+5:x+c[1]-5,y+12,7.8,{b:1,cor:'#FFFFFF',al:c[2]==='l'?'l':'r'}); x+=c[1]; }); y+=20; };
+    espaco(44+15*Math.min(rows.length,6)); cab();
+    rows.forEach(function(r,i){ espaco(15,cab); if(i%2===1)P.rect(M,y,CW,15,ZEB); var x=M; cols.forEach(function(c,k){ P.texto(r[k],c[2]==='l'?x+5:x+c[1]-5,y+10.5,8.2,{al:c[2]==='l'?'l':'r',max:c[1]-8,cor:k===0?NAVY:'#2B3A4A'}); x+=c[1]; }); y+=15; });
+    if(tot){ espaco(18); P.linha(M,y+1,M+CW,y+1,NAVY,1); var x=M; cols.forEach(function(c,k){ P.texto(tot[k],c[2]==='l'?x+5:x+c[1]-5,y+13,8.2,{b:1,al:c[2]==='l'?'l':'r',max:c[1]-8}); x+=c[1]; }); y+=20; }
+  }
+  if(d.meses.length){
+    var cm=[['Mês',70,'l'],['Ganhos',70],['Taxa op.',58],['Aluguer',64],['Energia',60],['Saldo oper.',70],['Impostos',58],['Líquido',65]];
+    var rm=d.meses.map(function(m){ var r=m.r; return [m.label,relNumPT(r.ganhos),relNumPT(r.taxa),relNumPT(r.aluguer),relNumPT(r.energia),relNumPT(r.saldoOper),relNumPT(relImpTot(r)),relNumPT(r.saldoReal)]; });
+    tabela('Mês a mês (valores em €)',cm,rm,['Total',relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),relNumPT(imp),relNumPT(t.saldoReal)]);
+  }
+  if(_relTipo!=='ano'&&d.chaves.length){
+    var cd=[['Data',54,'l'],['Uber',52],[plat2(),52],['Transf.',52],['Ganhos',56],['Taxa op.',48],['Aluguer',52],['Energia',50],['Saldo op.',60],['Km',39]];
+    var rd=d.chaves.map(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r),al=alDiaISO(iso),en=energiaFrota(r);
+      return [fmtData(iso),relNumPT(r.uber||0),relNumPT(r.bolt||0),relNumPT((r.outroG||0)+trajetoAutoValor(r)),relNumPT(g),relNumPT(tx),relNumPT(al),relNumPT(en),relNumPT(g-tx-al-en),String(Math.round(r.kms||0))]; });
+    tabela('Dia a dia (valores em €)',cd,rd,['Total',relNumPT(t.uber),relNumPT(t.bolt),relNumPT(t.outros),relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),String(Math.round(t.kms))]);
+  }
+  espaco(46); y+=14;
+  ['Estimativa feita pelo Finance Drive com os registos e as configurações do utilizador, para apoio ao contabilista.','Não substitui a declaração de IRS nem os documentos oficiais emitidos pelas plataformas (Uber, '+plat2()+', etc.).'].forEach(function(n){ P.texto(n,M,y,8,{cor:MUT}); y+=12; });
+  // Rodapés
+  var n=P.pags.length; P.pags.forEach(function(ops,i){ P.ops=ops; P.linha(M,P.H-34,M+CW,P.H-34,LINE,0.8); P.texto('Finance Drive · financedrive.pt',M,P.H-22,8,{cor:MUT}); P.texto('Página '+(i+1)+' de '+n,M+CW,P.H-22,8,{cor:MUT,al:'r'}); });
+  return P.bytes('Finance Drive - Relatório '+d.iv.label);
+}
 function relPDF(){
   if(!isPro()){ abrirPro('relatorio'); return; }
   var d=relDados(_relTipo,_relOff); if(!d.total.dias){ toast('Sem registos neste período','er'); return; }
-  var p=document.getElementById('relPrint'); p.innerHTML=relHtmlImpressao(d);
-  document.body.classList.add('imprimindo'); trackEvent('relatorio_pdf',{tipo:_relTipo});
-  var fim=function(){ document.body.classList.remove('imprimindo'); window.removeEventListener('afterprint',fim); };
-  window.addEventListener('afterprint',fim);
-  try{ window.print(); }catch(e){ toast('Este aparelho não deixou imprimir. Usa o Excel.','er'); }
-  setTimeout(fim,60000);
+  try{ relEntregar(relGerarPDF(d),relNomeFich(d,'pdf'),'application/pdf'); trackEvent('relatorio_pdf',{tipo:_relTipo}); }
+  catch(e){ console.warn('pdf:',e); toast('Não foi possível criar o PDF','er'); }
+}
+
+// ===== Excel (.xlsx verdadeiro) =====
+var _crcT=null;
+function crc32(u){ if(!_crcT){ _crcT=[]; for(var n=0;n<256;n++){ var c=n; for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1; _crcT[n]=c>>>0; } } var c=0xFFFFFFFF; for(var i=0;i<u.length;i++)c=_crcT[(c^u[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zipCriar(fichs){ // sem compressão (formato "stored")
+  var enc=new TextEncoder(),partes=[],central=[],off=0;
+  var le=function(n,b){ var a=[]; for(var i=0;i<b;i++)a.push((n>>>(8*i))&255); return a; };
+  fichs.forEach(function(f){ var nome=enc.encode(f[0]),dados=enc.encode(f[1]),crc=crc32(dados);
+    var cab=[].concat(le(0x04034b50,4),le(20,2),le(0x0800,2),le(0,2),le(0,2),le(0x21,2),le(crc,4),le(dados.length,4),le(dados.length,4),le(nome.length,2),le(0,2));
+    partes.push(new Uint8Array(cab),nome,dados);
+    central.push(new Uint8Array([].concat(le(0x02014b50,4),le(20,2),le(20,2),le(0x0800,2),le(0,2),le(0,2),le(0x21,2),le(crc,4),le(dados.length,4),le(dados.length,4),le(nome.length,2),le(0,2),le(0,2),le(0,2),le(0,2),le(0,4),le(off,4))),nome);
+    off+=cab.length+nome.length+dados.length; });
+  var tamC=central.reduce(function(a,p){ return a+p.length; },0);
+  var fim=new Uint8Array([].concat(le(0x06054b50,4),le(0,2),le(0,2),le(fichs.length,2),le(fichs.length,2),le(tamC,4),le(off,4),le(0,2)));
+  var tudo=partes.concat(central,[fim]),tot=tudo.reduce(function(a,p){ return a+p.length; },0),u=new Uint8Array(tot),p=0;
+  tudo.forEach(function(x){ u.set(x,p); p+=x.length; }); return u;
+}
+function xEsc(v){ return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function xCol(i){ var s=''; i++; while(i>0){ var m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=Math.floor((i-1)/26); } return s; }
+function xData(iso){ var p=iso.split('-'); return (Date.UTC(+p[0],+p[1]-1,+p[2])-Date.UTC(1899,11,30))/864e5; }
+// estilos: 0 normal | 1 título | 2 subtítulo | 3 cabeçalho | 4 texto | 5 € | 6 texto total | 7 € total | 8 secção | 9 inteiro | 10 data | 11 € resultado | 12 nota | 13 horas | 14 inteiro total | 15 horas total | 16 texto resultado | 17 texto recuado
+var XLSX_ESTILOS='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+ '<numFmts count="3"><numFmt numFmtId="164" formatCode="#,##0.00\\ &quot;€&quot;;[Red]\\-#,##0.00\\ &quot;€&quot;"/><numFmt numFmtId="165" formatCode="dd/mm/yyyy"/><numFmt numFmtId="166" formatCode="[h]:mm"/></numFmts>'+
+ '<fonts count="9"><font><sz val="11"/><color rgb="FF0B1F3A"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FF0B1F3A"/><name val="Calibri"/></font><font><b/><sz val="16"/><color rgb="FF0B1F3A"/><name val="Calibri"/></font><font><sz val="10"/><color rgb="FF6B7785"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FF4A5A8A"/><name val="Calibri"/></font><font><b/><sz val="13"/><color rgb="FF2E8B57"/><name val="Calibri"/></font><font><i/><sz val="9"/><color rgb="FF6B7785"/><name val="Calibri"/></font><font><b/><sz val="13"/><color rgb="FF0B1F3A"/><name val="Calibri"/></font></fonts>'+
+ '<fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0B1F3A"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEEF2F6"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE4F2EA"/></patternFill></fill></fills>'+
+ '<borders count="3"><border/><border><bottom style="thin"><color rgb="FFE3E7EA"/></bottom></border><border><top style="medium"><color rgb="FF0B1F3A"/></top></border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs>'+
+ '<cellXfs count="18"><xf/>'+
+ '<xf fontId="2" applyFont="1"/>'+
+ '<xf fontId="3" applyFont="1"/>'+
+ '<xf fontId="4" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'+
+ '<xf borderId="1" applyBorder="1"/>'+
+ '<xf numFmtId="164" borderId="1" applyNumberFormat="1" applyBorder="1"/>'+
+ '<xf fontId="1" borderId="2" applyFont="1" applyBorder="1"/>'+
+ '<xf numFmtId="164" fontId="1" borderId="2" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'+
+ '<xf fontId="5" fillId="3" applyFont="1" applyFill="1"/>'+
+ '<xf numFmtId="3" borderId="1" applyNumberFormat="1" applyBorder="1"/>'+
+ '<xf numFmtId="165" borderId="1" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left"/></xf>'+
+ '<xf numFmtId="164" fontId="6" fillId="4" applyNumberFormat="1" applyFont="1" applyFill="1"/>'+
+ '<xf fontId="7" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf>'+
+ '<xf numFmtId="166" borderId="1" applyNumberFormat="1" applyBorder="1"/>'+
+ '<xf numFmtId="3" fontId="1" borderId="2" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'+
+ '<xf numFmtId="166" fontId="1" borderId="2" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'+
+ '<xf fontId="8" fillId="4" applyFont="1" applyFill="1"/>'+
+ '<xf fontId="3" borderId="1" applyFont="1" applyBorder="1" applyAlignment="1"><alignment indent="2"/></xf>'+
+ '</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+function xFolha(f){ // f={larg:[], linhas:[[{v,s,f}]], fixar:n, filtro:'A5:L5', juntar:['A1:C1']}
+  var xml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">';
+  xml+='<sheetViews><sheetView workbookViewId="0" showGridLines="0">'+(f.fixar?'<pane ySplit="'+f.fixar+'" topLeftCell="A'+(f.fixar+1)+'" activePane="bottomLeft" state="frozen"/>':'')+'</sheetView></sheetViews>';
+  xml+='<sheetFormatPr defaultRowHeight="18"/><cols>'+f.larg.map(function(w,i){ return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'; }).join('')+'</cols><sheetData>';
+  f.linhas.forEach(function(l,ri){ var r=ri+1; xml+='<row r="'+r+'"'+(l.alt?' ht="'+l.alt+'" customHeight="1"':'')+'>';
+    (l.c||l).forEach(function(c,ci){ if(!c)return; var ref=xCol(ci)+r,st=c.s?' s="'+c.s+'"':'';
+      if(c.f)xml+='<c r="'+ref+'"'+st+'><f>'+xEsc(c.f)+'</f>'+(typeof c.v==='number'?'<v>'+c.v+'</v>':'')+'</c>';
+      else if(typeof c.v==='number')xml+='<c r="'+ref+'"'+st+'><v>'+(Math.round(c.v*1e6)/1e6)+'</v></c>';
+      else if(c.v===undefined||c.v==='')xml+='<c r="'+ref+'"'+st+'/>';
+      else xml+='<c r="'+ref+'"'+st+' t="inlineStr"><is><t xml:space="preserve">'+xEsc(c.v)+'</t></is></c>'; });
+    xml+='</row>'; });
+  xml+='</sheetData>'+(f.filtro?'<autoFilter ref="'+f.filtro+'"/>':'')+(f.juntar&&f.juntar.length?'<mergeCells count="'+f.juntar.length+'">'+f.juntar.map(function(m){ return '<mergeCell ref="'+m+'"/>'; }).join('')+'</mergeCells>':'')+
+    '<pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="'+(f.paisagem?'landscape':'portrait')+'" fitToWidth="1" fitToHeight="0"/></worksheet>';
+  return xml;
+}
+function xlsxCriar(folhas,titulo){
+  var ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>'+
+    folhas.map(function(f,i){ return '<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join('')+'</Types>';
+  var rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>';
+  var core='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>'+xEsc(titulo)+'</dc:title><dc:creator>Finance Drive</dc:creator></cp:coreProperties>';
+  var wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+
+    folhas.map(function(f,i){ return '<sheet name="'+xEsc(f.nome)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>'; }).join('')+'</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>';
+  var wbr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+    folhas.map(function(f,i){ return '<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>'; }).join('')+
+    '<Relationship Id="rId'+(folhas.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  var fich=[['[Content_Types].xml',ct],['_rels/.rels',rels],['docProps/core.xml',core],['xl/workbook.xml',wb],['xl/_rels/workbook.xml.rels',wbr],['xl/styles.xml',XLSX_ESTILOS]];
+  folhas.forEach(function(f,i){ fich.push(['xl/worksheets/sheet'+(i+1)+'.xml',xFolha(f)]); });
+  return zipCriar(fich);
+}
+function relGerarXLSX(d){
+  var t=d.total,imp=relImpTot(t),conta=fbUser&&fbUser.email?fbUser.email:'';
+  var T=function(v,s){ return {v:v,s:s||4}; },E=function(v,s){ return {v:Math.round(v*100)/100,s:s||5}; };
+  // --- Resumo ---
+  var L=[[T('Finance Drive — Relatório para o contabilista',1)],[T(d.iv.label+'  ·  '+fmtData(d.iv.de)+' a '+fmtData(d.iv.ate),2)],[T((conta?'Conta: '+conta+'  ·  ':'')+'Gerado a '+relGeradoEm(),2)],[],
+    {alt:22,c:[T('Descrição',3),T('Valor',3)]}];
+  var sec=function(n){ L.push({alt:22,c:[T(n,8),T('',8)]}); };
+  sec('Ganhos'); L.push([T('Uber'),E(t.uber)]); L.push([T(plat2()),E(t.bolt)]); L.push([T('Transfers / outros'),E(t.outros)]);
+  if(t.trajeto>0)L.push([T('dos quais Trajeto Transfer',17),E(t.trajeto)]);
+  L.push([T('Ganhos totais',6),E(t.ganhos,7)]);
+  sec('Despesas da atividade'); if(t.taxa>0)L.push([T('Taxa do operador'),E(-t.taxa)]); L.push([T('Aluguer da viatura'),E(-t.aluguer)]); L.push([T(isEletrico()?'Energia (carregamentos da frota)':'Combustível'),E(-t.energia)]);
+  L.push([T('Saldo operacional',6),E(t.saldoOper,7)]);
+  if(imp>0){ sec('Estimativa fiscal'); if(t.imp.ss>0)L.push([T('Segurança Social (15%)'),E(-t.imp.ss)]); if(t.imp.irs>0)L.push([T('IRS ('+t.imp.taxaIRS.toFixed(1).replace('.',',')+'%)'),E(-t.imp.irs)]); if(t.imp.iva>0)L.push([T('IVA (6%)'),E(-t.imp.iva)]); L.push([T('Total de impostos estimados',6),E(-imp,7)]); }
+  if(t.energiaBolso>0||t.comida>0||t.outrosGastos>0){ sec('Gastos do bolso'); if(t.energiaBolso>0)L.push([T('Energia paga do bolso'),E(-t.energiaBolso)]); if(t.comida>0)L.push([T('Alimentação'),E(-t.comida)]); if(t.outrosGastos>0)L.push([T('Outros gastos'),E(-t.outrosGastos)]); }
+  L.push([]); L.push({alt:26,c:[T('Rendimento líquido estimado',16),E(t.saldoReal,11)]}); L.push([]);
+  sec('Atividade'); L.push([T('Dias registados'),{v:t.dias,s:9}]); L.push([T('Quilómetros'),{v:Math.round(t.kms),s:9}]); if(t.horas>0)L.push([T('Horas registadas'),{v:t.horas/24,s:13}]);
+  L.push([T('Ganho médio por dia'),E(t.dias?t.ganhos/t.dias:0)]); if(t.kms>0)L.push([T('Ganho por km'),E(t.ganhos/t.kms)]); if(t.horas>0)L.push([T('Rendimento líquido por hora'),E(t.saldoReal/t.horas)]);
+  L.push([]); L.push({alt:42,c:[T('Estimativa feita pelo Finance Drive com os registos e as configurações do utilizador, para apoio ao contabilista. Não substitui a declaração de IRS nem os documentos oficiais das plataformas.',12)]});
+  var nota=L.length;
+  var folhas=[{nome:'Resumo',larg:[44,18],linhas:L,juntar:['A1:B1','A2:B2','A3:B3','A'+nota+':B'+nota]}];
+  // --- Mês a mês ---
+  if(d.meses.length){
+    var cab=['Mês','Ganhos','Uber',plat2(),'Transfers','Taxa operador','Aluguer','Energia','Saldo operacional','Impostos','Rendimento líquido','Km'];
+    var M=[[T('Mês a mês — '+d.iv.label,1)],[],{alt:22,c:cab.map(function(c){ return T(c,3); })}],i0=4;
+    d.meses.forEach(function(m){ var r=m.r; M.push([T(m.label),E(r.ganhos),E(r.uber),E(r.bolt),E(r.outros),E(r.taxa),E(r.aluguer),E(r.energia),E(r.saldoOper),E(relImpTot(r)),E(r.saldoReal),{v:Math.round(r.kms),s:9}]); });
+    var i1=M.length,sm=function(c,v,s){ return {f:'SUM('+c+i0+':'+c+i1+')',v:Math.round(v*100)/100,s:s}; };
+    M.push([T('Total',6),sm('B',t.ganhos,7),sm('C',t.uber,7),sm('D',t.bolt,7),sm('E',t.outros,7),sm('F',t.taxa,7),sm('G',t.aluguer,7),sm('H',t.energia,7),sm('I',t.saldoOper,7),sm('J',imp,7),sm('K',t.saldoReal,7),{f:'SUM(L'+i0+':L'+i1+')',v:Math.round(t.kms),s:14}]);
+    folhas.push({nome:'Mês a mês',larg:[14,13,13,13,13,14,13,13,17,13,19,10],linhas:M,fixar:3,paisagem:1});
+  }
+  // --- Dia a dia ---
+  var cd=['Data','Dia','Uber',plat2(),'Transfers / outros','Ganhos','Taxa operador','Aluguer','Energia','Saldo operacional','Km','Horas'];
+  var D=[[T('Dia a dia — '+d.iv.label,1)],[],{alt:22,c:cd.map(function(c){ return T(c,3); })}],j0=4;
+  var DIAS=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  d.chaves.forEach(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r),al=alDiaISO(iso),en=energiaFrota(r),h=r.horaInicio&&r.horaFim?(calcHoras(r.horaInicio,r.horaFim,r.almoco||false)||0):0;
+    D.push([{v:xData(iso),s:10},T(DIAS[diaSemanaISO(iso)]),E(r.uber||0),E(r.bolt||0),E((r.outroG||0)+trajetoAutoValor(r)),E(g),E(tx),E(al),E(en),E(g-tx-al-en),{v:Math.round(r.kms||0),s:9},h>0?{v:h/24,s:13}:T('')]); });
+  var j1=D.length,sd=function(c,v,s){ return {f:'SUM('+c+j0+':'+c+j1+')',v:Math.round(v*100)/100,s:s}; };
+  D.push([T('Total',6),T('',6),sd('C',t.uber,7),sd('D',t.bolt,7),sd('E',t.outros,7),sd('F',t.ganhos,7),sd('G',t.taxa,7),sd('H',t.aluguer,7),sd('I',t.energia,7),sd('J',t.saldoOper,7),{f:'SUM(K'+j0+':K'+j1+')',v:Math.round(t.kms),s:14},{f:'SUM(L'+j0+':L'+j1+')',v:t.horas/24,s:15}]);
+  folhas.push({nome:'Dia a dia',larg:[12,11,12,12,17,12,14,12,12,17,9,9],linhas:D,fixar:3,filtro:'A3:L'+j1,paisagem:1});
+  return xlsxCriar(folhas,'Finance Drive - Relatório '+d.iv.label);
 }
 function relExcel(){
   if(!isPro()){ abrirPro('relatorio'); return; }
-  var d=relDados(_relTipo,_relOff),t=d.total; if(!t.dias){ toast('Sem registos neste período','er'); return; }
-  var num=function(v){ return (Math.round(v*100)/100).toFixed(2).replace('.',','); };
-  var cel=function(v){ var s=String(v==null?'':v); return /[;"\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
-  var linhas=[['Finance Drive - Relatório para o contabilista'],['Período',d.iv.label],['De',fmtData(d.iv.de)],['Até',fmtData(d.iv.ate)],[]];
-  linhas.push(['RESUMO','Valor (€)']);
-  var R=[['Dias registados',t.dias],['Ganhos Uber',num(t.uber)],['Ganhos '+plat2(),num(t.bolt)],['Transfers / outros',num(t.outros)],['dos quais Trajeto Transfer',num(t.trajeto)],['Ganhos totais',num(t.ganhos)],
-    ['Taxa do operador',num(-t.taxa)],['Aluguer da viatura',num(-t.aluguer)],[isEletrico()?'Energia (frota)':'Combustível',num(-t.energia)],['Saldo operacional',num(t.saldoOper)],
-    ['Segurança Social estimada',num(-(t.imp?t.imp.ss:0))],['IRS estimado',num(-(t.imp?t.imp.irs:0))],['IVA estimado',num(-(t.imp?t.imp.iva:0))],['Energia paga do bolso',num(-t.energiaBolso)],['Alimentação',num(-t.comida)],['Outros gastos',num(-t.outrosGastos)],
-    ['Rendimento líquido estimado',num(t.saldoReal)],['Quilómetros',Math.round(t.kms)],['Horas registadas',num(t.horas)]];
-  R.forEach(function(x){ linhas.push(x); });
-  if(d.meses.length){ linhas.push([]); linhas.push(['MÊS A MÊS','Ganhos','Taxa operador','Aluguer','Energia','Rendimento líquido']); d.meses.forEach(function(m){ var r=m.r; linhas.push([m.label,num(r.ganhos),num(r.taxa),num(r.aluguer),num(r.energia),num(r.saldoReal)]); }); }
-  linhas.push([]); linhas.push(['DIA A DIA','Uber',plat2(),'Transfers/outros','Ganhos','Taxa operador','Aluguer','Energia','Km','Rendimento líquido']);
-  d.chaves.forEach(function(iso){ var r=DB[iso]||{}; linhas.push([fmtData(iso),num(r.uber||0),num(r.bolt||0),num((r.outroG||0)+trajetoAutoValor(r)),num(ganhos(r)),num(taxaOperadorValor(r)),num(alDiaISO(iso)),num(energiaFrota(r)),(r.kms||0),num(saldoReal(r,iso))]); });
-  var csv='﻿'+linhas.map(function(l){ return l.map(cel).join(';'); }).join('\r\n');
-  var nome='financedrive_relatorio_'+d.iv.de+'_a_'+d.iv.ate+'.csv';
-  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url; a.download=nome; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); },2000);
-  trackEvent('relatorio_excel',{tipo:_relTipo}); toast('Relatório exportado','ok');
+  var d=relDados(_relTipo,_relOff); if(!d.total.dias){ toast('Sem registos neste período','er'); return; }
+  try{ relEntregar(relGerarXLSX(d),relNomeFich(d,'xlsx'),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); trackEvent('relatorio_excel',{tipo:_relTipo}); }
+  catch(e){ console.warn('xlsx:',e); toast('Não foi possível criar o Excel','er'); }
 }
 
+// ---------- Ativação imediata: volta da Stripe e verificação ao regressar à app ----------
+var _ultChkPlano=0,_esperaPro=null;
+function planoVerificarAgora(){ if(!fbUser||isPro())return; _ultChkPlano=Date.now(); carregarPlano(); }
+document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible'&&fbUser&&!isPro()&&Date.now()-_ultChkPlano>8000)planoVerificarAgora(); });
+function proAcabouDeAtivar(){
+  if(_esperaPro){ clearInterval(_esperaPro); _esperaPro=null; }
+  var c=document.getElementById('proCorpo'); if(!c)return;
+  c.innerHTML='<div style="text-align:center;padding:10px 4px 16px"><div style="font-size:44px">🎉</div><div style="font:800 19px var(--fd-head);margin:6px 0">O teu PRO está ativo!</div><p class="import-info">Obrigado por apoiares o Finance Drive. Já podes criar o relatório para o contabilista em PDF e Excel.</p><button class="btn btn-green" type="button" onclick="fecharPro();navTo(\'hist\');abrirRelatorio()">Abrir o relatório</button></div>';
+  document.getElementById('proOverlay').classList.add('show'); trackEvent('pro_ativado',{});
+}
+function proVoltaDaStripe(){
+  var q; try{ q=new URLSearchParams(location.search); }catch(e){ return; }
+  if(q.get('pro')!=='ok')return;
+  try{ history.replaceState(null,'',location.pathname+location.hash); }catch(e){}
+  var c=document.getElementById('proCorpo');
+  c.innerHTML='<div style="text-align:center;padding:10px 4px 16px"><div style="font-size:40px">✓</div><div style="font:800 18px var(--fd-head);margin:6px 0">Pagamento concluído</div><p class="import-info" id="proEsperaTx">A ativar o PRO na tua conta… normalmente demora poucos segundos.</p></div>';
+  document.getElementById('proOverlay').classList.add('show');
+  var n=0; _esperaPro=setInterval(function(){ n++;
+    if(fbUser)carregarPlano();
+    if(n===4&&!fbUser){ var e=document.getElementById('proEsperaTx'); if(e)e.innerHTML='O PRO já ficou na tua conta. Volta à app <b>Finance Drive</b> (ou entra na tua conta aqui) para o usares.'; }
+    if(n>=40){ clearInterval(_esperaPro); _esperaPro=null; var e2=document.getElementById('proEsperaTx'); if(e2)e2.innerHTML='Está a demorar mais do que o normal. Fecha e volta a abrir a app daqui a um minuto. Se não ficar ativo, escreve para '+SUPORTE_EMAIL+'.'; }
+  },3000);
+}
 // ── Estatísticas (Google Analytics) só com autorização ──
 function atualizarCookieUI(){
   var v=null; try{ v=localStorage.getItem('fd_cookies'); }catch(e){}
@@ -3530,6 +3781,7 @@ renderHoje();
 atualizarCookieUI();
 renderPlanoUI();
 iniciarNuvem();
+proVoltaDaStripe();
 trajetoIniciar();
 </script>
 </body>
