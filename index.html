@@ -632,6 +632,12 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 
 
 /* ===== v3.15: PRO, relatório e acessos ===== */
+.imp-bloq{position:relative;margin:4px 0 8px}
+.imp-bloq-linhas{filter:blur(4px);opacity:.6;pointer-events:none;user-select:none}
+.imp-bloq-cta{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:8px 10px}
+.imp-bloq-cta b{font-size:14px;color:var(--text)} .imp-bloq-cta span{font-size:11.5px;color:var(--sub);line-height:1.45;max-width:300px}
+.imp-bloq-cta .btn{max-width:200px;padding:9px 14px;font-size:13px;margin-top:2px}
+.impostos-row.imp-lado .impostos-val{color:var(--gold);font-weight:800}
 .pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
 .rel-abrir{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 12px;padding:13px 14px;border-radius:14px;border:1px solid var(--gold-bd,rgba(251,191,36,.3));background:var(--gold-bg,rgba(251,191,36,.08));color:var(--text);text-align:left;cursor:pointer;font:inherit}
 .rel-abrir-ic{font-size:22px} .rel-abrir-tx{flex:1;min-width:0} .rel-abrir-tx b{display:block;font-size:14px} .rel-abrir-tx small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -1055,7 +1061,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.16.1 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.17.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1622,6 +1628,21 @@ function saldoSemTransfers(r,iso){
 }
 function saldoParaMeta(r,iso){ return metaComTransfers()?saldoReal(r,iso):saldoSemTransfers(r,iso); }
 function rotuloMeta(){ return metaComTransfers()?'saldo real (com Transfers)':'saldo real sem Transfers'; }
+// v3.17: na Semana e no Histórico o detalhe dos impostos é PRO (o saldo real continua igual para todos)
+function htmlImpostosPeriodo(imp,trajeto,periodo){
+  if(!imp)return '';
+  if(isPro())return htmlImpostos(imp,trajeto,true);
+  normalizarImpostosCfg();
+  var lin=function(t){ return '<div class="impostos-row"><span class="impostos-lbl">'+t+'</span><span class="impostos-val imp-borrado">-000,00 €</span></div>'; };
+  var linhas=(imp.usarSS?lin('SS (15%)'):'')+(imp.usarIRS?lin('IRS'):'')+(imp.usarIVA?lin('IVA (6%)'):'')+lin('💰 Total a pôr de lado');
+  return '<div class="impostos-box">'+
+    '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span class="pro-tag">PRO</span></div>'+
+    '<div class="imp-bloq"><div class="imp-bloq-linhas">'+linhas+'</div>'+
+      '<div class="imp-bloq-cta"><b>🔒 Impostos '+(periodo||'do período')+'</b><span>Quanto pagas de SS, IRS e IVA, quanto pôr de lado e a projeção do IRS do ano. A estimativa de cada dia continua grátis no ecrã Hoje.</span>'+
+      '<button class="btn btn-green" type="button" onclick="abrirPro(\'impostos\')">Ver o PRO</button></div></div>'+
+    htmlBlocoSaldos(imp.real-(trajeto||0),trajeto||0,imp.real)+
+  '</div>';
+}
 function htmlBlocoSaldos(frota,traj,real){
   var cF=frota>=0?'var(--green)':'var(--red)',cR=real>=0?'var(--green)':'var(--red)';
   return '<div class="saldos-bloco">'+
@@ -1734,7 +1755,7 @@ function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
   var total=ss+irs+iva,b=bolso||0;
   return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-b,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
-function htmlImpostos(imp,trajeto){
+function htmlImpostos(imp,trajeto,porDeLado){
   if(!imp)return '';
   normalizarImpostosCfg();
   var proj=projetarRendimentoAnual();
@@ -1744,6 +1765,8 @@ function htmlImpostos(imp,trajeto){
   if(imp.usarIRS)linhas+='<div class="impostos-row"><span class="impostos-lbl">IRS ('+imp.taxaIRS.toFixed(1)+'%'+(CFG.impostos.irsManual?'':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>';
   if(imp.usarIVA)linhas+='<div class="impostos-row"><span class="impostos-lbl">IVA (6%)</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>';
   if(!linhas)linhas='<div class="impostos-row"><span class="impostos-lbl">Nenhum imposto selecionado</span><span class="impostos-val">-'+moeda(0)+'</span></div>';
+  var totImp=(imp.usarSS?imp.ss:0)+(imp.usarIRS?imp.irs:0)+(imp.usarIVA?imp.iva:0);
+  if(porDeLado&&totImp>0)linhas+='<div class="impostos-row imp-lado"><span class="impostos-lbl">💰 Total a pôr de lado</span><span class="impostos-val">'+moeda(totImp)+'</span></div>';
   var ativos=[]; if(imp.usarSS)ativos.push('SS'); if(imp.usarIRS)ativos.push('IRS'); if(imp.usarIVA)ativos.push('IVA');
   return '<div class="impostos-box">'+
     '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:11px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
@@ -2231,7 +2254,7 @@ function renderSemana(){
       // Bases fiscais semanais por imposto, respeitando a seleção individual dos Transfers.
       var basesSem=reais.reduce(function(a,d){ var rr=DB[d]||{}; a.SS+=baseFiscalAplicada(rr,d,'SS'); a.IRS+=baseFiscalAplicada(rr,d,'IRS'); a.IVA+=baseFiscalAplicada(rr,d,'IVA'); return a; },{SS:0,IRS:0,IVA:0});
       var impSemObj=calcImpostosValores(sl2,basesSem,teDinheiro+tc+tou,teDinheiro);
-      var impSemHtml=htmlImpostos(impSemObj,trajSem);
+      var impSemHtml=htmlImpostosPeriodo(impSemObj,trajSem,'da semana');
 
       var slSemanal=reais.reduce(function(a,d){ return a+saldo(DB[d]||{},d); },0);
       var slSemanalReal=reais.reduce(function(a,d){ return a+saldoReal(DB[d]||{},d); },0);
@@ -2434,7 +2457,7 @@ function renderHist(){
       var totalLitrosHist=chaves.reduce(function(a,d){ return a+(r0(d).litros||0); },0);
       var consumoHist=!isEletrico()&&totalKmsHist>0&&totalLitrosHist>0?(totalLitrosHist/totalKmsHist*100):0;
       var impHist=calcImpostosValores(slTotal,basesHist,teDinheiro+tc+tou,teDinheiro);
-      var impHistHtml=htmlImpostos(impHist,trajHist);
+      var impHistHtml=histFiltro==='dia'?htmlImpostos(impHist,trajHist):htmlImpostosPeriodo(impHist,trajHist,({semana:'da semana',mes:'do mês',ano:'do ano'})[histFiltro]||'do período');
       var slRealPeriodo=impHist?impHist.real:slRealHist;
 
       document.getElementById('resumoPeriodo').innerHTML=
@@ -3321,7 +3344,8 @@ function fmtDataMs(ms){ var d=new Date(ms); return pad(d.getDate())+'/'+pad(d.ge
 function linhaFuncoesPro(){
   return '<table class="pro-tab"><tr><th></th><th>Grátis</th><th>PRO</th></tr>'+
     '<tr><td>Registar o dia, saldo, metas e histórico</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
-    '<tr><td>Estimativa de SS, IRS e IVA</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Estimativa de impostos do dia (SS, IRS e IVA)</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Impostos da semana, mês e ano, com quanto pôr de lado</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Relatório para o contabilista (mês, trimestre, ano) em PDF e Excel</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Ligação ao Trajeto Transfer</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Novas funções PRO que forem saindo</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr></table>';
@@ -3335,13 +3359,14 @@ function renderPlanoUI(){
       box.innerHTML='<div class="plano-ativo"><div style="font-size:22px">✓</div><div><b>PRO ativo'+(_plano.origem==='oferta'?' · oferta':'')+'</b><small>'+(_plano.ate?'até '+fmtDataMs(_plano.ate):'sem prazo')+'</small></div></div>';
     } else {
       box.innerHTML='<div class="plan-card"><div class="plan-head"><div class="plan-title">Finance Drive <span>Grátis</span></div><span class="pro-tag">PRO</span></div>'+
-        '<div class="plan-desc">O essencial continua grátis. O PRO junta o relatório para o contabilista e a ligação ao Trajeto Transfer.</div>'+
+        '<div class="plan-desc">O essencial continua grátis. O PRO junta os impostos da semana, mês e ano, o relatório para o contabilista e a ligação ao Trajeto Transfer.</div>'+
         '<button class="btn btn-green" type="button" onclick="abrirPro(\'config\')" style="margin-top:6px">Ver o PRO · '+PRECOS_PRO.mensal+'/mês</button></div>';
     }
   }
   var acc=document.getElementById('cfgAcessos'); if(acc)acc.style.display=isAdmin()?'':'none';
   if(isAdmin())renderAcessos();
   var rel=document.getElementById('relOverlay'); if(rel&&rel.classList.contains('show'))desenharRelatorio();
+  try{ var pgOn=document.querySelector('.pg.on'); if(pgOn&&pgOn.id==='pg-semana')renderSemana(); if(pgOn&&pgOn.id==='pg-hist')renderHist(); }catch(e){}
   if(typeof renderTrajetoCfg==='function')renderTrajetoCfg();
 }
 // ---- Janela PRO (comprar) ----
