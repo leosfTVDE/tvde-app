@@ -1055,7 +1055,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.16.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.16.1 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -3301,7 +3301,8 @@ function planoAtivo(p){ return !!(p&&p.pro&&(!p.ate||p.ate>Date.now())); }
 function isPro(){ return isAdmin()||planoAtivo(_plano); }
 function planoAoMudarConta(){
   _plano=null; _acessos=null;
-  if(fbUser){ try{ var c=JSON.parse(localStorage.getItem(PLANO_CACHE_KEY)||'null'); if(c&&c.uid===fbUser.uid)_plano=c.dados||null; }catch(e){} carregarPlano(); }
+  if(fbUser){ try{ var c=JSON.parse(localStorage.getItem(PLANO_CACHE_KEY)||'null'); if(c&&c.uid===fbUser.uid)_plano=c.dados||null; }catch(e){} carregarPlano();
+    if(_proDepoisDeEntrar){ _proDepoisDeEntrar=false; setTimeout(function(){ abrirPro('depois_entrar'); },400); } }
   renderPlanoUI();
 }
 function carregarPlano(){
@@ -3352,7 +3353,8 @@ function abrirPro(origem){
   } else {
     html='<p class="import-info" style="margin-bottom:6px">O essencial continua grátis. Com o <b>PRO</b> poupas tempo com o contabilista e junta o Trajeto Transfer.</p>'+linhaFuncoesPro();
     if(!fbUser){
-      html+='<div class="traj-info" style="margin-top:12px">Para comprar, entra primeiro na tua conta do Finance Drive (em <b>Configurações → Conta e sincronização</b>). O PRO fica ligado à tua conta, em todos os aparelhos.</div>';
+      html+='<div class="traj-info" style="margin-top:12px">Para comprar, entra primeiro na tua conta do Finance Drive (ou cria uma, é grátis). O PRO fica ligado à tua conta, em todos os aparelhos.</div>'+
+        '<button class="btn btn-green" type="button" style="margin-top:10px" onclick="proIrParaConta()">Entrar ou criar conta</button>';
     } else {
       html+='<div class="pro-preco"><button type="button" class="pro-op" onclick="comprarPro(\'mensal\')"><small>Mensal</small><b>'+PRECOS_PRO.mensal+'</b><small>por mês</small></button>'+
         '<button type="button" class="pro-op dest" onclick="comprarPro(\'anual\')"><small>Anual · poupa 37%</small><b>'+PRECOS_PRO.anual+'</b><small>por ano</small></button></div>'+
@@ -3361,6 +3363,28 @@ function abrirPro(origem){
   }
   c.innerHTML=html;
   document.getElementById('proOverlay').classList.add('show');
+}
+// v3.16.1: link direto financedrive.pt/?pro abre o ecrã do PRO (e volta a abri-lo depois de entrar na conta)
+var _proDepoisDeEntrar=false;
+function proIrParaConta(){
+  _proDepoisDeEntrar=true; fecharPro();
+  if(fbAuth&&typeof mostrarLogin==='function'){ if(typeof definirModoLogin==='function')_lgModo='criar'; mostrarLogin(); return; }
+  navTo('cfg');
+  setTimeout(function(){ var c=document.getElementById('cfgConta'); if(c&&c.scrollIntoView)c.scrollIntoView({block:'start',behavior:'smooth'}); },60);
+}
+function proAbrirPeloLink(){
+  var q; try{ q=new URLSearchParams(location.search); }catch(e){ return; }
+  if(!q.has('pro')||q.get('pro')==='ok')return;
+  try{ history.replaceState(null,'',location.pathname+location.hash); }catch(e){}
+  trackEvent('link_pro',{});
+  if(!fbUser)_proDepoisDeEntrar=true;
+  // se for a primeira vez (apresentação da app no ecrã), abre o PRO logo a seguir a fechá-la
+  var tentativas=0,t;
+  setTimeout(function(){ t=setInterval(function(){
+    var ob=document.getElementById('onboardOverlay'),wn=document.getElementById('novidadesOverlay');
+    var ocupado=(ob&&ob.classList.contains('show'))||(wn&&wn.classList.contains('show'));
+    if(!ocupado||++tentativas>600){ clearInterval(t); abrirPro('link'); }
+  },400); },900); // a apresentação da 1.ª vez aparece aos 600 ms
 }
 function fecharPro(){ document.getElementById('proOverlay').classList.remove('show'); }
 function comprarPro(tipo){
@@ -3832,6 +3856,7 @@ atualizarCookieUI();
 renderPlanoUI();
 iniciarNuvem();
 proVoltaDaStripe();
+proAbrirPeloLink();
 trajetoIniciar();
 </script>
 </body>
