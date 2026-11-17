@@ -638,6 +638,37 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .imp-bloq-cta b{font-size:14px;color:var(--text)} .imp-bloq-cta span{font-size:11.5px;color:var(--sub);line-height:1.45;max-width:300px}
 .imp-bloq-cta .btn{max-width:200px;padding:9px 14px;font-size:13px;margin-top:2px}
 .impostos-row.imp-lado .impostos-val{color:var(--gold);font-weight:800}
+
+/* v3.18: pedido de avaliação */
+.av-modal{padding:24px 22px}
+.av-centro{text-align:center}
+.av-ic{font-size:38px}
+.av-tit{font:800 21px/1.25 var(--fd-head);color:var(--text);margin:8px 0 6px}
+.av-txt{font-size:14.5px;line-height:1.5;color:var(--sub)}
+.av-estrelas{display:flex;justify-content:center;gap:4px;margin:16px 0 2px}
+.av-estrelas button{border:none;background:none;font-size:40px;line-height:1;color:#D5DCE3;cursor:pointer;padding:2px 3px;transition:transform .12s}
+.av-estrelas button.on{color:#C9971C}
+.av-estrelas button:active{transform:scale(1.15)}
+.av-dica{font-size:12px;color:var(--muted)}
+.av-rot{font-weight:700;font-size:15px;color:var(--text);margin-top:4px;min-height:20px}
+.av-sec{font-weight:700;font-size:14px;color:var(--text);margin:16px 0 6px}
+.av-sec span{font-weight:400;color:var(--muted)}
+.av-chips{display:flex;flex-wrap:wrap;gap:6px}
+.av-chip{border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 13px;font:600 13px var(--fd-body,inherit);cursor:pointer}
+.av-chip.on{background:var(--navy,#0B1F3A);border-color:var(--navy,#0B1F3A);color:#fff}
+.av-texto{width:100%;min-height:90px;border:1.5px solid var(--border);border-radius:14px;padding:12px;font:15px/1.45 inherit;color:var(--text);background:var(--surface);resize:vertical;box-sizing:border-box}
+.av-agora{margin-top:16px;width:100%;padding:13px;border:none;border-radius:14px;background:var(--bg);font-weight:700;font-size:15px;color:var(--sub);cursor:pointer}
+.av-res{display:flex;gap:10px;margin-bottom:10px}
+.av-res>div{flex:1;background:var(--bg);border-radius:14px;padding:12px;text-align:center}
+.av-res b{display:block;font:800 24px var(--fd-head);color:var(--text)}
+.av-res small{font-size:12px;color:var(--sub)}
+.av-item{padding:11px 0;border-bottom:1px solid var(--border)}
+.av-item-cab{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.av-item-cab b{font-size:13.5px;overflow-wrap:anywhere}
+.av-st{color:#C9971C;letter-spacing:1px;white-space:nowrap}
+.av-st i{font-style:normal;color:#D5DCE3}
+.av-item small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.av-item q{display:block;font-size:13.5px;line-height:1.45;color:var(--text);margin-top:6px;background:var(--bg);border-radius:10px;padding:8px 10px;quotes:"“" "”"}
 .pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
 .rel-abrir{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 12px;padding:13px 14px;border-radius:14px;border:1px solid var(--gold-bd,rgba(251,191,36,.3));background:var(--gold-bg,rgba(251,191,36,.08));color:var(--text);text-align:left;cursor:pointer;font:inherit}
 .rel-abrir-ic{font-size:22px} .rel-abrir-tx{flex:1;min-width:0} .rel-abrir-tx b{display:block;font-size:14px} .rel-abrir-tx small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -864,6 +895,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         <div class="hist-acc-body"><div class="card" id="contaBox"></div></div>
       </div>
 
+      <div class="hist-acc cfg-acc" id="cfgAvaliacoes" style="display:none">
+        <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgAvaliacoes');avCarregarAdmin()"><span>&#11088; Avalia&ccedil;&otilde;es dos motoristas</span><span class="hist-acc-arrow">&#8964;</span></button>
+        <div class="hist-acc-body"><div class="card" id="avAdminBox"><p class="rel-nota">A carregar…</p></div></div>
+      </div>
+
       <div class="hist-acc cfg-acc" id="cfgAcessos" style="display:none">
         <button class="hist-acc-btn" type="button" onclick="toggleHistAcc('cfgAcessos')"><span>&#128081; Gerir acessos PRO</span><span class="hist-acc-arrow">&#8964;</span></button>
         <div class="hist-acc-body"><div class="card" id="acessosBox"></div></div>
@@ -1061,7 +1097,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.17.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.18.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1091,6 +1127,10 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="periodo-sel" style="margin-top:8px"><button class="periodo-arr" type="button" onclick="relMudar(-1)" aria-label="Anterior">&#8249;</button><div class="periodo-label" id="relLabel"></div><button class="periodo-arr" type="button" onclick="relMudar(1)" aria-label="Seguinte">&#8250;</button></div>
     <div class="rel-wrap" id="relWrap"><div id="relCorpo"></div><div class="rel-cadeado" id="relCadeado" hidden></div></div>
   </div>
+</div>
+
+<div class="modal-overlay" id="avOverlay">
+  <div class="modal av-modal"><div id="avCorpo"></div></div>
 </div>
 
 <div class="modal-overlay" id="proOverlay">
@@ -3327,6 +3367,7 @@ function planoAoMudarConta(){
   if(fbUser){ try{ var c=JSON.parse(localStorage.getItem(PLANO_CACHE_KEY)||'null'); if(c&&c.uid===fbUser.uid)_plano=c.dados||null; }catch(e){} carregarPlano();
     if(_proDepoisDeEntrar){ _proDepoisDeEntrar=false; setTimeout(function(){ abrirPro('depois_entrar'); },400); } }
   renderPlanoUI();
+  if(fbUser&&typeof avAgendarVerificacao==='function')avAgendarVerificacao();
 }
 function carregarPlano(){
   if(!fbDB||!fbUser)return Promise.resolve(null);
@@ -3364,6 +3405,7 @@ function renderPlanoUI(){
     }
   }
   var acc=document.getElementById('cfgAcessos'); if(acc)acc.style.display=isAdmin()?'':'none';
+  var avA=document.getElementById('cfgAvaliacoes'); if(avA)avA.style.display=isAdmin()?'':'none';
   if(isAdmin())renderAcessos();
   var rel=document.getElementById('relOverlay'); if(rel&&rel.classList.contains('show'))desenharRelatorio();
   try{ var pgOn=document.querySelector('.pg.on'); if(pgOn&&pgOn.id==='pg-semana')renderSemana(); if(pgOn&&pgOn.id==='pg-hist')renderHist(); }catch(e){}
@@ -3851,6 +3893,94 @@ function proVoltaDaStripe(){
     if(n>=40){ clearInterval(_esperaPro); _esperaPro=null; var e2=document.getElementById('proEsperaTx'); if(e2)e2.innerHTML='Está a demorar mais do que o normal. Fecha e volta a abrir a app daqui a um minuto. Se não ficar ativo, escreve para '+SUPORTE_EMAIL+'.'; }
   },3000);
 }
+// ══ v3.18: pedido de avaliação (8.º dia após criar conta; "Agora não" volta 7 dias depois; no máximo 3 vezes) ══
+var AV_DIAS_INICIO=7, AV_DIAS_REPETIR=7, AV_MAX_PEDIDOS=3, AV_LOCAL='fd_av_estado';
+var AV_GOSTOS=['Saldo real','Impostos','Metas','Histórico','Relatório','Facilidade'];
+var AV_ROTULOS=['','Fraco 😕','Pode melhorar','Razoável','Muito bom 👍','Excelente 🤩'];
+var _avTimer=null,_avMostradoSessao=false,_avEstado=null,_avNota=0,_avGostos=[];
+function avDoc(){ return fbDB&&fbUser?fbDB.collection('avaliacoes').doc(fbUser.uid):null; }
+function avLocal(){ try{ var o=JSON.parse(localStorage.getItem(AV_LOCAL)||'null'); return o&&o.uid===(fbUser&&fbUser.uid)?o:null; }catch(e){ return null; } }
+function avGuardarLocal(d){ try{ localStorage.setItem(AV_LOCAL,JSON.stringify(Object.assign({uid:fbUser.uid},d))); }catch(e){} }
+function avAgendarVerificacao(){ clearTimeout(_avTimer); _avTimer=setTimeout(avVerificar,2500); }
+function avOcupado(){
+  var ids=['onboardOverlay','novidadesOverlay','loginOverlay','proOverlay','relOverlay','modalOverlay'];
+  for(var i=0;i<ids.length;i++){ var e=document.getElementById(ids[i]); if(e&&(e.classList.contains('show')||e.classList.contains('open')||e.classList.contains('aberto')))return true; }
+  return false;
+}
+function avVerificar(){
+  if(!fbUser||!fbDB||_avMostradoSessao||isAdmin())return;
+  var criado=fbUser.metadata&&fbUser.metadata.creationTime?new Date(fbUser.metadata.creationTime).getTime():0;
+  if(!criado||Date.now()-criado<AV_DIAS_INICIO*864e5)return;
+  var loc=avLocal(); if(loc&&(loc.estado==='feito'||loc.estado==='desistiu'))return;
+  if(loc&&loc.ultimoPedido&&Date.now()-loc.ultimoPedido<AV_DIAS_REPETIR*864e5)return;
+  var uid=fbUser.uid;
+  avDoc().get().then(function(snap){
+    if(!fbUser||fbUser.uid!==uid)return;
+    var d=snap.exists?(snap.data()||{}):{};
+    _avEstado=d;
+    avGuardarLocal({estado:d.estado||'',ultimoPedido:d.ultimoPedido||0,pedidos:d.pedidos||0});
+    if(d.estado==='feito'||(d.pedidos||0)>=AV_MAX_PEDIDOS)return;
+    if(d.ultimoPedido&&Date.now()-d.ultimoPedido<AV_DIAS_REPETIR*864e5)return;
+    var tentar=0,t=setInterval(function(){ if(!avOcupado()||++tentar>40){ clearInterval(t); if(!avOcupado())avMostrar(); } },1500);
+  }).catch(function(e){ console.warn('avaliacao:',e&&e.code); });
+}
+function avMostrar(){
+  _avMostradoSessao=true; _avNota=0; _avGostos=[];
+  var pedidos=((_avEstado&&_avEstado.pedidos)||0)+1;
+  var reg={pedidos:pedidos,ultimoPedido:Date.now(),email:emailAtual(),estado:'pendente'};
+  avDoc().set(reg,{merge:true}).catch(function(){});
+  avGuardarLocal({estado:'pendente',ultimoPedido:reg.ultimoPedido,pedidos:pedidos});
+  trackEvent('avaliacao_pedido',{n:pedidos});
+  avPasso1();
+  document.getElementById('avOverlay').classList.add('show');
+}
+function avEstrelasHtml(){ var h='<div class="av-estrelas" role="radiogroup" aria-label="Avaliação de 1 a 5 estrelas">'; for(var i=1;i<=5;i++)h+='<button type="button" class="'+(i<=_avNota?'on':'')+'" aria-label="'+i+' estrela'+(i>1?'s':'')+'" onclick="avEscolherNota('+i+')">★</button>'; return h+'</div>'; }
+function avPasso1(){
+  document.getElementById('avCorpo').innerHTML='<div class="av-centro"><div class="av-ic">🚗💬</div><div class="av-tit">Já usas o Finance Drive há 1 semana!</div>'+
+    '<div class="av-txt">O que estás a achar? A tua opinião ajuda a melhorar a app para todos os motoristas.</div>'+avEstrelasHtml()+
+    '<div class="av-dica">Toca numa estrela</div><button type="button" class="av-agora" onclick="avAgoraNao()">Agora não</button></div>';
+}
+function avEscolherNota(n){ _avNota=n; avPasso2(); }
+function avPasso2(){
+  var txt=(document.getElementById('avTexto')||{}).value||'';
+  document.getElementById('avCorpo').innerHTML='<div class="av-centro">'+avEstrelasHtml()+'<div class="av-rot">'+AV_ROTULOS[_avNota]+'</div></div>'+
+    '<div class="av-sec">O que mais te ajuda?</div><div class="av-chips">'+AV_GOSTOS.map(function(g){ return '<button type="button" class="av-chip'+(_avGostos.indexOf(g)>=0?' on':'')+'" onclick="avToggleGosto(\''+g+'\')">'+g+'</button>'; }).join('')+'</div>'+
+    '<div class="av-sec">O que falta ou podia ser melhor? <span>(opcional)</span></div><textarea class="av-texto" id="avTexto" maxlength="1500" placeholder="Escreve aqui a tua sugestão…"></textarea>'+
+    '<div class="login-erro" id="avErro"></div><button type="button" class="btn btn-green" style="margin-top:14px" id="avEnviar" onclick="avEnviar()">Enviar avaliação</button>'+
+    '<button type="button" class="av-agora" style="margin-top:8px" onclick="avAgoraNao()">Agora não</button>';
+  var ta=document.getElementById('avTexto'); if(ta)ta.value=txt;
+}
+function avToggleGosto(g){ var i=_avGostos.indexOf(g); if(i>=0)_avGostos.splice(i,1); else _avGostos.push(g); avPasso2(); }
+function avEnviar(){
+  if(!_avNota||!fbUser)return;
+  var b=document.getElementById('avEnviar'); if(b){ b.disabled=true; b.textContent='A enviar…'; }
+  var dados={estado:'feito',estrelas:_avNota,gostos:_avGostos.slice(0,6),texto:((document.getElementById('avTexto')||{}).value||'').trim().slice(0,1500),email:emailAtual(),dataAvaliacao:Date.now(),versao:'3.18.0'};
+  avDoc().set(dados,{merge:true}).then(function(){
+    avGuardarLocal({estado:'feito'});
+    trackEvent('avaliacao_enviada',{estrelas:_avNota});
+    document.getElementById('avCorpo').innerHTML='<div class="av-centro"><div class="av-ic" style="font-size:46px">🙏</div><div class="av-tit">Obrigado, motorista!</div><div class="av-txt">A tua avaliação chegou. Não voltamos a perguntar.</div><button type="button" class="btn" style="margin-top:18px" onclick="avFechar()">Fechar</button></div>';
+  }).catch(function(e){ var er=document.getElementById('avErro'); if(er)er.textContent='Não foi possível enviar ('+((e&&e.code)||'erro')+'). Tenta de novo daqui a pouco.'; if(b){ b.disabled=false; b.textContent='Enviar avaliação'; } });
+}
+function avAgoraNao(){
+  var n=(avLocal()||{}).pedidos||1;
+  if(n>=AV_MAX_PEDIDOS){ avGuardarLocal({estado:'desistiu',pedidos:n}); if(avDoc())avDoc().set({estado:'desistiu'},{merge:true}).catch(function(){}); }
+  trackEvent('avaliacao_agora_nao',{n:n}); avFechar();
+}
+function avFechar(){ document.getElementById('avOverlay').classList.remove('show'); }
+document.getElementById('avOverlay').addEventListener('click',function(e){ if(e.target===this)avAgoraNao(); });
+// ---- painel do administrador ----
+function avCarregarAdmin(){
+  var box=document.getElementById('avAdminBox'); if(!box||!isAdmin()||!fbDB)return;
+  fbDB.collection('avaliacoes').get().then(function(snap){
+    var todos=[]; snap.forEach(function(d){ var x=d.data()||{}; x.id=d.id; todos.push(x); });
+    var feitas=todos.filter(function(x){ return x.estado==='feito'&&x.estrelas; }).sort(function(a,b){ return (b.dataAvaliacao||0)-(a.dataAvaliacao||0); });
+    var media=feitas.length?feitas.reduce(function(a,x){ return a+x.estrelas; },0)/feitas.length:0;
+    var est=function(n){ return '<span class="av-st">'+'★'.repeat(n)+'<i>'+'★'.repeat(5-n)+'</i></span>'; };
+    box.innerHTML='<div class="av-res"><div><b>'+(feitas.length?media.toFixed(1).replace('.',',')+' ★':'—')+'</b><small>média · '+feitas.length+' avaliaç'+(feitas.length===1?'ão':'ões')+'</small></div><div><b>'+todos.length+'</b><small>motoristas a quem foi pedida</small></div></div>'+
+      (feitas.length?feitas.map(function(x){ return '<div class="av-item"><div class="av-item-cab"><b>'+escHtml(x.email||x.id)+'</b>'+est(x.estrelas)+'</div><small>'+fmtDataMs(x.dataAvaliacao)+((x.gostos&&x.gostos.length)?' · gosta de: '+escHtml(x.gostos.join(', ')):'')+'</small>'+(x.texto?'<q>'+escHtml(x.texto)+'</q>':'')+'</div>'; }).join(''):'<p class="rel-nota">Ainda não há avaliações. O pedido aparece aos motoristas 7 dias depois de criarem conta.</p>');
+  }).catch(function(e){ box.innerHTML='<p class="rel-nota">Não foi possível ler as avaliações ('+escHtml((e&&e.code)||'erro')+'). Confirma a regra "avaliacoes" no Firebase.</p>'; });
+}
+
 // ── Estatísticas (Google Analytics) só com autorização ──
 function atualizarCookieUI(){
   var v=null; try{ v=localStorage.getItem('fd_cookies'); }catch(e){}
