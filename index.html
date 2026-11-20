@@ -669,6 +669,62 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .av-st i{font-style:normal;color:#D5DCE3}
 .av-item small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .av-item q{display:block;font-size:13.5px;line-height:1.45;color:var(--text);margin-top:6px;background:var(--bg);border-radius:10px;padding:8px 10px;quotes:"“" "”"}
+
+/* v3.19: impostos automático / personalizar */
+.imp-bloco{padding:10px 0;border-bottom:1px solid var(--border)}
+.imp-bloco:last-of-type{border-bottom:none}
+.imp-cfg{margin:2px 0 0 26px}
+.imp-cfg .seg-opt{font-size:12.5px;padding:10px 4px;text-align:center;white-space:nowrap;position:relative}
+.imp-cfg .seg-opt input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.imp-man{margin-top:8px}
+.imp-dica{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:5px}
+.imp-dica.erro{color:var(--red,#C2362F);font-weight:600}
+.imp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.imp-chips button{border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 10px;font:600 12.5px var(--fd-head,inherit);cursor:pointer}
+.imp-chips button.on{background:var(--navy,#0B1F3A);border-color:var(--navy,#0B1F3A);color:#fff}
+.imp-aviso{font-size:12px;color:var(--sub);margin-top:10px;padding:10px 12px;background:#fff4dc;border:1px solid #f3d9a8;border-radius:12px;line-height:1.55}
+
+/* v3.20: cofre dos impostos */
+.cf-modal{max-height:92vh}
+.cf-c{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.cf-h{font:800 15px var(--fd-head);color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.cf-big{font:800 32px var(--fd-head);color:var(--text);line-height:1.1}
+.cf-sub{font-size:12.5px;color:var(--sub);line-height:1.45}
+.cf-l{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.cf-l:last-child{border-bottom:none}
+.cf-l b{white-space:nowrap}
+.cf-bar{height:10px;background:var(--well);border-radius:6px;margin:10px 0 6px;overflow:hidden}
+.cf-bar i{display:block;height:100%;background:var(--green);border-radius:6px}
+.cf-falta{font:700 13.5px var(--fd-head);color:var(--red)}
+.cf-ok{font:700 13.5px var(--fd-head);color:var(--green)}
+.cf-ob{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--border);font-size:13px;line-height:1.4;color:var(--sub)}
+.cf-ob:first-child{border-top:none;padding-top:2px}
+.cf-ob .ic{width:32px;height:32px;border-radius:10px;background:var(--well);display:flex;align-items:center;justify-content:center;flex:none;font-size:16px}
+.cf-ob b{display:block;font-size:14px;color:var(--text)}
+.cf-ob.pago{opacity:.55}
+.cf-est{display:inline-block;background:var(--well);color:var(--sub);font:700 10px var(--fd-head);padding:2px 7px;border-radius:999px;margin-left:4px;vertical-align:1px;letter-spacing:.03em}
+.cf-meu{display:inline-block;background:#e8eefc;color:#2848a8;font:700 10px var(--fd-head);padding:2px 7px;border-radius:999px;margin-left:4px;vertical-align:1px;letter-spacing:.03em}
+.cf-acoes{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:5px}
+.cf-acoes button{border:none;background:none;padding:2px 0;font:700 12.5px var(--fd-head);color:#2848a8;cursor:pointer}
+.cf-aviso{background:#fff4dc;border:1px solid #f3d9a8;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.5;color:var(--text);margin-bottom:10px}
+.cf-cont{background:var(--tint);border:1px solid #bfe3cc;border-radius:14px;padding:11px 13px;font-size:13px;line-height:1.45;color:var(--text);margin:10px 0}
+.cf-q{font:800 20px/1.25 var(--fd-head);color:var(--text);margin:4px 0 6px}
+.cf-dots{display:flex;gap:6px;justify-content:center;margin:0 0 14px}.cf-dots i{width:28px;height:5px;border-radius:3px;background:var(--border)}.cf-dots i.on{background:var(--green)}
+.cf-op{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;font-family:inherit;color:var(--text)}
+.cf-op .r{width:20px;height:20px;border-radius:50%;border:2px solid #b8c2cc;flex:none}
+.cf-op.on{border-color:var(--green);background:#f1faf4}.cf-op.on .r{border:6px solid var(--green)}
+.cf-op b{display:block;font-size:14.5px}.cf-op small{font-size:12px;color:var(--sub);line-height:1.35}
+.cf-stp{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13.5px;line-height:1.45;color:var(--text)}
+.cf-stp:first-of-type{border-top:none}
+.cf-stp .n{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font:800 12px var(--fd-head);display:flex;align-items:center;justify-content:center;flex:none}
+.cf-hist{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.cf-hist button{border:none;background:none;color:var(--red);font-size:15px;cursor:pointer;padding:2px 6px}
+.cf-hoje{background:#fff;border:1px solid var(--border);border-radius:18px;padding:13px 14px;margin:10px 0}
+.cf-banner{background:#fff4dc;border:1px solid #f3d9a8;border-radius:16px;padding:12px 14px;margin:10px 0;font-size:13px;line-height:1.45;color:var(--text)}
+.cf-banner b{display:block;font-size:14.5px}
+.cf-row{display:flex;gap:8px;margin-top:9px}
+.cf-row .btn{margin:0;padding:10px 8px;font-size:13px}
+.cf-lnk{display:block;text-align:center;text-decoration:none}
 .pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
 .rel-abrir{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 12px;padding:13px 14px;border-radius:14px;border:1px solid var(--gold-bd,rgba(251,191,36,.3));background:var(--gold-bg,rgba(251,191,36,.08));color:var(--text);text-align:left;cursor:pointer;font:inherit}
 .rel-abrir-ic{font-size:22px} .rel-abrir-tx{flex:1;min-width:0} .rel-abrir-tx b{display:block;font-size:14px} .rel-abrir-tx small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -754,6 +810,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="pg on" id="pg-hoje">
       <div id="kpiGrid"></div>
       <div id="metaDiariaBox"></div>
+      <div id="cofreHoje"></div>
       <div class="kpi-g" id="kpiMini"></div>
       <div class="stit">Horas de trabalho</div>
       <div class="card">
@@ -962,16 +1019,40 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
           <div class="fld">
             <div class="fld-lbl">Impostos a considerar</div>
-            <label class="login-check"><input type="checkbox" id="chkImpSS" onchange="salvarImpostosCfg()"><span>Segurança Social (15%)</span></label>
-            <label class="login-check"><input type="checkbox" id="chkImpIRS" onchange="salvarImpostosCfg()"><span>IRS (automático ou manual)</span></label>
-            <label class="login-check"><input type="checkbox" id="chkImpIVA" onchange="salvarImpostosCfg()"><span>IVA (6%)</span></label>
-            <button class="btn btn-outline" type="button" onclick="restaurarImpostosPadrao()" style="margin-top:8px;padding:10px"> Restaurar padrão</button>
+            <div class="imp-bloco">
+              <label class="login-check"><input type="checkbox" id="chkImpSS" onchange="salvarImpostosCfg()"><span>Seguran&ccedil;a Social</span></label>
+              <div class="imp-cfg" id="impCfgSS">
+                <div class="seg"><label class="seg-opt"><input type="radio" name="impModoSS" id="impModoSSauto" onchange="salvarImpostosCfg()"> Autom&aacute;tico &middot; 15%</label><label class="seg-opt"><input type="radio" name="impModoSS" id="impModoSSman" onchange="salvarImpostosCfg()"> &#9998; Personalizar <span class="pro-tag" id="impProSS" style="font-size:9px;padding:1px 5px">PRO</span></label></div>
+                <div class="imp-man" id="impManSS">
+                  <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iSsManual" placeholder="ex.: 11,2" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
+                  <div class="imp-dica" id="impDicaSS">A percentagem que pagas de facto. Se est&aacute;s isento, p&otilde;e 0.</div>
+                </div>
+              </div>
+            </div>
+            <div class="imp-bloco">
+              <label class="login-check"><input type="checkbox" id="chkImpIRS" onchange="salvarImpostosCfg()"><span>IRS</span></label>
+              <div class="imp-cfg" id="impCfgIRS">
+                <div class="seg"><label class="seg-opt"><input type="radio" name="impModoIRS" id="impModoIRSauto" onchange="salvarImpostosCfg()"> Autom&aacute;tico &middot; <span id="impIrsAutoTxt">escal&atilde;o</span></label><label class="seg-opt"><input type="radio" name="impModoIRS" id="impModoIRSman" onchange="salvarImpostosCfg()"> &#9998; Personalizar <span class="pro-tag" id="impProIRS" style="font-size:9px;padding:1px 5px">PRO</span></label></div>
+                <div class="imp-man" id="impManIRS">
+                  <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iIrsManual" placeholder="ex.: 23" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
+                  <div class="imp-dica" id="impDicaIRS">A taxa que o teu contabilista indicou (conta com rendimentos de outros anos que a app n&atilde;o conhece).</div>
+                  <div class="imp-escaloes"><div class="imp-dica" style="margin:8px 0 4px">Ou toca no teu escal&atilde;o:</div><div class="imp-chips" id="impIrsChips"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="imp-bloco">
+              <label class="login-check"><input type="checkbox" id="chkImpIVA" onchange="salvarImpostosCfg()"><span>IVA</span></label>
+              <div class="imp-cfg" id="impCfgIVA">
+                <div class="seg"><label class="seg-opt"><input type="radio" name="impModoIVA" id="impModoIVAauto" onchange="salvarImpostosCfg()"> Autom&aacute;tico &middot; 6%</label><label class="seg-opt"><input type="radio" name="impModoIVA" id="impModoIVAman" onchange="salvarImpostosCfg()"> &#9998; Personalizar <span class="pro-tag" id="impProIVA" style="font-size:9px;padding:1px 5px">PRO</span></label></div>
+                <div class="imp-man" id="impManIVA">
+                  <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iIvaManual" placeholder="ex.: 6" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
+                  <div class="imp-dica" id="impDicaIVA">A taxa que cobras nas tuas faturas.</div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline" type="button" onclick="restaurarImpostosPadrao()" style="margin-top:8px;padding:10px"> Restaurar padr&atilde;o</button>
           </div>
-          <div class="fld">
-            <div class="fld-lbl">IRS taxa manual (opcional)</div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Deixa em branco para c&aacute;lculo autom&aacute;tico por escal&atilde;o</div>
-            <div class="iw"><div class="ipfx">%</div><input type="number" inputmode="decimal" id="iIrsManual" placeholder="automatico" min="0" max="53" step="0.1" oninput="salvarImpostosCfg()"></div>
-          </div>
+          <div class="imp-aviso"><b>&#9432; Valores estimados</b><br><b>Autom&aacute;tico</b> = c&aacute;lculo do Finance Drive com as regras gerais. Ele n&atilde;o sabe de isen&ccedil;&otilde;es, redu&ccedil;&otilde;es nem de rendimentos de anos anteriores.<br><b>&#9998; Personalizar</b> = p&otilde;es a taxa que pagas de facto. A taxa vale para todos os teus registos.<br><b>Confirma sempre com o teu contabilista.</b></div>
           <div style="font-size:11px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
             Seleciona apenas os impostos que queres considerar no c&aacute;lculo. Podes deixar todos ativos ou calcular s&oacute; SS, IRS ou IVA.<br>
             <strong style="color:var(--amber)">N&atilde;o incluem:</strong> energia em &euro; (bolso), alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Transfer
@@ -1097,7 +1178,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.18.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.20.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1131,6 +1212,13 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 
 <div class="modal-overlay" id="avOverlay">
   <div class="modal av-modal"><div id="avCorpo"></div></div>
+</div>
+
+<div class="modal-overlay" id="cofreOverlay">
+  <div class="modal cf-modal">
+    <div class="modal-hdr"><div class="modal-title" id="cfTitulo">&#129534; Cofre dos impostos <span class="pro-tag">PRO</span></div><button class="modal-close" type="button" onclick="cofreFechar()" aria-label="Fechar">&#10005;</button></div>
+    <div id="cfCorpo"></div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="proOverlay">
@@ -1674,7 +1762,7 @@ function htmlImpostosPeriodo(imp,trajeto,periodo){
   if(isPro())return htmlImpostos(imp,trajeto,true);
   normalizarImpostosCfg();
   var lin=function(t){ return '<div class="impostos-row"><span class="impostos-lbl">'+t+'</span><span class="impostos-val imp-borrado">-000,00 €</span></div>'; };
-  var linhas=(imp.usarSS?lin('SS (15%)'):'')+(imp.usarIRS?lin('IRS'):'')+(imp.usarIVA?lin('IVA (6%)'):'')+lin('💰 Total a pôr de lado');
+  var linhas=(imp.usarSS?lin('SS ('+rotTaxa('SS')+')'):'')+(imp.usarIRS?lin('IRS'):'')+(imp.usarIVA?lin('IVA ('+rotTaxa('IVA')+')'):'')+lin('💰 Total a pôr de lado');
   return '<div class="impostos-box">'+
     '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span class="pro-tag">PRO</span></div>'+
     '<div class="imp-bloq"><div class="imp-bloq-linhas">'+linhas+'</div>'+
@@ -1741,7 +1829,8 @@ function calcHoras(inicio,fim,almoco){
 function fmtHoras(h){ if(!h&&h!==0)return'-- h --min'; var hh=Math.floor(h),mm=Math.round((h-hh)*60); return hh+'h '+pad(mm)+'min'; }
 
 // ── Impostos PT ───────────────────────────────────────────────────────
-function escaloesIRS(){ return [{ate:7703,taxa:13},{ate:11623,taxa:18},{ate:16472,taxa:23},{ate:21321,taxa:26},{ate:27146,taxa:32.75},{ate:39791,taxa:37},{ate:51997,taxa:43.5},{ate:81199,taxa:45},{ate:Infinity,taxa:48}]; }
+// v3.20: escalões de IRS de 2026 (art. 68.º CIRS, limites +3,51% e taxas com a descida de 2026). Rever todos os anos.
+function escaloesIRS(){ return [{ate:8342,taxa:12.2},{ate:12587,taxa:15.2},{ate:17838,taxa:20.7},{ate:23089,taxa:23.6},{ate:29397,taxa:30.6},{ate:43090,taxa:34.6},{ate:46566,taxa:43.1},{ate:86634,taxa:44.6},{ate:Infinity,taxa:48}]; }
 function calcEscalaoIRS(rend){ var e=escaloesIRS(); for(var i=0;i<e.length;i++){ if(rend<=e[i].ate)return e[i].taxa; } return 48; }
 function projetarRendimentoAnual(){
   var anoAtual=new Date().getFullYear();
@@ -1751,8 +1840,28 @@ function projetarRendimentoAnual(){
   var total=keys.reduce(function(a,k){ var r=DB[k]||{}; var bf=baseFiscal(r,k); return a+(bf>0?bf:0); },0);
   return total;
 }
+// v3.19: cada imposto tem modo 'auto' (padrão do FD) ou 'manual' (taxa posta pelo motorista).
+// Por omissão os valores são exatamente os de antes: SS 15%, IVA 6%, IRS por escalão.
+var IMP_PADRAO={SS:15,IVA:6}, IMP_MAX={SS:60,IRS:53,IVA:23};
+function r2(x){ return Math.round((x+(x>=0?1:-1)*1e-9)*100)/100; }
+function _impNum(x){ return typeof x==='number'&&isFinite(x); }
+function lerPct(txt){ var t=String(txt==null?'':txt).trim().replace(/\s|%/g,'').replace(',','.'); if(t==='')return null; if(!/^\d*\.?\d*$/.test(t))return NaN; var v=parseFloat(t); return isNaN(v)?NaN:Math.round(v*100)/100; }
+function fmtPct(v){ return String(Math.round(v*100)/100).replace('.',','); }
+function impPodePersonalizar(t){ return isPro()||(t==='IRS'&&!!(CFG.impostos&&CFG.impostos.irsLegado)); }
+function impEhManual(t){ normalizarImpostosCfg(); var i=CFG.impostos; if(!impPodePersonalizar(t))return false; if(t==='SS')return i.ssModo==='manual'&&_impNum(i.ssManual); if(t==='IVA')return i.ivaModo==='manual'&&_impNum(i.ivaManual); return i.irsModo==='manual'&&_impNum(i.irsManual); }
+function taxaSSef(){ return impEhManual('SS')?CFG.impostos.ssManual:IMP_PADRAO.SS; }
+function taxaIVAef(){ return impEhManual('IVA')?CFG.impostos.ivaManual:IMP_PADRAO.IVA; }
+function taxaIRSef(){ return impEhManual('IRS')?CFG.impostos.irsManual:calcEscalaoIRS(projetarRendimentoAnual()); }
+function rotTaxa(t){ return fmtPct(t==='SS'?taxaSSef():taxaIVAef())+'%'+(impEhManual(t)?' ✏️':''); }
 function normalizarImpostosCfg(){
   if(!CFG.impostos)CFG.impostos={ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true};
+  var _i=CFG.impostos;
+  if(typeof _i.irsLegado==='undefined')_i.irsLegado=!!(_impNum(_i.irsManual)&&_i.irsManual>0&&_i.irsModo!=='auto');
+  if(typeof _i.irsModo==='undefined')_i.irsModo=(_impNum(_i.irsManual)&&_i.irsManual>0)?'manual':'auto';
+  if(typeof _i.ssModo==='undefined')_i.ssModo='auto';
+  if(typeof _i.ivaModo==='undefined')_i.ivaModo='auto';
+  if(typeof _i.ssManual==='undefined')_i.ssManual=null;
+  if(typeof _i.ivaManual==='undefined')_i.ivaManual=null;
   if(typeof CFG.impostos.ativo==='undefined')CFG.impostos.ativo=false;
   if(typeof CFG.impostos.irsManual==='undefined')CFG.impostos.irsManual=null;
   if(typeof CFG.impostos.usarSS==='undefined')CFG.impostos.usarSS=true;
@@ -1775,12 +1884,13 @@ function calcImpostos(r,iso){
   var baseSS=baseFiscalPorImposto(r,iso,'SS'),baseIRS=baseFiscalPorImposto(r,iso,'IRS'),baseIVA=baseFiscalPorImposto(r,iso,'IVA');
   var temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
   if(!CFG.impostos.ativo&&!temFiscal)return null;
-  var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
+  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=taxaIVAef()/100;
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
-  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
-  if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*0.15:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=transferTemImposto(r,'IVA')?baseIVA*0.06:0; }
-  var total=ss+irs+iva,sl=saldo(r,iso),bolso=gastosBolso(r);
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-bolso,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:bolso,recuperarEnergia:energiaDinheiro(r),usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
+  var ss=usarSS?baseSS*tSS:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*tIVA:0;
+  if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*tSS:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=transferTemImposto(r,'IVA')?baseIVA*tIVA:0; }
+  ss=r2(ss); irs=r2(irs); iva=r2(iva);
+  var total=r2(ss+irs+iva),sl=saldo(r,iso),bolso=gastosBolso(r);
+  return{ss:ss,irs:irs,iva:iva,total:total,real:r2(sl)-total-r2(bolso),taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:bolso,recuperarEnergia:energiaDinheiro(r),usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
 // calcImpostosValores: semana/hist&oacute;rico com uma base separada para cada imposto.
 function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
@@ -1788,12 +1898,13 @@ function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
   if(CFG.pais!=='PT'||!bases)return null;
   var baseSS=bases.SS||0,baseIRS=bases.IRS||0,baseIVA=bases.IVA||0,temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
   if(!CFG.impostos.ativo&&!temFiscal)return null;
-  var taxa=CFG.impostos.irsManual||calcEscalaoIRS(projetarRendimentoAnual());
+  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=taxaIVAef()/100;
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
-  var ss=usarSS?baseSS*0.15:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*0.06:0;
-  if(!CFG.impostos.ativo){ ss=baseSS*0.15; irs=baseIRS*(taxa/100); iva=baseIVA*0.06; }
-  var total=ss+irs+iva,b=bolso||0;
-  return{ss:ss,irs:irs,iva:iva,total:total,real:sl-total-b,taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
+  var ss=usarSS?baseSS*tSS:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*tIVA:0;
+  if(!CFG.impostos.ativo){ ss=baseSS*tSS; irs=baseIRS*(taxa/100); iva=baseIVA*tIVA; }
+  ss=r2(ss); irs=r2(irs); iva=r2(iva);
+  var total=r2(ss+irs+iva),b=bolso||0;
+  return{ss:ss,irs:irs,iva:iva,total:total,real:r2(sl)-total-r2(b),taxaIRS:taxa,base:Math.max(baseSS,baseIRS,baseIVA),baseSS:baseSS,baseIRS:baseIRS,baseIVA:baseIVA,saldo:sl,bolso:b,recuperarEnergia:energiaRecuperar||0,usarSS:ss>0,usarIRS:irs>0,usarIVA:iva>0};
 }
 function htmlImpostos(imp,trajeto,porDeLado){
   if(!imp)return '';
@@ -1801,9 +1912,9 @@ function htmlImpostos(imp,trajeto,porDeLado){
   var proj=projetarRendimentoAnual();
   var auto=calcEscalaoIRS(proj);
   var linhas='';
-  if(imp.usarSS)linhas+='<div class="impostos-row"><span class="impostos-lbl">SS (15%)</span><span class="impostos-val">-'+moeda(imp.ss)+'</span></div>';
-  if(imp.usarIRS)linhas+='<div class="impostos-row"><span class="impostos-lbl">IRS ('+imp.taxaIRS.toFixed(1)+'%'+(CFG.impostos.irsManual?'':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>';
-  if(imp.usarIVA)linhas+='<div class="impostos-row"><span class="impostos-lbl">IVA (6%)</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>';
+  if(imp.usarSS)linhas+='<div class="impostos-row"><span class="impostos-lbl">SS ('+rotTaxa('SS')+')</span><span class="impostos-val">-'+moeda(imp.ss)+'</span></div>';
+  if(imp.usarIRS)linhas+='<div class="impostos-row"><span class="impostos-lbl">IRS ('+fmtPct(imp.taxaIRS)+'%'+(impEhManual('IRS')?' ✏️':' auto')+')</span><span class="impostos-val">-'+moeda(imp.irs)+'</span></div>';
+  if(imp.usarIVA)linhas+='<div class="impostos-row"><span class="impostos-lbl">IVA ('+rotTaxa('IVA')+')</span><span class="impostos-val">-'+moeda(imp.iva)+'</span></div>';
   if(!linhas)linhas='<div class="impostos-row"><span class="impostos-lbl">Nenhum imposto selecionado</span><span class="impostos-val">-'+moeda(0)+'</span></div>';
   var totImp=(imp.usarSS?imp.ss:0)+(imp.usarIRS?imp.irs:0)+(imp.usarIVA?imp.iva:0);
   if(porDeLado&&totImp>0)linhas+='<div class="impostos-row imp-lado"><span class="impostos-lbl">💰 Total a pôr de lado</span><span class="impostos-val">'+moeda(totImp)+'</span></div>';
@@ -1811,7 +1922,7 @@ function htmlImpostos(imp,trajeto,porDeLado){
   return '<div class="impostos-box">'+
     '<div class="impostos-titulo"><span>Estimativa fiscal PT</span><span style="font-size:11px;color:var(--muted)">'+(ativos.length?ativos.join(' + '):'sem impostos')+'</span></div>'+linhas+
     htmlBlocoSaldos(imp.real-(trajeto||0),trajeto||0,imp.real)+
-    '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(CFG.impostos.irsManual?' (manual)':' (auto)')+'. Base fiscal conforme configurações gerais e Transfers tributáveis. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+
+    '<div class="impostos-nota">Acumulado '+new Date().getFullYear()+': '+moeda(proj)+' → Escalão IRS: '+auto+'%'+(impEhManual('IRS')?' (usas '+fmtPct(imp.taxaIRS)+'% ✏️)':' (auto)')+'.'+((impEhManual('SS')||impEhManual('IVA')||impEhManual('IRS'))?' ✏️ = taxa personalizada por ti.':'')+' Base fiscal conforme configurações gerais e Transfers tributáveis. Energia do bolso recuperada antes da meta. Estimativa — consulta o teu contabilista.</div>'+
   '</div>';
 }
 function toggleImpostos(){
@@ -1822,19 +1933,54 @@ function toggleImpostos(){
   if(det)det.style.display=CFG.impostos.ativo?'':'none';
   renderHoje(); renderSemana();
 }
-function salvarImpostosCfg(){
+var IMP_CAMPOS={SS:{inp:'iSsManual',modo:'ssModo',val:'ssManual'},IRS:{inp:'iIrsManual',modo:'irsModo',val:'irsManual'},IVA:{inp:'iIvaManual',modo:'ivaModo',val:'ivaManual'}};
+var IMP_DICAS={},_impPedirPro=false;
+function salvarImpostosCfg(reescrever){
   normalizarImpostosCfg();
-  var v=document.getElementById('iIrsManual');
-  if(v){ var val=parseFloat(v.value); CFG.impostos.irsManual=(!isNaN(val)&&val>0)?val:null; }
+  ['SS','IRS','IVA'].forEach(function(t){
+    var c=IMP_CAMPOS[t],man=document.getElementById('impModo'+t+'man'),inp=document.getElementById(c.inp),dica=document.getElementById('impDica'+t);
+    if(man&&man.checked&&!impPodePersonalizar(t)){ man.checked=false; var au=document.getElementById('impModo'+t+'auto'); if(au)au.checked=true; _impPedirPro=true; }
+    if(man)CFG.impostos[c.modo]=man.checked?'manual':'auto';
+    if(inp){
+      var v=lerPct(inp.value),erro='';
+      if(v!==null&&isNaN(v)){ erro='Escreve só números, por exemplo 11,2.'; v=CFG.impostos[c.val]; }
+      else if(v!==null&&v>IMP_MAX[t]){ erro='O máximo é '+IMP_MAX[t]+'%. Ficou '+IMP_MAX[t]+'%.'; v=IMP_MAX[t]; }
+      CFG.impostos[c.val]=v;
+      if(dica){ if(!IMP_DICAS[t])IMP_DICAS[t]=dica.innerHTML; dica.className='imp-dica'+(erro?' erro':''); dica.innerHTML=erro||(CFG.impostos[c.modo]==='manual'&&v===null?'Sem valor, continua a usar o automático.':IMP_DICAS[t]); }
+      if(reescrever===true&&v!==null)inp.value=fmtPct(v);
+    }
+  });
   var ss=document.getElementById('chkImpSS'),irs=document.getElementById('chkImpIRS'),iva=document.getElementById('chkImpIVA');
   if(ss)CFG.impostos.usarSS=!!ss.checked;
   if(irs)CFG.impostos.usarIRS=!!irs.checked;
   if(iva)CFG.impostos.usarIVA=!!iva.checked;
+  atualizarVisImpostos();
   salvarLocal(); renderHoje(); renderSemana(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist();
+  if(_impPedirPro){ _impPedirPro=false; abrirPro('personalizar_impostos'); }
+}
+function atualizarVisImpostos(){
+  ['SS','IRS','IVA'].forEach(function(t){
+    var chk=document.getElementById('chkImp'+t),cfg=document.getElementById('impCfg'+t),man=document.getElementById('impMan'+t);
+    if(cfg)cfg.style.display=(chk&&chk.checked)?'':'none';
+    if(man)man.style.display=(CFG.impostos[IMP_CAMPOS[t].modo]==='manual'&&impPodePersonalizar(t))?'':'none';
+    var mr=document.getElementById('impModo'+t+'man'),ar=document.getElementById('impModo'+t+'auto');
+    if(mr&&!impPodePersonalizar(t)){ mr.checked=false; if(ar)ar.checked=true; }
+    var tg=document.getElementById('impPro'+t); if(tg)tg.style.display=impPodePersonalizar(t)?'none':'';
+  });
+  var a=document.getElementById('impIrsAutoTxt'); if(a)a.textContent=fmtPct(calcEscalaoIRS(projetarRendimentoAnual()))+'%';
+  var ch=document.getElementById('impIrsChips');
+  if(ch){ var atual=impEhManual('IRS')?CFG.impostos.irsManual:null, vistos={};
+    ch.innerHTML=escaloesIRS().map(function(e){ if(vistos[e.taxa])return ''; vistos[e.taxa]=1; return '<button type="button" class="'+(atual===e.taxa?'on':'')+'" onclick="escolherEscalaoIRS('+e.taxa+')">'+fmtPct(e.taxa)+'%</button>'; }).join(''); }
+}
+function escolherEscalaoIRS(t){
+  var inp=document.getElementById('iIrsManual'),man=document.getElementById('impModoIRSman');
+  if(man)man.checked=true; if(inp)inp.value=fmtPct(t);
+  salvarImpostosCfg(true);
 }
 function restaurarImpostosPadrao(){
   normalizarImpostosCfg();
   CFG.impostos.usarSS=true; CFG.impostos.usarIRS=true; CFG.impostos.usarIVA=true;
+  CFG.impostos.ssModo='auto'; CFG.impostos.irsModo='auto'; CFG.impostos.ivaModo='auto';
   mostrarImpostosCfg(); salvarImpostosCfg(); toast('Impostos padrão restaurados','ok');
 }
 function mostrarImpostosCfg(){
@@ -1846,8 +1992,13 @@ function mostrarImpostosCfg(){
   if(stit)stit.style.display=show?'':'none'; if(card)card.style.display=show?'':'none';
   if(tog)tog.className='toggle'+(CFG.impostos.ativo?' on':'');
   if(det)det.style.display=(show&&CFG.impostos.ativo)?'':'none';
-  if(inp)inp.value=CFG.impostos.irsManual||'';
   if(ss)ss.checked=CFG.impostos.usarSS!==false; if(irs)irs.checked=CFG.impostos.usarIRS!==false; if(iva)iva.checked=CFG.impostos.usarIVA!==false;
+  ['SS','IRS','IVA'].forEach(function(t){
+    var c=IMP_CAMPOS[t],m=CFG.impostos[c.modo]==='manual',a=document.getElementById('impModo'+t+'auto'),mm=document.getElementById('impModo'+t+'man'),el=document.getElementById(c.inp);
+    if(a)a.checked=!m; if(mm)mm.checked=m;
+    if(el&&document.activeElement!==el)el.value=_impNum(CFG.impostos[c.val])?fmtPct(CFG.impostos[c.val]):'';
+  });
+  atualizarVisImpostos();
 }
 
 // ── Comparativo semanal ───────────────────────────────────────────────
@@ -2195,7 +2346,7 @@ function concluirGuardar(hojeKey,rec){
   document.getElementById('mainContent').scrollTop=0;
   verificarConquistas(hojeKey);
 }
-function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSection(); renderKPIs(); renderResumoDia(); atualizarPlat2Labels(); }
+function renderHoje(){ renderHeader(); renderEnergiaSection(); renderMEnergiaSection(); renderKPIs(); renderResumoDia(); atualizarPlat2Labels(); try{ renderCofreHoje(); }catch(e){ console.warn('cofre',e); } }
 
 // ── Semana ────────────────────────────────────────────────────────────
 var _semInfo=null;
@@ -3388,6 +3539,8 @@ function linhaFuncoesPro(){
     '<tr><td>Estimativa de impostos do dia (SS, IRS e IVA)</td><td class="c pro-ok">✓</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Impostos da semana, mês e ano, com quanto pôr de lado</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Relatório para o contabilista (mês, trimestre, ano) em PDF e Excel</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Cofre dos impostos: quanto guardar, datas e avisos no calendário</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
+    '<tr><td>Personalizar as taxas de SS, IRS e IVA</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Ligação ao Trajeto Transfer</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr>'+
     '<tr><td>Novas funções PRO que forem saindo</td><td class="c pro-no">—</td><td class="c pro-ok">✓</td></tr></table>';
 }
@@ -3410,6 +3563,8 @@ function renderPlanoUI(){
   var rel=document.getElementById('relOverlay'); if(rel&&rel.classList.contains('show'))desenharRelatorio();
   try{ var pgOn=document.querySelector('.pg.on'); if(pgOn&&pgOn.id==='pg-semana')renderSemana(); if(pgOn&&pgOn.id==='pg-hist')renderHist(); }catch(e){}
   if(typeof renderTrajetoCfg==='function')renderTrajetoCfg();
+  // v3.20: as taxas personalizadas e o cofre dependem do PRO
+  try{ renderHoje(); if(document.getElementById('impostosCard'))mostrarImpostosCfg(); var co=document.getElementById('cofreOverlay'); if(co&&co.classList.contains('show'))cofreRender(); }catch(e){}
 }
 // ---- Janela PRO (comprar) ----
 function abrirPro(origem){
@@ -3560,9 +3715,9 @@ function relLinhas(t){
   L.push(['Saldo operacional',moeda(t.saldoOper),'b']);
   if(t.imp&&(t.imp.ss+t.imp.irs+t.imp.iva)>0){
     L.push(['__Estimativa fiscal']);
-    if(t.imp.ss>0)L.push(['Segurança Social (15%)','-'+moeda(t.imp.ss),'']);
+    if(t.imp.ss>0)L.push(['Segurança Social ('+fmtPct(taxaSSef())+'%)','-'+moeda(t.imp.ss),'']);
     if(t.imp.irs>0)L.push(['IRS ('+t.imp.taxaIRS.toFixed(1)+'%)','-'+moeda(t.imp.irs),'']);
-    if(t.imp.iva>0)L.push(['IVA (6%)','-'+moeda(t.imp.iva),'']);
+    if(t.imp.iva>0)L.push(['IVA ('+fmtPct(taxaIVAef())+'%)','-'+moeda(t.imp.iva),'']);
   }
   if(t.energiaBolso>0||t.comida>0||t.outrosGastos>0){ L.push(['__Gastos do bolso']); if(t.energiaBolso>0)L.push(['Energia paga do bolso','-'+moeda(t.energiaBolso),'']); if(t.comida>0)L.push(['Alimentação','-'+moeda(t.comida),'']); if(t.outrosGastos>0)L.push(['Outros gastos','-'+moeda(t.outrosGastos),'']); }
   L.push(['@TOT']);
@@ -3835,7 +3990,7 @@ function relGerarXLSX(d){
   L.push([T('Ganhos totais',6),E(t.ganhos,7)]);
   sec('Despesas da atividade'); if(t.taxa>0)L.push([T('Taxa do operador'),E(-t.taxa)]); L.push([T('Aluguer da viatura'),E(-t.aluguer)]); L.push([T(isEletrico()?'Energia (carregamentos da frota)':'Combustível'),E(-t.energia)]);
   L.push([T('Saldo operacional',6),E(t.saldoOper,7)]);
-  if(imp>0){ sec('Estimativa fiscal'); if(t.imp.ss>0)L.push([T('Segurança Social (15%)'),E(-t.imp.ss)]); if(t.imp.irs>0)L.push([T('IRS ('+t.imp.taxaIRS.toFixed(1).replace('.',',')+'%)'),E(-t.imp.irs)]); if(t.imp.iva>0)L.push([T('IVA (6%)'),E(-t.imp.iva)]); L.push([T('Total de impostos estimados',6),E(-imp,7)]); }
+  if(imp>0){ sec('Estimativa fiscal'); if(t.imp.ss>0)L.push([T('Segurança Social ('+fmtPct(taxaSSef())+'%)'),E(-t.imp.ss)]); if(t.imp.irs>0)L.push([T('IRS ('+t.imp.taxaIRS.toFixed(1).replace('.',',')+'%)'),E(-t.imp.irs)]); if(t.imp.iva>0)L.push([T('IVA ('+fmtPct(taxaIVAef())+'%)'),E(-t.imp.iva)]); L.push([T('Total de impostos estimados',6),E(-imp,7)]); }
   if(t.energiaBolso>0||t.comida>0||t.outrosGastos>0){ sec('Gastos do bolso'); if(t.energiaBolso>0)L.push([T('Energia paga do bolso'),E(-t.energiaBolso)]); if(t.comida>0)L.push([T('Alimentação'),E(-t.comida)]); if(t.outrosGastos>0)L.push([T('Outros gastos'),E(-t.outrosGastos)]); }
   L.push([]); L.push({alt:26,c:[T('Rendimento líquido estimado',16),E(t.saldoReal,11)]}); L.push([]);
   sec('Atividade'); L.push([T('Dias registados'),{v:t.dias,s:9}]); L.push([T('Quilómetros'),{v:Math.round(t.kms),s:9}]); if(t.horas>0)L.push([T('Horas registadas'),{v:t.horas/24,s:13}]);
@@ -3893,6 +4048,270 @@ function proVoltaDaStripe(){
     if(n>=40){ clearInterval(_esperaPro); _esperaPro=null; var e2=document.getElementById('proEsperaTx'); if(e2)e2.innerHTML='Está a demorar mais do que o normal. Fecha e volta a abrir a app daqui a um minuto. Se não ficar ativo, escreve para '+SUPORTE_EMAIL+'.'; }
   },3000);
 }
+
+// ══ v3.20: Cofre dos impostos (PRO) ══
+// Usa os mesmos valores de calcImpostos (ss + irs + iva de cada dia). Não mexe em nenhum cálculo do resto da app.
+// Tudo o que o motorista marca fica em CFG.cofre (vai para a nuvem com as outras definições).
+var CF_LINK={ss:'https://app.seg-social.pt',at:'https://www.portaldasfinancas.gov.pt'};
+var _cfView='main',_cfArg=null,_cfWiz=null;
+function cfCfg(){ if(!CFG.cofre||typeof CFG.cofre!=='object')CFG.cofre={}; var c=CFG.cofre;
+  if(!c.valores||typeof c.valores!=='object')c.valores={}; if(!c.pagos||typeof c.pagos!=='object')c.pagos={}; if(!c.guardado||typeof c.guardado!=='object')c.guardado={};
+  if(!c.ivaRegime)c.ivaRegime='trimestral'; if(!(c.avisoDias>=0))c.avisoDias=5; return c; }
+function cfISO(y,m,d){ var x=new Date(y,m-1,d,12); return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate()); }
+function cfUltimoDia(y,m){ return new Date(y,m,0,12).getDate(); }
+function cfDiasEntre(a,b){ return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000); }
+function cfDataTxt(iso){ var d=new Date(iso+'T12:00:00'); return d.getDate()+' '+MESES_S[d.getMonth()].toLowerCase()+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():''); }
+function cfTrimTxt(y,q){ var n=['jan–mar','abr–jun','jul–set','out–dez']; return n[q-1]+(y!==new Date().getFullYear()?' '+y:''); }
+// impostos de cada dia registado (uma vez por desenho)
+function cfMapaImp(){ var m={}; Object.keys(DB).forEach(function(k){ if(!/^\d{4}-\d{2}-\d{2}$/.test(k))return; var i=calcImpostos(DB[k],k); m[k]=i?{ss:i.ss,irs:i.irs,iva:i.iva,total:i.total}:{ss:0,irs:0,iva:0,total:0}; }); return m; }
+function cfSoma(mapa,de,ate,campo){ var t=0; Object.keys(mapa).forEach(function(k){ if(k>=de&&k<=ate)t+=mapa[k][campo]; }); return r2(t); }
+function cfFaturado(de,ate){ var t=0; Object.keys(DB).forEach(function(k){ if(k>=de&&k<=ate){ var r=DB[k]; t+=ganhos(r)-trajetoValor(r); } }); return r2(t); }
+function cfTemDados(de,ate){ return Object.keys(DB).some(function(k){ return k>=de&&k<=ate; }); }
+function cfQuarter(m){ return Math.floor((m-1)/3)+1; }
+function cfQuarterIni(y,q){ return cfISO(y,(q-1)*3+1,1); }
+function cfQuarterFim(y,q){ return cfISO(y,q*3,cfUltimoDia(y,q*3)); }
+// Lista de obrigações à volta de hoje (do mês anterior até 13 meses à frente)
+function cfObrigacoes(mapa){
+  normalizarImpostosCfg(); var c=cfCfg(),I=CFG.impostos,lst=[],h=new Date(),y0=h.getFullYear(),m0=h.getMonth()+1;
+  for(var k=-1;k<=13;k++){
+    var d=new Date(y0,m0-1+k,1,12),y=d.getFullYear(),m=d.getMonth()+1,ym=y+'-'+pad(m);
+    if(I.usarSS){
+      // contribuição do mês anterior; a base vem do trimestre declarado antes desse mês
+      var cm=new Date(y,m-2,1,12),cy=cm.getFullYear(),cq=cfQuarter(cm.getMonth()+1),by=cq===1?cy-1:cy,bq=cq===1?4:cq-1;
+      var de=cfQuarterIni(by,bq),ate=cfQuarterFim(by,bq);
+      lst.push({key:'ss_pag:'+ym,tipo:'ss_pag',data:cfISO(y,m,20),ic:'🏛',tit:'Segurança Social · pagar',per:'contribuição de '+MESES[cm.getMonth()].toLowerCase()+' · base '+cfTrimTxt(by,bq),est:cfTemDados(de,ate)?r2(cfSoma(mapa,de,ate,'ss')/3):null,pag:true});
+      if(m%3===1){ var py=m===1?y-1:y,pq=m===1?4:cfQuarter(m)-1,pde=cfQuarterIni(py,pq),pate=cfQuarterFim(py,pq);
+        lst.push({key:'ss_decl:'+ym,tipo:'ss_decl',data:cfISO(y,m,cfUltimoDia(y,m)),ic:'📝',tit:'Segurança Social · declaração trimestral',per:'declarar '+cfTrimTxt(py,pq),fat:cfTemDados(pde,pate)?cfFaturado(pde,pate):null,pag:false}); }
+    }
+    if(I.usarIVA){
+      if(c.ivaRegime==='mensal'){ var rm=new Date(y,m-3,1,12),rde=cfISO(rm.getFullYear(),rm.getMonth()+1,1),rate=cfISO(rm.getFullYear(),rm.getMonth()+1,cfUltimoDia(rm.getFullYear(),rm.getMonth()+1)),rlb=MESES[rm.getMonth()].toLowerCase()+(rm.getFullYear()!==y0?' '+rm.getFullYear():''),rk=rm.getFullYear()+'-'+pad(rm.getMonth()+1),rest=cfTemDados(rde,rate)?cfSoma(mapa,rde,rate,'iva'):null;
+        lst.push({key:'iva_ent:'+rk,tipo:'iva_ent',data:cfISO(y,m,20),ic:'🧾',tit:'IVA · entregar declaração',per:'IVA de '+rlb,est:rest,pag:false});
+        lst.push({key:'iva_pag:'+rk,tipo:'iva_pag',data:cfISO(y,m,25),ic:'🧾',tit:'IVA · pagar',per:'IVA de '+rlb,est:rest,pag:true});
+      } else if(m%3===2){ var iy=m===2?y-1:y,iq=m===2?4:cfQuarter(m)-1,ide=cfQuarterIni(iy,iq),iate=cfQuarterFim(iy,iq),iest=cfTemDados(ide,iate)?cfSoma(mapa,ide,iate,'iva'):null;
+        lst.push({key:'iva_ent:'+iy+'-T'+iq,tipo:'iva_ent',data:cfISO(y,m,20),ic:'🧾',tit:'IVA · entregar declaração',per:'IVA de '+cfTrimTxt(iy,iq),est:iest,pag:false});
+        lst.push({key:'iva_pag:'+iy+'-T'+iq,tipo:'iva_pag',data:cfISO(y,m,25),ic:'🧾',tit:'IVA · pagar',per:'IVA de '+cfTrimTxt(iy,iq),est:iest,pag:true});
+      }
+    }
+    if(I.usarIRS&&m===6){ var ay=y-1,ade=ay+'-01-01',aate=ay+'-12-31';
+      lst.push({key:'irs:'+ay,tipo:'irs',data:cfISO(y,6,30),ic:'📄',tit:'IRS de '+ay+' · entregar',per:'de 1 de abril a 30 de junho'+(ay===y0?' · até agora':''),est:cfTemDados(ade,aate)?cfSoma(mapa,ade,aate,'irs'):null,pag:true}); }
+  }
+  lst.forEach(function(o){ var v=cfValor(o); o.valor=v.valor; o.teu=v.teu; o.nota=v.nota; o.pago=c.pagos[o.key]||null; });
+  return lst.sort(function(a,b){ return a.data<b.data?-1:a.data>b.data?1:0; });
+}
+// valor a usar: o deste prazo > o "sempre" desse tipo > a estimativa
+function cfValor(o){ var c=cfCfg(),v=c.valores[o.key]; if(v&&_impNum(v.valor))return {valor:v.valor,teu:'este',nota:v.nota||''};
+  var f=c.valores[o.tipo+'_sempre']; if(f&&_impNum(f.valor)&&o.pag)return {valor:f.valor,teu:'sempre',nota:f.nota||''};
+  return {valor:o.est,teu:'',nota:''}; }
+function cfGuardadoTotal(){ var c=cfCfg(),t=0; Object.keys(c.guardado).forEach(function(k){ (c.guardado[k]||[]).forEach(function(e){ t+=(+e.v||0); }); }); return r2(t); }
+function cfPagoTotal(){ var c=cfCfg(),t=0; Object.keys(c.pagos).forEach(function(k){ t+=(+c.pagos[k].v||0); }); return r2(t); }
+function cfNoCofre(){ return r2(cfGuardadoTotal()-cfPagoTotal()); }
+function cfResumoMes(mapa){ var h=hoje(),ym=h.slice(0,7),c=cfCfg();
+  var dev=cfSoma(mapa,ym+'-01',h,'total'),g=r2((c.guardado[ym]||[]).reduce(function(a,e){ return a+(+e.v||0); },0));
+  return {ym:ym,devias:dev,guardou:g,falta:r2(Math.max(0,dev-g)),pct:dev>0?Math.min(100,Math.round(g/dev*100)):(g>0?100:0),
+    hoje:mapa[h]?mapa[h]:{ss:0,irs:0,iva:0,total:0},ss:cfSoma(mapa,ym+'-01',h,'ss'),irs:cfSoma(mapa,ym+'-01',h,'irs'),iva:cfSoma(mapa,ym+'-01',h,'iva')}; }
+function cfProximaAviso(lst){ var h=hoje(),c=cfCfg(),dias=c.avisoDias;
+  for(var i=0;i<lst.length;i++){ var o=lst[i]; if(o.pago)continue; var dd=cfDiasEntre(h,o.data); if(dd<0&&dd>=-15)return {o:o,dd:dd}; if(dd>=0&&dd<=dias)return {o:o,dd:dd}; }
+  return null; }
+function cfValorHtml(o){ if(o.tipo==='ss_decl')return o.fat!=null?'faturaste ≈ '+moeda(o.fat)+' <span class="cf-est">ESTIMADO</span>':'sem registos nesse trimestre';
+  if(o.valor==null)return 'sem dados para estimar · <b style="display:inline;font-size:13px">põe o teu valor</b>';
+  return (o.teu?'':'≈ ')+moeda(o.valor)+(o.teu?' <span class="cf-meu">✏️ O TEU VALOR</span>':' <span class="cf-est">ESTIMADO</span>'); }
+// "já tens no cofre": soma as obrigações por pagar, por ordem de data, e vê até onde chega o dinheiro do cofre
+function cfCobertura(lst){ var h=hoje(),acc=0,tem=cfNoCofre(),m={}; lst.forEach(function(o){ if(o.pago||!o.pag||o.valor==null||cfDiasEntre(h,o.data)<-15)return; acc=r2(acc+o.valor); m[o.key]=acc<=tem+1e-9; }); return m; }
+function cfQuando(dd){ return dd===0?'hoje':dd===1?'amanhã':dd>0?'faltam '+dd+' dias':(dd===-1?'passou ontem':'passou há '+(-dd)+' dias'); }
+function cfLinkTipo(t){ return t.indexOf('ss_')===0?{u:CF_LINK.ss,t:'Abrir Segurança Social Direta ↗'}:{u:CF_LINK.at,t:'Abrir Portal das Finanças ↗'}; }
+
+// ── cartão no ecrã Hoje ──
+function renderCofreHoje(){
+  var box=document.getElementById('cofreHoje'); if(!box)return;
+  normalizarImpostosCfg();
+  if(CFG.pais!=='PT'||!CFG.impostos.ativo){ box.innerHTML=''; return; }
+  if(!isPro()){ box.innerHTML='<div class="cf-hoje" onclick="abrirPro(\'cofre_hoje\')" style="cursor:pointer"><div class="cf-h">🧾 Cofre dos impostos <span class="pro-tag">PRO</span></div><div class="cf-sub">Sabe quanto guardar por dia para os impostos, quando pagar a SS, o IVA e o IRS, e recebe avisos no calendário.</div></div>'; return; }
+  var c=cfCfg();
+  if(!c.configurado){ box.innerHTML='<div class="cf-hoje"><div class="cf-h">🧾 Cofre dos impostos <span class="pro-tag">PRO</span></div><div class="cf-sub">3 perguntas rápidas e passas a saber quanto guardar e quando pagar.</div><button class="btn btn-green" type="button" style="margin-top:10px" onclick="cofreAbrir()">Configurar o cofre</button></div>'; return; }
+  var mapa=cfMapaImp(),R=cfResumoMes(mapa),lst=cfObrigacoes(mapa),av=cfProximaAviso(lst),html='';
+  if(av){ var o=av.o,lk=cfLinkTipo(o.tipo);
+    html+='<div class="cf-banner">🔔 <b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+cfQuando(av.dd)+(o.tipo==='ss_decl'?'':' · '+cfValorHtml(o))+
+      (o.pag&&o.valor!=null?(cfCobertura(lst)[o.key]?' · <span class="cf-ok">✓ já tens no cofre</span>':' · <span class="cf-falta">no cofre: '+moeda(cfNoCofre())+'</span>'):'')+
+      '<div class="cf-row"><a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+(o.tipo.indexOf('ss_')===0?'SS Direta ↗':'Finanças ↗')+'</a><button class="btn btn-green" type="button" onclick="cofreAbrir(\'pago\',\''+o.key+'\')">✓ '+(o.pag?'Já paguei':'Já entreguei')+'</button></div></div>'; }
+  html+='<div class="cf-hoje" onclick="cofreAbrir()" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:center"><div class="cf-h" style="margin:0">🧾 Cofre de '+MESES[new Date().getMonth()].toLowerCase()+'</div><span style="color:var(--muted);font-size:18px">›</span></div>'+
+    '<div class="cf-l"><span>Hoje guarda</span><b>'+moeda(R.hoje.total)+'</b></div>'+
+    '<div class="cf-l"><span>Já guardaste</span><b style="color:var(--green)">'+moeda(R.guardou)+' de '+moeda(R.devias)+'</b></div>'+
+    '<div class="cf-bar"><i style="width:'+R.pct+'%"></i></div>'+(R.falta>0?'<div class="cf-falta">Falta guardar '+moeda(R.falta)+'</div>':'<div class="cf-ok">✓ Tudo guardado este mês</div>')+'</div>';
+  box.innerHTML=html;
+}
+
+// ── janela do cofre ──
+function cofreAbrir(view,arg){
+  if(!isPro()){ abrirPro('cofre'); return; }
+  var c=cfCfg(); _cfView=c.configurado?(view||'main'):'wiz'; _cfArg=arg||null;
+  if(_cfView==='wiz')cfWizIni();
+  cofreRender(); document.getElementById('cofreOverlay').classList.add('show');
+  trackEvent('cofre_abrir',{view:_cfView});
+}
+function cofreFechar(){ document.getElementById('cofreOverlay').classList.remove('show'); renderHoje(); }
+function cofreIr(v,a){ _cfView=v; _cfArg=a===undefined?null:a; cofreRender(); var m=document.querySelector('#cofreOverlay .modal'); if(m)m.scrollTop=0; }
+function cofreRender(){
+  var el=document.getElementById('cfCorpo'); if(!el)return;
+  if(!isPro()){ el.innerHTML='<div class="cf-sub">O cofre é uma função PRO.</div><button class="btn btn-green" type="button" style="margin-top:10px" onclick="cofreFechar();abrirPro(\'cofre\')">Ver o PRO</button>'; return; }
+  var f={wiz:cfHtmlWiz,main:cfHtmlMain,guardar:cfHtmlGuardar,pago:cfHtmlPago,editar:cfHtmlEditar,ajuda:cfHtmlAjuda}[_cfView]||cfHtmlMain;
+  el.innerHTML=f();
+}
+function cfVoltar(){ return '<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">‹ Voltar ao cofre</button>'; }
+function cfHtmlMain(){
+  var c=cfCfg(),mapa=cfMapaImp(),R=cfResumoMes(mapa),lst=cfObrigacoes(mapa),h=hoje(),I=CFG.impostos;
+  var html='<div class="cf-c"><div class="cf-sub" style="font-weight:600">Hoje guarda</div><div class="cf-big">'+moeda(R.hoje.total)+'</div>'+
+    '<div class="cf-sub">'+(R.hoje.total>0?'SS '+moeda(R.hoje.ss)+' · IRS '+moeda(R.hoje.irs)+' · IVA '+moeda(R.hoje.iva):'Ainda sem registo de hoje.')+'</div></div>';
+  html+='<div class="cf-c"><div class="cf-h">📦 '+MESES[new Date().getMonth()]+'</div>'+
+    '<div class="cf-l"><span>Devias ter guardado</span><b>'+moeda(R.devias)+'</b></div>'+
+    (I.usarSS?'<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">Segurança Social</span><span>'+moeda(R.ss)+'</span></div>':'')+
+    (I.usarIRS?'<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">IRS</span><span>'+moeda(R.irs)+'</span></div>':'')+
+    (I.usarIVA?'<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">IVA</span><span>'+moeda(R.iva)+'</span></div>':'')+
+    '<div class="cf-l"><span>Já guardaste</span><b style="color:var(--green)">'+moeda(R.guardou)+'</b></div>'+
+    '<div class="cf-bar"><i style="width:'+R.pct+'%"></i></div>'+
+    '<div style="display:flex;justify-content:space-between">'+(R.falta>0?'<span class="cf-falta">Falta guardar '+moeda(R.falta)+'</span>':'<span class="cf-ok">✓ Tudo guardado</span>')+'<span class="cf-sub">'+R.pct+'%</span></div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cofreIr(\'guardar\')">＋ Já pus de lado</button>'+
+    '<div class="cf-sub" style="margin-top:8px;text-align:center">No cofre agora (guardado − pago): <b>'+moeda(cfNoCofre())+'</b></div></div>';
+  var vis=lst.filter(function(o){ var dd=cfDiasEntre(h,o.data); return dd>=0||(!o.pago&&dd>=-15); }).slice(0,8);
+  var cob=cfCobertura(lst);
+  html+='<div class="cf-h" style="margin:14px 2px 8px">📅 Próximas obrigações</div><div class="cf-c" style="padding:10px 14px">';
+  if(!vis.length)html+='<div class="cf-sub">Sem obrigações com os impostos que tens ativos.</div>';
+  vis.forEach(function(o){ var dd=cfDiasEntre(h,o.data);
+    html+='<div class="cf-ob'+(o.pago?' pago':'')+'"><div class="ic">'+o.ic+'</div><div style="flex:1;min-width:0"><b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+escHtml(o.per)+'<br>'+cfValorHtml(o)+
+      (o.nota?'<br><i style="font-size:12px">“'+escHtml(o.nota)+'”</i>':'')+
+      (o.pago?'<br><span class="cf-ok">✓ '+(o.pag?'Pago':'Entregue')+'</span>':(dd<0?'<br><span class="cf-falta">'+cfQuando(dd)+'</span>':(o.pag&&o.valor!=null?(cob[o.key]?'<br><span class="cf-ok">✓ já tens no cofre</span>':'<br><span class="cf-falta">ainda não chega o cofre</span>'):'')))+
+      '<div class="cf-acoes">'+(o.pag&&!o.pago?'<button type="button" onclick="cofreIr(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
+      '<button type="button" onclick="cofreIr(\'ajuda\',\''+o.tipo+'\')">❓ Como '+(o.pag?'pagar':'fazer')+'</button>'+
+      (o.pago?'<button type="button" onclick="cfDesfazerPago(\''+o.key+'\')">↺ Desfazer</button>':'<button type="button" onclick="cofreIr(\'pago\',\''+o.key+'\')">✓ Já '+(o.pag?'paguei':'entreguei')+'</button>')+'</div></div></div>'; });
+  html+='</div>';
+  var nEv=cfEventosCalendario().length;
+  html+='<div class="cf-c" style="text-align:center"><div class="cf-h" style="justify-content:center">'+nEv+' datas nos próximos 12 meses</div><div class="cf-sub">Põe tudo no calendário do telemóvel. É o próprio telemóvel que te avisa '+c.avisoDias+' dias antes, mesmo com o Finance Drive fechado.</div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:10px" onclick="cfBaixarCalendario()">📅 Pôr no meu calendário</button>'+
+    (cfPodePartilhar()?'<button class="cf-acoes" type="button" style="border:none;background:none;margin:8px auto 0;font:700 12.5px var(--fd-head);color:#2848a8;cursor:pointer" onclick="cfPartilharCalendario()">Não abriu? Partilhar o ficheiro</button>':'')+'</div>';
+  html+='<div class="cf-aviso"><b>ⓘ Valores estimados.</b> O Finance Drive calcula com base nos teus registos e nas regras gerais. Não sabe de isenções, reduções nem de rendimentos de outros anos. Se pagas outro valor, toca em ✏️. Para mudar o quanto guardar por dia, ajusta as taxas em Config → Impostos. <b>Confirma sempre com o teu contabilista.</b></div>';
+  html+='<button class="btn btn-outline" type="button" onclick="cofreIr(\'wiz\');cfWizIni();cofreRender()">⚙ Mudar respostas e avisos</button>';
+  return html;
+}
+// ── perguntas iniciais ──
+function cfWizIni(){ var c=cfCfg(),I=CFG.impostos; _cfWiz={passo:1,ss:c.ssResp||(I.usarSS?'sim':'isento'),iva:c.ivaResp||(I.usarIVA?'sim':'isento'),regime:c.ivaRegime||'trimestral',aviso:c.avisoDias||5}; _cfView='wiz'; }
+function cfOp(on,fn,tit,sub){ return '<button type="button" class="cf-op'+(on?' on':'')+'" onclick="'+fn+'"><span class="r"></span><span><b>'+tit+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span></button>'; }
+function cfWizSet(k,v){ _cfWiz[k]=v; cofreRender(); }
+function cfHtmlWiz(){
+  if(!_cfWiz)cfWizIni(); var w=_cfWiz,p=w.passo,dots='<div class="cf-dots">'+[1,2,3].map(function(i){ return '<i class="'+(i<=p?'on':'')+'"></i>'; }).join('')+'</div>',h=dots;
+  if(p===1){ h+='<div class="cf-q">Pagas Segurança Social todos os meses?</div><div class="cf-sub" style="margin-bottom:12px">Assim sabemos que datas te mostrar. Podes mudar depois.</div>'+
+    cfOp(w.ss==='sim',"cfWizSet('ss','sim')",'Sim, pago todos os meses','Já passei o 1.º ano de atividade')+
+    cfOp(w.ss==='isento',"cfWizSet('ss','isento')",'Não, estou isento','1.º ano de atividade (12 meses de isenção)')+
+    cfOp(w.ss==='naosei',"cfWizSet('ss','naosei')",'Não sei','Mostramos as datas e tiras a dúvida com o contabilista'); }
+  if(p===2){ h+='<div class="cf-q">Cobras IVA nas tuas faturas?</div><div class="cf-sub" style="margin-bottom:12px">Está nos teus recibos verdes. Se tens dúvidas, pergunta ao contabilista.</div>'+
+    cfOp(w.iva==='isento',"cfWizSet('iva','isento')",'Não, estou isento','Isenção do art. 53.º (faturação abaixo do limite anual)')+
+    cfOp(w.iva==='sim',"cfWizSet('iva','sim')",'Sim, cobro IVA','As minhas faturas têm IVA');
+    if(w.iva==='sim')h+='<div class="cf-c" style="border-style:dashed"><div style="font:700 13.5px var(--fd-head);margin-bottom:6px">Entregas o IVA de quanto em quanto tempo?</div>'+
+      cfOp(w.regime==='trimestral',"cfWizSet('regime','trimestral')",'De 3 em 3 meses','A maioria dos motoristas')+cfOp(w.regime==='mensal',"cfWizSet('regime','mensal')",'Todos os meses','')+'</div>';
+    h+=cfOp(w.iva==='naosei',"cfWizSet('iva','naosei')",'Não sei',''); }
+  if(p===3){ h+='<div class="cf-q">Quando queres ser avisado?</div><div class="cf-sub" style="margin-bottom:12px">O aviso aparece no Finance Drive e no calendário do teu telemóvel.</div>'+
+    [1,3,5,7].map(function(d){ return cfOp(w.aviso===d,"cfWizSet('aviso',"+d+")",d+' dia'+(d>1?'s':'')+' antes',d===5?'Recomendado · dá tempo para transferir':''); }).join(''); }
+  h+='<div class="cf-row" style="margin-top:14px">'+(p>1?'<button class="btn btn-outline" type="button" onclick="_cfWiz.passo--;cofreRender()">‹ Voltar</button>':'')+
+    '<button class="btn btn-green" type="button" onclick="'+(p<3?'_cfWiz.passo++;cofreRender()':'cfWizConcluir()')+'">'+(p<3?'Seguinte →':'Concluir ✓')+'</button></div>';
+  if(cfCfg().configurado)h+='<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">Cancelar</button>';
+  return h;
+}
+function cfWizConcluir(){
+  var c=cfCfg(),w=_cfWiz; normalizarImpostosCfg();
+  c.ssResp=w.ss; c.ivaResp=w.iva; c.ivaRegime=w.regime; c.avisoDias=w.aviso; c.configurado=true;
+  // as respostas ficam iguais às definições de impostos (uma só fonte de verdade)
+  CFG.impostos.ativo=true;
+  if(w.ss==='sim')CFG.impostos.usarSS=true; if(w.ss==='isento')CFG.impostos.usarSS=false;
+  if(w.iva==='sim')CFG.impostos.usarIVA=true; if(w.iva==='isento')CFG.impostos.usarIVA=false;
+  salvarLocal(); try{ mostrarImpostosCfg(); }catch(e){}
+  trackEvent('cofre_configurado',{ss:w.ss,iva:w.iva,regime:w.regime,aviso:w.aviso});
+  renderHoje(); renderSemana(); cofreIr('main'); toast('Cofre configurado','ok');
+}
+// ── guardar dinheiro ──
+function cfHtmlGuardar(){
+  var c=cfCfg(),R=cfResumoMes(cfMapaImp()),lst=(c.guardado[R.ym]||[]);
+  var h='<div class="cf-q">Quanto puseste de lado?</div><div class="cf-sub" style="margin-bottom:10px">Transfere para uma poupança no banco e regista aqui. O Finance Drive não mexe no teu dinheiro.</div>'+
+    '<div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValGuardar" value="'+(R.falta>0?cfEur(R.falta):'')+'"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">Sugestão: o que falta guardar este mês ('+moeda(R.falta)+').</div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfGuardar()">Guardar</button>';
+  if(lst.length){ h+='<div class="cf-h" style="margin-top:16px">Este mês</div>';
+    lst.forEach(function(e,i){ h+='<div class="cf-hist"><span>'+fmtDataMs(e.ts)+'</span><span style="margin-left:auto;font-weight:700">'+moeda(+e.v)+'</span><button type="button" aria-label="Apagar" onclick="cfApagarGuardado('+i+')">🗑</button></div>'; }); }
+  return h+cfVoltar();
+}
+function cfEur(v){ return (Math.round(v*100)/100).toFixed(2).replace('.',','); }
+function cfLerEuro(id){ var el=document.getElementById(id); var v=lerPct(el?el.value:''); return (v===null||isNaN(v))?null:v; }
+function cfGuardar(){ var v=cfLerEuro('cfValGuardar'); if(v===null||v<=0){ toast('Escreve um valor, por exemplo 45,27','er'); return; }
+  var c=cfCfg(),ym=hoje().slice(0,7); (c.guardado[ym]=c.guardado[ym]||[]).push({v:v,ts:Date.now()}); salvarLocal(); trackEvent('cofre_guardar',{});
+  toast('Guardado: '+moeda(v),'ok'); cofreIr('main'); }
+function cfApagarGuardado(i){ var c=cfCfg(),ym=hoje().slice(0,7),l=c.guardado[ym]||[]; l.splice(i,1); if(!l.length)delete c.guardado[ym]; salvarLocal(); cofreRender(); }
+// ── marcar pago / entregue ──
+function cfAchar(key){ var l=cfObrigacoes(cfMapaImp()); for(var i=0;i<l.length;i++)if(l[i].key===key)return l[i]; return null; }
+function cfHtmlPago(){ var o=cfAchar(_cfArg); if(!o)return cfHtmlMain();
+  var h='<div class="cf-q">'+escHtml(o.tit)+'</div><div class="cf-sub" style="margin-bottom:10px">'+escHtml(o.per)+' · até '+cfDataTxt(o.data)+'</div>';
+  if(o.pag){ h+='<div class="fld-lbl">Quanto pagaste?</div><div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValPago" value="'+(o.valor!=null?cfEur(o.valor):'')+'"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">Este valor sai do teu cofre.</div>'; }
+  else h+='<div class="cf-sub">Marca como entregue. Não sai dinheiro do cofre.</div>';
+  return h+'<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfMarcarPago(\''+o.key+'\')">✓ Confirmar</button>'+cfVoltar(); }
+function cfMarcarPago(key){ var o=cfAchar(key); if(!o)return; var v=0;
+  if(o.pag){ v=cfLerEuro('cfValPago'); if(v===null||v<0){ toast('Escreve o valor que pagaste','er'); return; } }
+  cfCfg().pagos[key]={ts:Date.now(),v:v}; salvarLocal(); trackEvent('cofre_pago',{tipo:o.tipo}); toast(o.pag?'Marcado como pago':'Marcado como entregue','ok'); cofreIr('main'); }
+function cfDesfazerPago(key){ delete cfCfg().pagos[key]; salvarLocal(); cofreRender(); }
+// ── editar valor ──
+var _cfSempre=true;
+function cfHtmlEditar(){ var o=cfAchar(_cfArg); if(!o)return cfHtmlMain(); var c=cfCfg(),v=c.valores[o.key]||c.valores[o.tipo+'_sempre']||{};
+  _cfSempre=!c.valores[o.key];
+  return '<div class="cf-q">✏️ '+escHtml(o.tit)+'</div><div class="cf-sub" style="margin-bottom:10px">Estimativa do Finance Drive: '+(o.est!=null?moeda(o.est):'sem dados')+'</div>'+
+    '<div class="fld-lbl">Quanto pagas de facto?</div><div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValEditar" value="'+(o.teu&&o.valor!=null?cfEur(o.valor):'')+'" placeholder="ex.: 96,40"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">Vê o valor na '+(o.tipo.indexOf('ss_')===0?'Segurança Social Direta':'tua declaração / Portal das Finanças')+' ou pergunta ao contabilista.</div>'+
+    '<div class="fld-lbl" style="margin-top:12px">Usar este valor</div><div class="seg"><label class="seg-opt"><input type="radio" name="cfSempre" '+(!_cfSempre?'checked':'')+' onchange="_cfSempre=false"> Só desta vez</label><label class="seg-opt"><input type="radio" name="cfSempre" '+(_cfSempre?'checked':'')+' onchange="_cfSempre=true"> Sempre, até mudar</label></div>'+
+    '<div class="fld-lbl" style="margin-top:12px">Nota (opcional)</div><div class="iw"><input type="text" id="cfNotaEditar" maxlength="80" value="'+escHtml(v.nota||'')+'" placeholder="ex.: indicado pela contabilista" style="padding-left:12px"></div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfGuardarEditar(\''+o.key+'\')">Guardar</button>'+
+    (o.teu?'<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cfVoltarEstimativa(\''+o.key+'\')">Voltar à estimativa</button>':'')+cfVoltar(); }
+function cfGuardarEditar(key){ var o=cfAchar(key); if(!o)return; var v=cfLerEuro('cfValEditar'); if(v===null||v<0){ toast('Escreve um valor, por exemplo 96,40','er'); return; }
+  var c=cfCfg(),n=((document.getElementById('cfNotaEditar')||{}).value||'').trim().slice(0,80),reg={valor:v,nota:n};
+  if(_cfSempre){ c.valores[o.tipo+'_sempre']=reg; delete c.valores[key]; } else c.valores[key]=reg;
+  salvarLocal(); trackEvent('cofre_editar',{tipo:o.tipo,sempre:_cfSempre}); toast('Valor guardado','ok'); cofreIr('main'); }
+function cfVoltarEstimativa(key){ var o=cfAchar(key); if(!o)return; var c=cfCfg(); if(c.valores[key])delete c.valores[key]; else delete c.valores[o.tipo+'_sempre']; salvarLocal(); cofreIr('main'); }
+// ── tutoriais curtos ──
+var CF_AJUDA={
+  ss_pag:{t:'Como pagar a Segurança Social',s:['Pelo <b>Multibanco</b> ou pela <b>app do banco</b>: vai a <b>Pagamentos ao Estado</b> → <b>Segurança Social</b>.','Escolhe <b>Trabalhador independente</b>.','Põe o teu <b>NISS</b> (11 números; está na Segurança Social Direta e no cartão de cidadão de quem o tem).','Põe o <b>valor</b> e confirma. Paga até dia 20.','<b>Guarda o comprovativo</b> e marca aqui “✓ Já paguei”.'],x:'Preferes não te lembrar? Na Segurança Social Direta podes ativar o <b>débito direto</b>.'},
+  ss_decl:{t:'Como fazer a declaração trimestral',s:['Entra na <b>Segurança Social Direta</b> com o NISS e a senha.','Procura <b>“Declaração trimestral”</b> (trabalhador independente).','Confirma os valores do trimestre. Muitas vezes já vêm preenchidos a partir dos teus recibos verdes.','Submete até ao <b>último dia</b> de janeiro, abril, julho ou outubro.','Marca aqui “✓ Já entreguei”.'],x:'Esta declaração define quanto pagas de Segurança Social nos 3 meses seguintes.'},
+  iva_ent:{t:'Como entregar a declaração de IVA',s:['Entra no <b>Portal das Finanças</b>.','Vai a <b>IVA</b> → <b>Declaração periódica</b> → Entregar.','Preenche o período e os valores (muitas vezes é o contabilista que faz).','Entrega até <b>dia 20</b>. Fica com a referência para pagar.','Marca aqui “✓ Já entreguei”.'],x:''},
+  iva_pag:{t:'Como pagar o IVA',s:['Depois de entregar a declaração, o Portal das Finanças dá-te uma <b>referência de pagamento</b>.','No <b>Multibanco</b> ou na <b>app do banco</b>: Pagamentos ao Estado → põe a referência e o valor.','Paga até <b>dia 25</b>.','Guarda o comprovativo e marca aqui “✓ Já paguei”.'],x:''},
+  irs:{t:'Como entregar o IRS',s:['Entre <b>1 de abril e 30 de junho</b>, entra no <b>Portal das Finanças</b> → IRS → Entregar declaração.','Os recibos verdes vão no <b>anexo B</b>. Confirma os valores com o contabilista.','Se houver imposto a pagar, a AT envia a nota de cobrança com o prazo de pagamento.','Paga com a referência no Multibanco ou na app do banco e marca aqui “✓ Já paguei”.'],x:''}
+};
+function cfHtmlAjuda(){ var a=CF_AJUDA[_cfArg]||CF_AJUDA.ss_pag,lk=cfLinkTipo(_cfArg||'ss_pag');
+  return '<div class="cf-q">❓ '+a.t+'</div><div class="cf-c">'+a.s.map(function(x,i){ return '<div class="cf-stp"><span class="n">'+(i+1)+'</span><span>'+x+'</span></div>'; }).join('')+(a.x?'<div class="cf-sub" style="margin-top:6px">'+a.x+'</div>':'')+'</div>'+
+    '<a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+lk.t+'</a>'+
+    '<div class="cf-cont">👩‍💼 <b>Dúvidas? Pergunta ao teu contabilista.</b> Os menus mudam de banco para banco e o valor certo depende do teu caso.</div>'+cfVoltar(); }
+// ── calendário (.ics) ──
+function cfEventosCalendario(){ var h=hoje(),lim=new Date(); lim.setFullYear(lim.getFullYear()+1); var limISO=lim.getFullYear()+'-'+pad(lim.getMonth()+1)+'-'+pad(lim.getDate());
+  return cfObrigacoes(cfMapaImp()).filter(function(o){ return o.data>=h&&o.data<limISO&&!o.pago; }); }
+function cfIcsTxt(t){ return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+function cfIcsDobrar(l){ var out=[],cur='',b=0,lim=75; Array.from(l).forEach(function(ch){ var n=unescape(encodeURIComponent(ch)).length; if(b+n>lim){ out.push(cur); cur=' '; b=1; lim=75; } cur+=ch; b+=n; }); out.push(cur); return out.join('\r\n'); }
+function cfGerarIcs(){
+  var c=cfCfg(),ev=cfEventosCalendario(),n=c.avisoDias,stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Finance Drive//Cofre dos impostos//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Finance Drive · Impostos'];
+  ev.forEach(function(o){ var d=o.data.replace(/-/g,''),dn=new Date(o.data+'T12:00:00'); dn.setDate(dn.getDate()+1); var d2=dn.getFullYear()+pad(dn.getMonth()+1)+pad(dn.getDate());
+    var val=o.tipo==='ss_decl'?'':(o.valor!=null?' · '+(o.teu?'':'≈ ')+moeda(o.valor):''),lk=cfLinkTipo(o.tipo);
+    L.push('BEGIN:VEVENT','UID:fd-'+o.key.replace(/[^a-zA-Z0-9-]/g,'-')+'@financedrive.pt','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+d,'DTEND;VALUE=DATE:'+d2,
+      cfIcsDobrar('SUMMARY:'+cfIcsTxt(o.ic+' '+o.tit+val)),
+      cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.per+'. Prazo: '+cfDataTxt(o.data)+'. Valores estimados pelo Finance Drive, confirma com o teu contabilista. '+lk.u)),
+      'TRANSP:TRANSPARENT');
+    if(n>0)L.push('BEGIN:VALARM','ACTION:DISPLAY',cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.tit+' daqui a '+n+' dia'+(n>1?'s':''))),'TRIGGER:-P'+(n-1)+'DT15H','END:VALARM');
+    L.push('BEGIN:VALARM','ACTION:DISPLAY',cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.tit+' · último dia')),'TRIGGER:PT9H','END:VALARM','END:VEVENT'); });
+  L.push('END:VCALENDAR'); return {txt:L.join('\r\n')+'\r\n',n:ev.length};
+}
+function cfBaixarCalendario(){
+  var g=cfGerarIcs(); if(!g.n){ toast('Sem datas para pôr no calendário','er'); return; }
+  trackEvent('cofre_calendario',{n:g.n,modo:'descarregar'});
+  cfDescarregar(new Blob([g.txt],{type:'text/calendar;charset=utf-8'}),'FinanceDrive_impostos.ics');
+}
+function cfPodePartilhar(){ try{ return !!(navigator.canShare&&navigator.canShare({files:[new File(['x'],'a.ics',{type:'text/calendar'})]})); }catch(e){ return false; } }
+function cfPartilharCalendario(){
+  var g=cfGerarIcs(); if(!g.n)return; trackEvent('cofre_calendario',{n:g.n,modo:'partilhar'});
+  try{ navigator.share({files:[new File([g.txt],'FinanceDrive_impostos.ics',{type:'text/calendar'})],title:'Datas dos impostos'}).catch(function(){}); }catch(e){ toast('Não deu para partilhar','er'); }
+}
+function cfDescarregar(blob,nome){ var u=URL.createObjectURL(blob),a=document.createElement('a'); a.href=u; a.download=nome; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(u); a.remove(); },4000); toast('Abre o ficheiro e escolhe “Adicionar tudo”','ok'); }
+
 // ══ v3.18: pedido de avaliação (8.º dia após criar conta; "Agora não" volta 7 dias depois; no máximo 3 vezes) ══
 var AV_DIAS_INICIO=7, AV_DIAS_REPETIR=7, AV_MAX_PEDIDOS=3, AV_LOCAL='fd_av_estado';
 var AV_GOSTOS=['Saldo real','Impostos','Metas','Histórico','Relatório','Facilidade'];
