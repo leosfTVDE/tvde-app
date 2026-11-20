@@ -725,6 +725,8 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .cf-row{display:flex;gap:8px;margin-top:9px}
 .cf-row .btn{margin:0;padding:10px 8px;font-size:13px}
 .cf-lnk{display:block;text-align:center;text-decoration:none}
+.cf-ver{display:block;margin:10px auto 0;border:none;background:none;font:700 13px var(--fd-head);color:#2848a8;cursor:pointer}
+#pg-cofre .cf-c{box-shadow:none}
 .pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
 .rel-abrir{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 12px;padding:13px 14px;border-radius:14px;border:1px solid var(--gold-bd,rgba(251,191,36,.3));background:var(--gold-bg,rgba(251,191,36,.08));color:var(--text);text-align:left;cursor:pointer;font:inherit}
 .rel-abrir-ic{font-size:22px} .rel-abrir-tx{flex:1;min-width:0} .rel-abrir-tx b{display:block;font-size:14px} .rel-abrir-tx small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -941,6 +943,12 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <div class="resumo-periodo" id="resumoPeriodo"></div>
       <div id="analiseConsumoBox"></div>
       <div id="histList"></div>
+    </div>
+
+    <!-- COFRE DOS IMPOSTOS (v3.21: aba própria) -->
+    <div class="pg" id="pg-cofre">
+      <div class="stit">&#129534; Cofre dos impostos <span class="pro-tag">PRO</span></div>
+      <div id="cfCorpo"></div>
     </div>
 
     <!-- CONFIG -->
@@ -1178,7 +1186,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.20.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.21.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1195,6 +1203,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
       <button class="nb on" id="nb-hoje" type="button" aria-label="Hoje"><span class="nb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span><span class="nb-t">Hoje</span></button>
       <button class="nb" id="nb-semana" type="button" aria-label="Semana"><span class="nb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span class="nb-t">Semana</span></button>
       <button class="nb" id="nb-hist" type="button" aria-label="Hist&oacute;rico"><span class="nb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="nb-t">Hist&oacute;rico</span></button>
+      <button class="nb" id="nb-cofre" type="button" aria-label="Cofre dos impostos"><span class="nb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3.2"/><path d="M12 8.8V7M12 17v-1.8M15.2 12H17M7 12h1.8M7 20v1.5M17 20v1.5"/></svg></span><span class="nb-t">Cofre</span></button>
       <button class="nb" id="nb-cfg" type="button" aria-label="Configura&ccedil;&otilde;es"><span class="nb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span><span class="nb-t">Config</span></button>
     </nav>
   </div>
@@ -1212,13 +1221,6 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 
 <div class="modal-overlay" id="avOverlay">
   <div class="modal av-modal"><div id="avCorpo"></div></div>
-</div>
-
-<div class="modal-overlay" id="cofreOverlay">
-  <div class="modal cf-modal">
-    <div class="modal-hdr"><div class="modal-title" id="cfTitulo">&#129534; Cofre dos impostos <span class="pro-tag">PRO</span></div><button class="modal-close" type="button" onclick="cofreFechar()" aria-label="Fechar">&#10005;</button></div>
-    <div id="cfCorpo"></div>
-  </div>
 </div>
 
 <div class="modal-overlay" id="proOverlay">
@@ -2069,8 +2071,8 @@ function refreshAtual(){
 }
 
 // ── Navega\u00e7\u00e3o ─────────────────────────────────────────────────────────
-var pages=['hoje','semana','hist','cfg'];
-function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cfg'){ fecharSeccoesCfg(); renderCfg(); } }
+var pages=['hoje','semana','hist','cofre','cfg'];
+function navTo(p){ trackEvent('abrir_aba',{aba:p}); pages.forEach(function(x){ document.getElementById('pg-'+x).classList.remove('on'); document.getElementById('nb-'+x).classList.remove('on'); }); document.getElementById('pg-'+p).classList.add('on'); document.getElementById('nb-'+p).classList.add('on'); document.body.classList.toggle('on-hoje',p==='hoje'); document.getElementById('mainContent').scrollTop=0; if(p==='hoje')renderHoje(); if(p==='semana')renderSemana(); if(p==='hist')renderHist(); if(p==='cofre')cofreRender(); if(p==='cfg'){ fecharSeccoesCfg(); renderCfg(); } }
 
 function atualizarBadgeVeiculo(){
   var bar=document.getElementById('veiculoBar'),txt=document.getElementById('veiculoBarTxt');
@@ -3006,6 +3008,7 @@ document.getElementById('btnRegistarDia').addEventListener('click',registarDiaMa
 document.getElementById('nb-hoje').addEventListener('click',function(){ navTo('hoje'); });
 document.getElementById('nb-semana').addEventListener('click',function(){ navTo('semana'); });
 document.getElementById('nb-hist').addEventListener('click',function(){ navTo('hist'); });
+document.getElementById('nb-cofre').addEventListener('click',function(){ cofreAbrir(); });
 document.getElementById('nb-cfg').addEventListener('click',function(){ navTo('cfg'); });
 document.getElementById('iUber').addEventListener('input',atualizarTotal);
 document.getElementById('iBolt').addEventListener('input',atualizarTotal);
@@ -3564,7 +3567,7 @@ function renderPlanoUI(){
   try{ var pgOn=document.querySelector('.pg.on'); if(pgOn&&pgOn.id==='pg-semana')renderSemana(); if(pgOn&&pgOn.id==='pg-hist')renderHist(); }catch(e){}
   if(typeof renderTrajetoCfg==='function')renderTrajetoCfg();
   // v3.20: as taxas personalizadas e o cofre dependem do PRO
-  try{ renderHoje(); if(document.getElementById('impostosCard'))mostrarImpostosCfg(); var co=document.getElementById('cofreOverlay'); if(co&&co.classList.contains('show'))cofreRender(); }catch(e){}
+  try{ renderHoje(); if(document.getElementById('impostosCard'))mostrarImpostosCfg(); var co=document.getElementById('pg-cofre'); if(co&&co.classList.contains('on'))cofreRender(); }catch(e){}
 }
 // ---- Janela PRO (comprar) ----
 function abrirPro(origem){
@@ -4125,36 +4128,37 @@ function renderCofreHoje(){
   var box=document.getElementById('cofreHoje'); if(!box)return;
   normalizarImpostosCfg();
   if(CFG.pais!=='PT'||!CFG.impostos.ativo){ box.innerHTML=''; return; }
-  if(!isPro()){ box.innerHTML='<div class="cf-hoje" onclick="abrirPro(\'cofre_hoje\')" style="cursor:pointer"><div class="cf-h">🧾 Cofre dos impostos <span class="pro-tag">PRO</span></div><div class="cf-sub">Sabe quanto guardar por dia para os impostos, quando pagar a SS, o IVA e o IRS, e recebe avisos no calendário.</div></div>'; return; }
+  if(!isPro()){ box.innerHTML=''; return; }
   var c=cfCfg();
-  if(!c.configurado){ box.innerHTML='<div class="cf-hoje"><div class="cf-h">🧾 Cofre dos impostos <span class="pro-tag">PRO</span></div><div class="cf-sub">3 perguntas rápidas e passas a saber quanto guardar e quando pagar.</div><button class="btn btn-green" type="button" style="margin-top:10px" onclick="cofreAbrir()">Configurar o cofre</button></div>'; return; }
-  var mapa=cfMapaImp(),R=cfResumoMes(mapa),lst=cfObrigacoes(mapa),av=cfProximaAviso(lst),html='';
+  if(!c.configurado){ box.innerHTML=''; return; }
+  var mapa=cfMapaImp(),lst=cfObrigacoes(mapa),av=cfProximaAviso(lst),html='';
   if(av){ var o=av.o,lk=cfLinkTipo(o.tipo);
     html+='<div class="cf-banner">🔔 <b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+cfQuando(av.dd)+(o.tipo==='ss_decl'?'':' · '+cfValorHtml(o))+
       (o.pag&&o.valor!=null?(cfCobertura(lst)[o.key]?' · <span class="cf-ok">✓ já tens no cofre</span>':' · <span class="cf-falta">no cofre: '+moeda(cfNoCofre())+'</span>'):'')+
-      '<div class="cf-row"><a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+(o.tipo.indexOf('ss_')===0?'SS Direta ↗':'Finanças ↗')+'</a><button class="btn btn-green" type="button" onclick="cofreAbrir(\'pago\',\''+o.key+'\')">✓ '+(o.pag?'Já paguei':'Já entreguei')+'</button></div></div>'; }
-  html+='<div class="cf-hoje" onclick="cofreAbrir()" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:center"><div class="cf-h" style="margin:0">🧾 Cofre de '+MESES[new Date().getMonth()].toLowerCase()+'</div><span style="color:var(--muted);font-size:18px">›</span></div>'+
-    '<div class="cf-l"><span>Hoje guarda</span><b>'+moeda(R.hoje.total)+'</b></div>'+
-    '<div class="cf-l"><span>Já guardaste</span><b style="color:var(--green)">'+moeda(R.guardou)+' de '+moeda(R.devias)+'</b></div>'+
-    '<div class="cf-bar"><i style="width:'+R.pct+'%"></i></div>'+(R.falta>0?'<div class="cf-falta">Falta guardar '+moeda(R.falta)+'</div>':'<div class="cf-ok">✓ Tudo guardado este mês</div>')+'</div>';
+      '<div class="cf-row"><a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+(o.tipo.indexOf('ss_')===0?'SS Direta ↗':'Finanças ↗')+'</a><button class="btn btn-green" type="button" onclick="cofreAbrir(\'pago\',\''+o.key+'\')">✓ '+(o.pag?'Já paguei':'Já entreguei')+'</button></div>'+
+      '<button type="button" class="cf-ver" onclick="cofreAbrir()">Ver o cofre ›</button></div>'; }
   box.innerHTML=html;
 }
 
 // ── janela do cofre ──
 function cofreAbrir(view,arg){
-  if(!isPro()){ abrirPro('cofre'); return; }
-  var c=cfCfg(); _cfView=c.configurado?(view||'main'):'wiz'; _cfArg=arg||null;
+  var c=cfCfg(); _cfView=(isPro()&&!c.configurado)?'wiz':(view||'main'); _cfArg=arg||null;
   if(_cfView==='wiz')cfWizIni();
-  cofreRender(); document.getElementById('cofreOverlay').classList.add('show');
-  trackEvent('cofre_abrir',{view:_cfView});
+  navTo('cofre');
+  trackEvent('cofre_abrir',{view:_cfView,pro:isPro()});
 }
-function cofreFechar(){ document.getElementById('cofreOverlay').classList.remove('show'); renderHoje(); }
-function cofreIr(v,a){ _cfView=v; _cfArg=a===undefined?null:a; cofreRender(); var m=document.querySelector('#cofreOverlay .modal'); if(m)m.scrollTop=0; }
+function cofreFechar(){ navTo('hoje'); }
+function cofreIr(v,a){ _cfView=v; _cfArg=a===undefined?null:a; cofreRender(); var m=document.getElementById('mainContent'); if(m)m.scrollTop=0; }
 function cofreRender(){
   var el=document.getElementById('cfCorpo'); if(!el)return;
-  if(!isPro()){ el.innerHTML='<div class="cf-sub">O cofre é uma função PRO.</div><button class="btn btn-green" type="button" style="margin-top:10px" onclick="cofreFechar();abrirPro(\'cofre\')">Ver o PRO</button>'; return; }
+  normalizarImpostosCfg();
+  if(CFG.pais!=='PT'){ el.innerHTML='<div class="cf-c"><div class="cf-sub">O cofre dos impostos é para Portugal.</div></div>'; return; }
+  if(!isPro()){ el.innerHTML='<div class="cf-c"><div class="cf-h">🔒 Função PRO</div><div class="cf-sub">Com o cofre sabes quanto guardar por dia para a Segurança Social, o IRS e o IVA, quando pagar cada um, e recebes avisos no calendário do telemóvel.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="abrirPro(\'cofre_aba\')">Ver o PRO</button></div>'; return; }
+  if(!CFG.impostos.ativo&&_cfView!=='wiz'){ el.innerHTML='<div class="cf-c"><div class="cf-h">Estimativa de impostos desligada</div><div class="cf-sub">O cofre usa a estimativa de impostos. Liga-a para começar.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfWizIni();cofreIr(\'wiz\')">Configurar o cofre</button></div>'; return; }
+  if(_cfView!=='wiz'&&!cfCfg().configurado){ cfWizIni(); }
   var f={wiz:cfHtmlWiz,main:cfHtmlMain,guardar:cfHtmlGuardar,pago:cfHtmlPago,editar:cfHtmlEditar,ajuda:cfHtmlAjuda}[_cfView]||cfHtmlMain;
   el.innerHTML=f();
+  try{ var nb=document.getElementById('nb-cofre'); if(nb)nb.style.display=CFG.pais==='PT'?'':'none'; }catch(e){}
 }
 function cfVoltar(){ return '<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">‹ Voltar ao cofre</button>'; }
 function cfHtmlMain(){
