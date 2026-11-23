@@ -722,9 +722,11 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .cf-hoje{background:#fff;border:1px solid var(--border);border-radius:18px;padding:13px 14px;margin:10px 0}
 .cf-banner{background:#fff4dc;border:1px solid #f3d9a8;border-radius:16px;padding:12px 14px;margin:10px 0;font-size:13px;line-height:1.45;color:var(--text)}
 .cf-banner b{display:block;font-size:14.5px}
+.cf-explica{background:#eef4ff;border:1px solid #cfdcf5;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.55;color:var(--text);margin:6px 0 10px}
 .cf-row{display:flex;gap:8px;margin-top:9px}
 .cf-row .btn{margin:0;padding:10px 8px;font-size:13px}
 .cf-lnk{display:block;text-align:center;text-decoration:none}
+.cf-banner .cf-vers{text-align:center}
 .cf-ver{display:block;margin:10px auto 0;border:none;background:none;font:700 13px var(--fd-head);color:#2848a8;cursor:pointer}
 #pg-cofre .cf-c{box-shadow:none}
 .pro-tag{display:inline-block;font-family:var(--fd-head);font-size:10px;font-weight:800;letter-spacing:.04em;color:#1a1408;background:linear-gradient(135deg,#E8C977,#C59A3A);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px}
@@ -988,7 +990,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <div class="iw"><div class="ipfx" id="pfxKwh">&euro;/kWh</div><input type="number" inputmode="decimal" id="iPrecoKwh" placeholder="0.75" step="0.01"></div>
         </div>
         <div style="font-size:11px;color:var(--muted);margin:6px 0 12px;line-height:1.5" id="kwh-hint">
-          Pre&ccedil;o usado para converter kWh em &euro;. Exemplo: 15&euro; &divide; 0,75 = 20 kWh autom&aacute;tico.
+          Pre&ccedil;o usado para converter kWh em dinheiro. Exemplo: 15 &divide; 0,75 = 20 kWh autom&aacute;tico.
         </div>
         <div class="fld" style="margin-top:12px">
           <div class="fld-lbl">Taxa do operador TVDE (%)</div>
@@ -1186,7 +1188,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.21.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.22.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1562,7 +1564,7 @@ function selecionarPais(p){
   ['PT','BR'].forEach(function(x){ document.getElementById('pais-'+x).classList.remove('on'); });
   document.getElementById('pais-'+p).classList.add('on');
   var me=document.getElementById('moedaAtual'); if(me)me.textContent=PAISES[p].nome;
-  atualizarPrefixos(); atualizarBadgePais(); atualizarPlat2Labels(); renderEnergiaSection(); renderMEnergiaSection(); mostrarImpostosCfg(); renderHoje();
+  atualizarPrefixos(); try{ atualizarTotal(); }catch(e){} atualizarBadgePais(); atualizarPlat2Labels(); renderEnergiaSection(); renderMEnergiaSection(); mostrarImpostosCfg(); renderHoje();
   toast(p==='PT'?'🇵🇹 Portugal \u2014 Moeda: \u20ac':'🇧🇷 Brasil \u2014 Uber + 99 | Moeda: R$','ok');
 }
 function atualizarPlat2Labels(){
@@ -2093,7 +2095,7 @@ function renderHeader(){
   document.getElementById('hdrWeek').textContent='Semana '+semanaDoAno(now)+' · '+regs+'/'+diasTrabalhoMeta()+' dias';
   document.getElementById('chipAl').textContent=sim()+alDia().toFixed(2)+'/dia';
   var pkb=document.getElementById('precoKwhBadge'); if(pkb)pkb.textContent=sim()+CFG.precoKwh.toFixed(2)+'/kWh';
-  atualizarPrefixos(); atualizarBadgeVeiculo(); atualizarBadgePais();
+  atualizarPrefixos(); atualizarBadgeVeiculo(); atualizarBadgePais(); try{ atualizarTotal(); }catch(e){}
 }
 function renderBarraMeta(containerId,label,atual,meta,nota,detalhesMeta,trajeto){
   var el=document.getElementById(containerId); if(!el)return;
@@ -3772,7 +3774,7 @@ function relHtmlImpressao(d){
 }
 // ---------- Ficheiros do relatório (PDF e Excel feitos no próprio telemóvel, sem internet) ----------
 function relNumPT(v){ var n=Math.round(Math.abs(v)*100)/100,p=n.toFixed(2).split('.'); return (v<0&&n>0?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ')+','+p[1]; }
-function relEur(v){ return (v<0?'-':'')+relNumPT(Math.abs(v))+' €'; }
+function relEur(v){ if(CFG.pais==='BR')return (v<0?'-':'')+'R$ '+relNumPT(Math.abs(v)); return (v<0?'-':'')+relNumPT(Math.abs(v))+' €'; }
 function relKm(v){ return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' km'; }
 function relDespesas(r){ return r.taxa+r.aluguer+r.energia; }
 function relImpTot(r){ return r.imp?(r.imp.ss+r.imp.irs+r.imp.iva):0; }
@@ -3874,7 +3876,7 @@ function relGerarPDF(d){
     if(l[0]==='Quilómetros')l=[l[0],relKm(t.kms),l[2]];
     espaco(18); var bold=l[2]==='b',sub=l[0].indexOf('↳')===0,lab=sub?'dos quais '+l[0].replace(/^↳\s*dos quais\s*/,''):l[0];
     if(bold){ P.linha(M,y,M+CW,y,'#C9D2DC',0.8); } else if(z++%2===1)P.rect(M,y,CW,17,ZEB);
-    var val=String(l[1]).replace(/^(-?)€(.*)$/,function(_,s,n){ return relEur((s?-1:1)*parseFloat(n.replace(/\s/g,'').replace(',','.'))); });
+    var val=String(l[1]).replace(/^(-?)(?:€|R\$)(.*)$/,function(_,s,n){ return relEur((s?-1:1)*parseFloat(n.replace(/\s/g,'').replace(',','.'))); });
     P.texto(lab,M+(sub?20:8),y+11.8,9.5,{b:bold,cor:sub?MUT:NAVY}); P.texto(val,M+CW-8,y+11.8,9.5,{b:bold,al:'r',cor:sub?MUT:NAVY}); y+=17;
   });
   function tabela(tit,cols,rows,tot){
@@ -3887,13 +3889,13 @@ function relGerarPDF(d){
   if(d.meses.length){
     var cm=[['Mês',70,'l'],['Ganhos',70],['Taxa op.',58],['Aluguer',64],['Energia',60],['Saldo oper.',70],['Impostos',58],['Líquido',65]];
     var rm=d.meses.map(function(m){ var r=m.r; return [m.label,relNumPT(r.ganhos),relNumPT(r.taxa),relNumPT(r.aluguer),relNumPT(r.energia),relNumPT(r.saldoOper),relNumPT(relImpTot(r)),relNumPT(r.saldoReal)]; });
-    tabela('Mês a mês (valores em €)',cm,rm,['Total',relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),relNumPT(imp),relNumPT(t.saldoReal)]);
+    tabela('Mês a mês (valores em '+sim()+')',cm,rm,['Total',relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),relNumPT(imp),relNumPT(t.saldoReal)]);
   }
   if(_relTipo!=='ano'&&d.chaves.length){
     var cd=[['Data',54,'l'],['Uber',52],[plat2(),52],['Transf.',52],['Ganhos',56],['Taxa op.',48],['Aluguer',52],['Energia',50],['Saldo op.',60],['Km',39]];
     var rd=d.chaves.map(function(iso){ var r=DB[iso]||{},g=ganhos(r),tx=taxaOperadorValor(r,iso),al=alDiaISO(iso),en=energiaFrota(r);
       return [fmtData(iso),relNumPT(r.uber||0),relNumPT(r.bolt||0),relNumPT((r.outroG||0)+trajetoAutoValor(r)),relNumPT(g),relNumPT(tx),relNumPT(al),relNumPT(en),relNumPT(g-tx-al-en),String(Math.round(r.kms||0))]; });
-    tabela('Dia a dia (valores em €)',cd,rd,['Total',relNumPT(t.uber),relNumPT(t.bolt),relNumPT(t.outros),relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),String(Math.round(t.kms))]);
+    tabela('Dia a dia (valores em '+sim()+')',cd,rd,['Total',relNumPT(t.uber),relNumPT(t.bolt),relNumPT(t.outros),relNumPT(t.ganhos),relNumPT(t.taxa),relNumPT(t.aluguer),relNumPT(t.energia),relNumPT(t.saldoOper),String(Math.round(t.kms))]);
   }
   espaco(46); y+=14;
   ['Estimativa feita pelo Finance Drive com os registos e as configurações do utilizador, para apoio ao contabilista.','Não substitui a declaração de IRS nem os documentos oficiais emitidos pelas plataformas (Uber, '+plat2()+', etc.).'].forEach(function(n){ P.texto(n,M,y,8,{cor:MUT}); y+=12; });
@@ -3977,7 +3979,7 @@ function xlsxCriar(folhas,titulo){
   var wbr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
     folhas.map(function(f,i){ return '<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>'; }).join('')+
     '<Relationship Id="rId'+(folhas.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
-  var fich=[['[Content_Types].xml',ct],['_rels/.rels',rels],['docProps/core.xml',core],['xl/workbook.xml',wb],['xl/_rels/workbook.xml.rels',wbr],['xl/styles.xml',XLSX_ESTILOS]];
+  var fich=[['[Content_Types].xml',ct],['_rels/.rels',rels],['docProps/core.xml',core],['xl/workbook.xml',wb],['xl/_rels/workbook.xml.rels',wbr],['xl/styles.xml',CFG.pais==='BR'?XLSX_ESTILOS.replace('formatCode="#,##0.00\\ &quot;€&quot;;[Red]\\-#,##0.00\\ &quot;€&quot;"','formatCode="&quot;R$&quot;\\ #,##0.00;[Red]\\-&quot;R$&quot;\\ #,##0.00"'):XLSX_ESTILOS]];
   folhas.forEach(function(f,i){ fich.push(['xl/worksheets/sheet'+(i+1)+'.xml',xFolha(f)]); });
   return zipCriar(fich);
 }
@@ -4057,7 +4059,7 @@ function proVoltaDaStripe(){
 // Tudo o que o motorista marca fica em CFG.cofre (vai para a nuvem com as outras definições).
 var CF_LINK={ss:'https://app.seg-social.pt',at:'https://www.portaldasfinancas.gov.pt'};
 var _cfView='main',_cfArg=null,_cfWiz=null;
-function cfCfg(){ if(!CFG.cofre||typeof CFG.cofre!=='object')CFG.cofre={}; var c=CFG.cofre;
+function cfCfg(){ if(CFG.pais==='BR')return brCfg(); if(!CFG.cofre||typeof CFG.cofre!=='object')CFG.cofre={}; var c=CFG.cofre;
   if(!c.valores||typeof c.valores!=='object')c.valores={}; if(!c.pagos||typeof c.pagos!=='object')c.pagos={}; if(!c.guardado||typeof c.guardado!=='object')c.guardado={};
   if(!c.ivaRegime)c.ivaRegime='trimestral'; if(!(c.avisoDias>=0))c.avisoDias=5; return c; }
 function cfISO(y,m,d){ var x=new Date(y,m-1,d,12); return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate()); }
@@ -4075,6 +4077,7 @@ function cfQuarterIni(y,q){ return cfISO(y,(q-1)*3+1,1); }
 function cfQuarterFim(y,q){ return cfISO(y,q*3,cfUltimoDia(y,q*3)); }
 // Lista de obrigações à volta de hoje (do mês anterior até 13 meses à frente)
 function cfObrigacoes(mapa){
+  if(CFG.pais==='BR')return brObrigacoes();
   normalizarImpostosCfg(); var c=cfCfg(),I=CFG.impostos,lst=[],h=new Date(),y0=h.getFullYear(),m0=h.getMonth()+1;
   for(var k=-1;k<=13;k++){
     var d=new Date(y0,m0-1+k,1,12),y=d.getFullYear(),m=d.getMonth()+1,ym=y+'-'+pad(m);
@@ -4102,8 +4105,11 @@ function cfObrigacoes(mapa){
   return lst.sort(function(a,b){ return a.data<b.data?-1:a.data>b.data?1:0; });
 }
 // valor a usar: o deste prazo > o "sempre" desse tipo > a estimativa
-function cfValor(o){ var c=cfCfg(),v=c.valores[o.key]; if(v&&_impNum(v.valor))return {valor:v.valor,teu:'este',nota:v.nota||''};
-  var f=c.valores[o.tipo+'_sempre']; if(f&&_impNum(f.valor)&&o.pag)return {valor:f.valor,teu:'sempre',nota:f.nota||''};
+// v3.22: a declaração de IVA e o pagamento do mesmo período partilham o valor (editar num muda o outro)
+function cfChave(o){ return o.tipo==='iva_ent'?{k:o.key.replace('iva_ent:','iva_pag:'),t:'iva_pag'}:{k:o.key,t:o.tipo}; }
+function cfEditavel(o){ return o.pag||o.tipo==='iva_ent'; }
+function cfValor(o){ var c=cfCfg(),ch=cfChave(o),v=c.valores[ch.k]; if(v&&_impNum(v.valor))return {valor:v.valor,teu:'este',nota:v.nota||''};
+  var f=c.valores[ch.t+'_sempre']; if(f&&_impNum(f.valor)&&cfEditavel(o))return {valor:f.valor,teu:'sempre',nota:f.nota||''};
   return {valor:o.est,teu:'',nota:''}; }
 function cfGuardadoTotal(){ var c=cfCfg(),t=0; Object.keys(c.guardado).forEach(function(k){ (c.guardado[k]||[]).forEach(function(e){ t+=(+e.v||0); }); }); return r2(t); }
 function cfPagoTotal(){ var c=cfCfg(),t=0; Object.keys(c.pagos).forEach(function(k){ t+=(+c.pagos[k].v||0); }); return r2(t); }
@@ -4113,31 +4119,197 @@ function cfResumoMes(mapa){ var h=hoje(),ym=h.slice(0,7),c=cfCfg();
   return {ym:ym,devias:dev,guardou:g,falta:r2(Math.max(0,dev-g)),pct:dev>0?Math.min(100,Math.round(g/dev*100)):(g>0?100:0),
     hoje:mapa[h]?mapa[h]:{ss:0,irs:0,iva:0,total:0},ss:cfSoma(mapa,ym+'-01',h,'ss'),irs:cfSoma(mapa,ym+'-01',h,'irs'),iva:cfSoma(mapa,ym+'-01',h,'iva')}; }
 function cfProximaAviso(lst){ var h=hoje(),c=cfCfg(),dias=c.avisoDias;
-  for(var i=0;i<lst.length;i++){ var o=lst[i]; if(o.pago)continue; var dd=cfDiasEntre(h,o.data); if(dd<0&&dd>=-15)return {o:o,dd:dd}; if(dd>=0&&dd<=dias)return {o:o,dd:dd}; }
+  for(var i=0;i<lst.length;i++){ var o=lst[i]; if(o.pago||o.isento)continue; var dd=cfDiasEntre(h,o.data); if(dd<0&&dd>=-15)return {o:o,dd:dd}; if(dd>=0&&dd<=dias)return {o:o,dd:dd}; }
   return null; }
 function cfValorHtml(o){ if(o.tipo==='ss_decl')return o.fat!=null?'faturaste ≈ '+moeda(o.fat)+' <span class="cf-est">ESTIMADO</span>':'sem registos nesse trimestre';
-  if(o.valor==null)return 'sem dados para estimar · <b style="display:inline;font-size:13px">põe o teu valor</b>';
-  return (o.teu?'':'≈ ')+moeda(o.valor)+(o.teu?' <span class="cf-meu">✏️ O TEU VALOR</span>':' <span class="cf-est">ESTIMADO</span>'); }
+  if(o.valor==null)return cfT('sem dados para estimar','sem dados para estimar')+' · <b style="display:inline;font-size:13px">'+cfT('põe o teu valor','coloque o seu valor')+'</b>';
+  if(o.fixo&&!o.teu)return moeda(o.valor)+' <span class="cf-est">'+o.fixo+'</span>';
+  return (o.teu?'':'≈ ')+moeda(o.valor)+(o.teu?' <span class="cf-meu">'+cfT('✏️ O TEU VALOR','✏️ SEU VALOR')+'</span>':' <span class="cf-est">ESTIMADO</span>'); }
 // "já tens no cofre": soma as obrigações por pagar, por ordem de data, e vê até onde chega o dinheiro do cofre
 function cfCobertura(lst){ var h=hoje(),acc=0,tem=cfNoCofre(),m={}; lst.forEach(function(o){ if(o.pago||!o.pag||o.valor==null||cfDiasEntre(h,o.data)<-15)return; acc=r2(acc+o.valor); m[o.key]=acc<=tem+1e-9; }); return m; }
 function cfQuando(dd){ return dd===0?'hoje':dd===1?'amanhã':dd>0?'faltam '+dd+' dias':(dd===-1?'passou ontem':'passou há '+(-dd)+' dias'); }
-function cfLinkTipo(t){ return t.indexOf('ss_')===0?{u:CF_LINK.ss,t:'Abrir Segurança Social Direta ↗'}:{u:CF_LINK.at,t:'Abrir Portal das Finanças ↗'}; }
+function cfLinkTipo(t){ if(BR_LINK[t])return BR_LINK[t]; return t.indexOf('ss_')===0?{u:CF_LINK.ss,t:'Abrir Segurança Social Direta ↗'}:{u:CF_LINK.at,t:'Abrir Portal das Finanças ↗'}; }
 
 // ── cartão no ecrã Hoje ──
 function renderCofreHoje(){
   var box=document.getElementById('cofreHoje'); if(!box)return;
   normalizarImpostosCfg();
-  if(CFG.pais!=='PT'||!CFG.impostos.ativo){ box.innerHTML=''; return; }
+  var br=CFG.pais==='BR';
+  if(!br&&(CFG.pais!=='PT'||!CFG.impostos.ativo)){ box.innerHTML=''; return; }
   if(!isPro()){ box.innerHTML=''; return; }
   var c=cfCfg();
-  if(!c.configurado){ box.innerHTML=''; return; }
-  var mapa=cfMapaImp(),lst=cfObrigacoes(mapa),av=cfProximaAviso(lst),html='';
+  if(!c.configurado||(br&&c.regime==='nao')){ box.innerHTML=''; return; }
+  var mapa=br?{}:cfMapaImp(),lst=cfObrigacoes(mapa),av=cfProximaAviso(lst),html='';
+  if(av&&br){ var o=av.o,lk=cfLinkTipo(o.tipo);
+    html+='<div class="cf-banner">🔔 <b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+cfQuando(av.dd)+(o.valor!=null||o.pag?' · '+cfValorHtml(o):'')+
+      (o.pag&&o.valor!=null?(cfCobertura(lst)[o.key]?' · <span class="cf-ok">✓ você já tem no cofre</span>':' · <span class="cf-falta">no cofre: '+moeda(cfNoCofre())+'</span>'):'')+
+      '<div class="cf-row"><a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+lk.b+'</a><button class="btn btn-green" type="button" onclick="cofreAbrir(\'pago\',\''+o.key+'\')">✓ '+(o.pag?'Já paguei':'Já entreguei')+'</button></div>'+
+      (cfEditavel(o)?'<button type="button" class="cf-ver" style="display:inline-block;margin:10px 14px 0 0" onclick="cofreAbrir(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
+      '<button type="button" class="cf-ver" style="display:inline-block;margin:10px 0 0" onclick="cofreAbrir()">Ver o cofre ›</button></div>'; av=null; }
   if(av){ var o=av.o,lk=cfLinkTipo(o.tipo);
     html+='<div class="cf-banner">🔔 <b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+cfQuando(av.dd)+(o.tipo==='ss_decl'?'':' · '+cfValorHtml(o))+
       (o.pag&&o.valor!=null?(cfCobertura(lst)[o.key]?' · <span class="cf-ok">✓ já tens no cofre</span>':' · <span class="cf-falta">no cofre: '+moeda(cfNoCofre())+'</span>'):'')+
       '<div class="cf-row"><a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+(o.tipo.indexOf('ss_')===0?'SS Direta ↗':'Finanças ↗')+'</a><button class="btn btn-green" type="button" onclick="cofreAbrir(\'pago\',\''+o.key+'\')">✓ '+(o.pag?'Já paguei':'Já entreguei')+'</button></div>'+
-      '<button type="button" class="cf-ver" onclick="cofreAbrir()">Ver o cofre ›</button></div>'; }
+      (cfEditavel(o)?'<button type="button" class="cf-ver" style="display:inline-block;margin:10px 14px 0 0" onclick="cofreAbrir(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
+      '<button type="button" class="cf-ver" style="display:inline-block;margin:10px 0 0" onclick="cofreAbrir()">Ver o cofre ›</button></div>'; }
   box.innerHTML=html;
+}
+
+// ══ v3.22: Cofre dos impostos no Brasil (PRO) — MEI ou Autônomo ══
+// Só informativo: não mexe no saldo nem em nenhum cálculo de Portugal. Fica em CFG.cofreBR.
+// Regras gerais de 2026: salário mínimo R$ 1.621; DAS MEI (INSS 5% + ISS) R$ 86,05; limite MEI R$ 81.000/ano;
+// IR do autônomo (transporte de passageiros): tributável 60% do bruto, tabela mensal 2026 + redução da Lei 15.270/2025.
+var BR_SM=1621, BR_DAS=86.05, BR_MEI_LIM=81000, BR_TRIB=0.6;
+var BR_IR_TAB=[{ate:2428.80,a:0,d:0},{ate:2826.65,a:0.075,d:182.16},{ate:3751.05,a:0.15,d:394.16},{ate:4664.68,a:0.225,d:675.49},{ate:Infinity,a:0.275,d:908.73}];
+var BR_LINK={
+  das:{u:'https://www.gov.br/empresas-e-negocios/pt-br/empreendedor',t:'Abrir o Portal do Empreendedor ↗',b:'gov.br ↗'},
+  dasn:{u:'https://www.gov.br/empresas-e-negocios/pt-br/empreendedor',t:'Abrir o Portal do Empreendedor ↗',b:'gov.br ↗'},
+  gps:{u:'https://sal.rfb.gov.br',t:'Abrir o SAL (guia do INSS) ↗',b:'SAL ↗'},
+  cl:{u:'https://www.gov.br/receitafederal/pt-br',t:'Abrir a Receita Federal ↗',b:'Receita ↗'},
+  irpf:{u:'https://www.gov.br/receitafederal/pt-br',t:'Abrir a Receita Federal ↗',b:'Receita ↗'}
+};
+function brCfg(){ if(!CFG.cofreBR||typeof CFG.cofreBR!=='object')CFG.cofreBR={}; var c=CFG.cofreBR;
+  if(!c.valores||typeof c.valores!=='object')c.valores={}; if(!c.pagos||typeof c.pagos!=='object')c.pagos={}; if(!c.guardado||typeof c.guardado!=='object')c.guardado={};
+  if(['mei','autonomo','naosei','nao'].indexOf(c.regime)<0)c.regime=null;
+  if(['11','20','0'].indexOf(c.inss)<0)c.inss='11';
+  if(!(c.inssBase>=BR_SM))c.inssBase=BR_SM;
+  if(!(c.avisoDias>=0))c.avisoDias=5; return c; }
+function brM(v){ var neg=v<0,n=(Math.round(Math.abs(v)*100)/100).toFixed(2).split('.'); return (neg?'-':'')+'R$'+n[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.')+','+n[1]; }
+function brAutonomo(){ var r=brCfg().regime; return r==='autonomo'||r==='naosei'; }
+// INSS do autônomo por mês (11% do salário mínimo, ou 20% do valor escolhido)
+function brINSSEst(){ var c=brCfg(); return c.inss==='0'?0:c.inss==='20'?r2(c.inssBase*0.20):r2(BR_SM*0.11); }
+// o valor que o motorista pôs "sempre" manda sobre a estimativa
+function brFixoMes(){ var c=brCfg(),t=c.regime==='mei'?'das':'gps',e=c.valores[t+':'+hoje().slice(0,7)],f=c.valores[t+'_sempre'];
+  if(e&&_impNum(e.valor))return r2(e.valor); if(f&&_impNum(f.valor))return r2(f.valor); return c.regime==='mei'?BR_DAS:(brAutonomo()?brINSSEst():0); }
+// Imposto de Renda de um mês a partir do faturado (estimativa de carnê-leão)
+function brIR(fat,inss){
+  var trib=r2(Math.max(0,fat)*BR_TRIB),base=Math.max(0,r2(trib-(inss||0))),imp=0;
+  for(var i=0;i<BR_IR_TAB.length;i++){ if(base<=BR_IR_TAB[i].ate){ imp=base*BR_IR_TAB[i].a-BR_IR_TAB[i].d; break; } }
+  imp=Math.max(0,imp);
+  var red=trib<=5000?imp:(trib<=7350?Math.max(0,978.62-0.133145*trib):0);
+  return r2(Math.max(0,imp-red));
+}
+function brFaturado(de,ate){ var t=0; Object.keys(DB).forEach(function(k){ if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&k>=de&&k<=ate)t+=ganhos(DB[k]); }); return r2(t); }
+function brMesTxt(y,m){ return MESES[m-1].toLowerCase()+(y!==new Date().getFullYear()?' '+y:''); }
+function brDiaUtil(iso){ var d=new Date(iso+'T12:00:00'); while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1); return cfISO(d.getFullYear(),d.getMonth()+1,d.getDate()); }
+function brUltimoUtil(y,m){ var d=new Date(y,m,0,12); while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()-1); return cfISO(d.getFullYear(),d.getMonth()+1,d.getDate()); }
+// resumo do mês atual: o que guardar (parte fixa repartida pelos dias + IR do que já faturou)
+function brResumoMes(){
+  var c=brCfg(),h=hoje(),ym=h.slice(0,7),y=+h.slice(0,4),m=+h.slice(5,7),d=+h.slice(8,10),dm=cfUltimoDia(y,m);
+  var fixo=brFixoMes(),aut=brAutonomo(),inssEst=aut?fixo:0;
+  var ontem=d>1?cfISO(y,m,d-1):null;
+  var fat=brFaturado(ym+'-01',h),fatOntem=ontem?brFaturado(ym+'-01',ontem):0;
+  var ir=aut?brIR(fat,inssEst):0,irOntem=aut&&ontem?brIR(fatOntem,inssEst):0;
+  var fixoAte=r2(fixo*d/dm),fixoOntem=r2(fixo*(d-1)/dm);
+  var total=r2(fixo+ir),g=r2((c.guardado[ym]||[]).reduce(function(a,e){ return a+(+e.v||0); },0));
+  return {ym:ym,dia:d,dm:dm,fixo:fixo,fat:fat,trib:r2(fat*BR_TRIB),ir:ir,
+    hojeFixo:r2(fixoAte-fixoOntem),hojeIR:r2(ir-irOntem),hoje:r2(r2(fixoAte-fixoOntem)+r2(ir-irOntem)),
+    total:total,guardou:g,falta:r2(Math.max(0,total-g)),pct:total>0?Math.min(100,Math.round(g/total*100)):(g>0?100:0)};
+}
+// limite do MEI no ano
+function brLimiteMEI(){ var h=hoje(),y=+h.slice(0,4),fat=brFaturado(y+'-01-01',h),doy=cfDiasEntre(y+'-01-01',h)+1,da=cfDiasEntre(y+'-01-01',(y+1)+'-01-01');
+  var proj=doy>0?r2(fat/doy*da):0; return {ano:y,fat:fat,pct:Math.min(100,Math.round(fat/BR_MEI_LIM*100)),proj:proj,passa:proj>BR_MEI_LIM,falta:r2(Math.max(0,BR_MEI_LIM-fat))}; }
+// lista de obrigações (do mês anterior até 13 meses à frente)
+function brObrigacoes(){
+  var c=brCfg(),lst=[],h=new Date(),y0=h.getFullYear(),m0=h.getMonth()+1,mei=c.regime==='mei',aut=brAutonomo();
+  if(!mei&&!aut)return [];
+  var inssEst=aut?brINSSEst():0,inssDed=aut?brFixoMes():0;
+  for(var k=-1;k<=13;k++){
+    var d=new Date(y0,m0-1+k,1,12),y=d.getFullYear(),m=d.getMonth()+1;
+    var cm=new Date(y,m-2,1,12),cy=cm.getFullYear(),cmm=cm.getMonth()+1,cym=cy+'-'+pad(cmm),cde=cym+'-01',cate=cfISO(cy,cmm,cfUltimoDia(cy,cmm));
+    if(mei){
+      lst.push({key:'das:'+cym,tipo:'das',data:brDiaUtil(cfISO(y,m,20)),ic:'🧾',tit:'DAS do MEI · pagar',per:'competência '+brMesTxt(cy,cmm),est:BR_DAS,fixo:'VALOR FIXO 2026',pag:true});
+      if(m===5){ var fa=cfTemDados((y-1)+'-01-01',(y-1)+'-12-31')?brFaturado((y-1)+'-01-01',(y-1)+'-12-31'):null;
+        lst.push({key:'dasn:'+(y-1),tipo:'dasn',data:cfISO(y,5,31),ic:'📄',tit:'Declaração anual do MEI',per:'DASN-SIMEI de '+(y-1)+(fa!=null?' · faturamento ≈ '+brM(fa):' · informar o faturamento do ano'),est:null,pag:false}); }
+    }
+    if(aut){
+      if(c.inss!=='0')lst.push({key:'gps:'+cym,tipo:'gps',data:brDiaUtil(cfISO(y,m,15)),ic:'🏛',tit:'INSS · pagar a guia (GPS)',per:'competência '+brMesTxt(cy,cmm)+(c.inss==='11'?' · código 1163':' · código 1007'),est:inssEst,fixo:c.inss==='11'?'11% DO SALÁRIO MÍNIMO':'20% DE '+moeda(c.inssBase),pag:true});
+      var tem=cfTemDados(cde,cate),irm=tem?brIR(brFaturado(cde,cate),inssDed):null;
+      lst.push({key:'cl:'+cym,tipo:'cl',data:brUltimoUtil(y,m),ic:'🦁',tit:'Carnê-leão',per:'IR de '+brMesTxt(cy,cmm),est:irm,pag:irm!==0,isento:irm===0});
+      if(m===5)lst.push({key:'irpf:'+(y-1),tipo:'irpf',data:brUltimoUtil(y,5),ic:'📄',tit:'Declaração do IR',per:'rendimentos de '+(y-1),est:null,pag:false});
+    }
+  }
+  lst.forEach(function(o){ var v=cfValor(o); o.valor=v.valor; o.teu=v.teu; o.nota=v.nota; o.pago=c.pagos[o.key]||null; });
+  return lst.sort(function(a,b){ return a.data<b.data?-1:a.data>b.data?1:0; });
+}
+// ── perguntas iniciais (Brasil) ──
+function brWizIni(){ var c=brCfg(); _cfWiz={br:1,passo:1,regime:c.regime||'mei',inss:c.inss||'11',base:c.inssBase||BR_SM,aviso:c.avisoDias||5}; _cfView='wiz'; }
+function brHtmlWiz(){
+  if(!_cfWiz||!_cfWiz.br)brWizIni(); var w=_cfWiz,p=w.passo,dots='<div class="cf-dots">'+[1,2,3].map(function(i){ return '<i class="'+(i<=p?'on':'')+'"></i>'; }).join('')+'</div>',h=dots;
+  if(p===1){ h+='<div class="cf-q">Como você paga seus impostos?</div><div class="cf-sub" style="margin-bottom:12px">Assim o app sabe o que calcular e quais datas mostrar. Pode mudar depois.</div>'+
+    cfOp(w.regime==='mei',"cfWizSet('regime','mei')",'MEI','Tenho CNPJ e pago o DAS fixo todo mês')+
+    cfOp(w.regime==='autonomo',"cfWizSet('regime','autonomo')",'Autônomo','Sem CNPJ: INSS + Imposto de Renda (carnê-leão)')+
+    cfOp(w.regime==='naosei',"cfWizSet('regime','naosei')",'Ainda não sei','Mostramos o cálculo de autônomo')+
+    cfOp(w.regime==='nao',"cfWizSet('regime','nao')",'Não calcular impostos','')+
+    '<div class="cf-explica"><b>🤔 Qual é o meu caso?</b><br>• Tem <b>CNPJ</b> e paga um boleto fixo (DAS) todo mês → <b>MEI</b><br>• Recebe só no <b>CPF</b>, sem empresa → <b>Autônomo</b><br>• Não paga nada hoje → escolha <b>Autônomo</b>: o app mostra quanto você deveria guardar.<br><span style="color:var(--sub)">Dica: o MEI costuma sair mais barato para quem fatura até R$ 81 mil por ano. Na dúvida, fale com um contador.</span></div>'; }
+  if(p===2){
+    if(w.regime==='mei'){ h+='<div class="cf-q">DAS do MEI</div><div class="cf-sub" style="margin-bottom:12px">Em 2026 o DAS do motorista MEI é <b>'+moeda(BR_DAS)+' por mês</b> (INSS de 5% do salário mínimo + R$ 5 de ISS). Vence todo dia 20.</div>'+
+      '<div class="cf-explica">Se a sua guia tiver outro valor, toque em <b>✏️ Editar valor</b> no cofre e use o da guia.</div>'; }
+    else { h+='<div class="cf-q">Você paga INSS?</div><div class="cf-sub" style="margin-bottom:12px">Contribuinte individual. Escolha o que você paga (ou o que pretende pagar).</div>'+
+      cfOp(w.inss==='11',"cfWizSet('inss','11')",'11% do salário mínimo · '+moeda(r2(BR_SM*0.11))+'/mês','Plano simplificado (código 1163). Aposentadoria por idade.')+
+      cfOp(w.inss==='20',"cfWizSet('inss','20')",'20% sobre um valor que eu escolho','Plano normal (código 1007). Conta para aposentadoria por tempo.')+
+      (w.inss==='20'?'<div class="cf-c" style="border-style:dashed"><div class="fld-lbl">Sobre quanto você contribui? (mínimo '+moeda(BR_SM)+')</div><div class="iw"><div class="ipfx">R$</div><input type="text" inputmode="decimal" autocomplete="off" id="brInssBase" value="'+cfEur(w.base)+'" oninput="var v=lerPct(this.value);if(v!==null&&!isNaN(v))_cfWiz.base=v"></div><div class="cf-sub" style="margin-top:6px">20% = '+moeda(r2(Math.max(BR_SM,w.base)*0.20))+' por mês.</div></div>':'')+
+      cfOp(w.inss==='0',"cfWizSet('inss','0')",'Não pago INSS','Mostramos só o Imposto de Renda'); }
+  }
+  if(p===3){ h+='<div class="cf-q">Quando quer ser avisado?</div><div class="cf-sub" style="margin-bottom:12px">O aviso aparece no Finance Drive e no calendário do seu celular.</div>'+
+    [1,3,5,7].map(function(d){ return cfOp(w.aviso===d,"cfWizSet('aviso',"+d+")",d+' dia'+(d>1?'s':'')+' antes',d===5?'Recomendado · dá tempo de transferir':''); }).join(''); }
+  var ult=p===3||(p===1&&w.regime==='nao');
+  h+='<div class="cf-row" style="margin-top:14px">'+(p>1?'<button class="btn btn-outline" type="button" onclick="_cfWiz.passo--;cofreRender()">‹ Voltar</button>':'')+
+    '<button class="btn btn-green" type="button" onclick="'+(ult?'brWizConcluir()':'brWizSeguinte()')+'">'+(ult?'Concluir ✓':'Seguinte →')+'</button></div>';
+  if(brCfg().configurado)h+='<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">Cancelar</button>';
+  return h;
+}
+function brWizSeguinte(){ var w=_cfWiz;
+  if(w.passo===2&&w.regime!=='mei'&&w.inss==='20'){ var el=document.getElementById('brInssBase'),v=el?lerPct(el.value):w.base;
+    if(v===null||isNaN(v)||v<BR_SM){ toast('O valor mínimo é '+moeda(BR_SM),'er'); return; } w.base=r2(v); }
+  w.passo++; cofreRender(); }
+function brWizConcluir(){ var c=brCfg(),w=_cfWiz;
+  c.regime=w.regime; c.inss=w.inss; c.inssBase=r2(Math.max(BR_SM,+w.base||BR_SM)); c.avisoDias=w.aviso; c.configurado=true;
+  salvarLocal(); try{ renderHoje(); }catch(e){} trackEvent('cofre_configurado',{pais:'BR',regime:c.regime,inss:c.inss});
+  toast('Cofre configurado','ok'); cofreIr('main'); }
+// ── ecrã principal (Brasil) ──
+function brHtmlMain(){
+  var c=brCfg();
+  if(c.regime==='nao')return '<div class="cf-c"><div class="cf-h">Cálculo de impostos desligado</div><div class="cf-sub">Você escolheu não calcular impostos. Se mudar de ideia, escolha MEI ou Autônomo.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="brWizIni();cofreRender()">Escolher MEI ou Autônomo</button></div>';
+  var R=brResumoMes(),lst=cfObrigacoes({}),h=hoje(),mei=c.regime==='mei',mes=MESES[+R.ym.slice(5,7)-1],html='';
+  html+='<div class="cf-c"><div class="cf-sub" style="font-weight:600">Hoje guarde</div><div class="cf-big">'+brM(R.hoje)+'</div><div class="cf-sub">'+
+    (mei?'DAS do MEI · '+brM(R.fixo)+' por mês ÷ '+R.dm+' dias':(c.inss!=='0'?'INSS '+brM(R.hojeFixo)+' · ':'')+'IR '+brM(R.hojeIR)+(R.ir===0?' (isento)':''))+'</div></div>';
+  html+='<div class="cf-c"><div class="cf-h">📦 '+mes+'</div>';
+  if(mei){ var y=+R.ym.slice(0,4),m=+R.ym.slice(5,7),nx=new Date(y,m,20,12);
+    html+='<div class="cf-l"><span>DAS de '+mes.toLowerCase()+' (vence '+pad(nx.getDate())+'/'+pad(nx.getMonth()+1)+')</span><b>'+brM(R.fixo)+'</b></div>'; }
+  else { html+='<div class="cf-l"><span>Faturado no mês</span><b>'+brM(R.fat)+'</b></div>'+
+    '<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">Tributável no IR (60%)</span><span>'+brM(R.trib)+'</span></div>'+
+    '<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">IR do mês</span>'+(R.ir===0?'<span class="cf-ok">isento · até R$ 5.000</span>':'<span>'+brM(R.ir)+'</span>')+'</div>'+
+    (c.inss!=='0'?'<div class="cf-l"><span style="padding-left:12px;color:var(--sub)">INSS'+(c.inss==='11'?' · plano simplificado 11%':' · 20%')+'</span><span>'+brM(R.fixo)+'</span></div>':''); }
+  html+='<div class="cf-l"><span>Você já guardou</span><b style="color:var(--green)">'+brM(R.guardou)+'</b></div>'+
+    '<div class="cf-bar"><i style="width:'+R.pct+'%"></i></div>'+
+    '<div style="display:flex;justify-content:space-between">'+(R.falta>0?'<span class="cf-falta">Falta guardar '+brM(R.falta)+'</span>':'<span class="cf-ok">✓ Tudo guardado</span>')+'<span class="cf-sub">'+R.pct+'%</span></div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cofreIr(\'guardar\')">＋ Já separei</button>'+
+    '<div class="cf-sub" style="margin-top:8px;text-align:center">No cofre agora (guardado − pago): <b>'+brM(cfNoCofre())+'</b></div></div>';
+  if(mei){ var L=brLimiteMEI();
+    html+='<div class="cf-c"><div class="cf-h">📈 Limite do MEI em '+L.ano+'</div>'+
+      '<div class="cf-l"><span>Faturado no ano</span><b>'+brM(L.fat)+'</b></div><div class="cf-l"><span>Limite anual</span><span>'+brM(BR_MEI_LIM)+'</span></div>'+
+      '<div class="cf-bar"><i style="width:'+L.pct+'%'+(L.passa?';background:#d9822b':'')+'"></i></div>'+
+      '<div style="display:flex;justify-content:space-between;gap:8px">'+(L.passa?'<span class="cf-falta">⚠️ No ritmo atual: ≈ '+brM(L.proj)+' no ano. Passa o limite, fale com um contador.</span>':'<span class="cf-ok">✓ No ritmo atual: ≈ '+brM(L.proj)+' no ano</span>')+'<span class="cf-sub">'+L.pct+'%</span></div></div>'; }
+  var vis=lst.filter(function(o){ var dd=cfDiasEntre(h,o.data); return dd>=0||(!o.pago&&dd>=-15); }).slice(0,8),cob=cfCobertura(lst);
+  html+='<div class="cf-h" style="margin:14px 2px 8px">📅 Próximas obrigações</div><div class="cf-c" style="padding:10px 14px">';
+  if(!vis.length)html+='<div class="cf-sub">Sem obrigações para mostrar.</div>';
+  vis.forEach(function(o){ var dd=cfDiasEntre(h,o.data);
+    html+='<div class="cf-ob'+(o.pago?' pago':'')+'"><div class="ic">'+o.ic+'</div><div style="flex:1;min-width:0"><b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+escHtml(o.per)+
+      (o.isento&&!o.teu?'<br><span class="cf-ok">'+brM(0)+' · isento neste mês</span>':(o.pag||o.valor!=null?'<br>'+cfValorHtml(o):''))+
+      (o.nota?'<br><i style="font-size:12px">“'+escHtml(o.nota)+'”</i>':'')+
+      (o.pago?'<br><span class="cf-ok">✓ '+(o.pag?'Pago':'Entregue')+'</span>':(dd<0&&!o.isento?'<br><span class="cf-falta">'+cfQuando(dd)+'</span>':(o.pag&&o.valor!=null?(cob[o.key]?'<br><span class="cf-ok">✓ você já tem no cofre</span>':'<br><span class="cf-falta">ainda não chega o cofre</span>'):'')))+
+      '<div class="cf-acoes">'+(cfEditavel(o)&&!o.pago?'<button type="button" onclick="cofreIr(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
+      '<button type="button" onclick="cofreIr(\'ajuda\',\''+o.tipo+'\')">❓ Como '+(o.pag?'pagar':'fazer')+'</button>'+
+      (o.pago?'<button type="button" onclick="cfDesfazerPago(\''+o.key+'\')">↺ Desfazer</button>':(o.pag||o.tipo==='dasn'||o.tipo==='irpf'?'<button type="button" onclick="cofreIr(\'pago\',\''+o.key+'\')">✓ Já '+(o.pag?'paguei':'entreguei')+'</button>':''))+'</div></div></div>'; });
+  html+='</div>';
+  var nEv=cfEventosCalendario().length;
+  html+='<div class="cf-c" style="text-align:center"><div class="cf-h" style="justify-content:center">'+nEv+' datas nos próximos 12 meses</div><div class="cf-sub">Coloque tudo no calendário do celular. O próprio celular avisa '+c.avisoDias+' dias antes, mesmo com o Finance Drive fechado.</div>'+
+    '<button class="btn btn-green" type="button" style="margin-top:10px" onclick="cfBaixarCalendario()">📅 Colocar no meu calendário</button>'+
+    (cfPodePartilhar()?'<button class="cf-acoes" type="button" style="border:none;background:none;margin:8px auto 0;font:700 12.5px var(--fd-head);color:#2848a8;cursor:pointer" onclick="cfPartilharCalendario()">Não abriu? Compartilhar o arquivo</button>':'')+'</div>';
+  html+='<div class="cf-aviso"><b>ⓘ Valores estimados.</b> O Finance Drive usa os seus registros e as regras gerais de 2026 (IR sobre 60% do faturado, isenção até R$ 5.000 tributáveis). Não conhece o seu caso completo. Se você paga outro valor, toque em ✏️. <b>Confirme sempre com o seu contador.</b></div>';
+  html+='<button class="btn btn-outline" type="button" onclick="brWizIni();cofreRender()">⚙ Mudar respostas e avisos</button>';
+  return html;
 }
 
 // ── janela do cofre ──
@@ -4152,15 +4324,23 @@ function cofreIr(v,a){ _cfView=v; _cfArg=a===undefined?null:a; cofreRender(); va
 function cofreRender(){
   var el=document.getElementById('cfCorpo'); if(!el)return;
   normalizarImpostosCfg();
+  try{ var nb0=document.getElementById('nb-cofre'); if(nb0)nb0.style.display=''; }catch(e){}
+  if(CFG.pais==='BR'){
+    if(!isPro()){ el.innerHTML='<div class="cf-c"><div class="cf-h">🔒 Função PRO</div><div class="cf-sub">Com o cofre você sabe quanto guardar por dia para o DAS do MEI ou para o INSS e o Imposto de Renda, quando pagar cada um, e recebe avisos no calendário do celular.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="abrirPro(\'cofre_aba\')">Ver o PRO</button></div>'; return; }
+    if(_cfView!=='wiz'&&!cfCfg().configurado)brWizIni();
+    var fb={wiz:brHtmlWiz,main:brHtmlMain,guardar:cfHtmlGuardar,pago:cfHtmlPago,editar:cfHtmlEditar,ajuda:cfHtmlAjuda}[_cfView]||brHtmlMain;
+    el.innerHTML=fb(); return;
+  }
   if(CFG.pais!=='PT'){ el.innerHTML='<div class="cf-c"><div class="cf-sub">O cofre dos impostos é para Portugal.</div></div>'; return; }
   if(!isPro()){ el.innerHTML='<div class="cf-c"><div class="cf-h">🔒 Função PRO</div><div class="cf-sub">Com o cofre sabes quanto guardar por dia para a Segurança Social, o IRS e o IVA, quando pagar cada um, e recebes avisos no calendário do telemóvel.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="abrirPro(\'cofre_aba\')">Ver o PRO</button></div>'; return; }
   if(!CFG.impostos.ativo&&_cfView!=='wiz'){ el.innerHTML='<div class="cf-c"><div class="cf-h">Estimativa de impostos desligada</div><div class="cf-sub">O cofre usa a estimativa de impostos. Liga-a para começar.</div><button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfWizIni();cofreIr(\'wiz\')">Configurar o cofre</button></div>'; return; }
   if(_cfView!=='wiz'&&!cfCfg().configurado){ cfWizIni(); }
   var f={wiz:cfHtmlWiz,main:cfHtmlMain,guardar:cfHtmlGuardar,pago:cfHtmlPago,editar:cfHtmlEditar,ajuda:cfHtmlAjuda}[_cfView]||cfHtmlMain;
   el.innerHTML=f();
-  try{ var nb=document.getElementById('nb-cofre'); if(nb)nb.style.display=CFG.pais==='PT'?'':'none'; }catch(e){}
 }
-function cfVoltar(){ return '<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">‹ Voltar ao cofre</button>'; }
+function cfT(pt,br){ return CFG.pais==='BR'?br:pt; }
+function cofreMainHtml(){ return CFG.pais==='BR'?brHtmlMain():cfHtmlMain(); }
+function cfVoltar(){ return '<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cofreIr(\'main\')">‹ '+cfT('Voltar ao cofre','Voltar ao cofre')+'</button>'; }
 function cfHtmlMain(){
   var c=cfCfg(),mapa=cfMapaImp(),R=cfResumoMes(mapa),lst=cfObrigacoes(mapa),h=hoje(),I=CFG.impostos;
   var html='<div class="cf-c"><div class="cf-sub" style="font-weight:600">Hoje guarda</div><div class="cf-big">'+moeda(R.hoje.total)+'</div>'+
@@ -4183,7 +4363,7 @@ function cfHtmlMain(){
     html+='<div class="cf-ob'+(o.pago?' pago':'')+'"><div class="ic">'+o.ic+'</div><div style="flex:1;min-width:0"><b>'+escHtml(o.tit)+' · até '+cfDataTxt(o.data)+'</b>'+escHtml(o.per)+'<br>'+cfValorHtml(o)+
       (o.nota?'<br><i style="font-size:12px">“'+escHtml(o.nota)+'”</i>':'')+
       (o.pago?'<br><span class="cf-ok">✓ '+(o.pag?'Pago':'Entregue')+'</span>':(dd<0?'<br><span class="cf-falta">'+cfQuando(dd)+'</span>':(o.pag&&o.valor!=null?(cob[o.key]?'<br><span class="cf-ok">✓ já tens no cofre</span>':'<br><span class="cf-falta">ainda não chega o cofre</span>'):'')))+
-      '<div class="cf-acoes">'+(o.pag&&!o.pago?'<button type="button" onclick="cofreIr(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
+      '<div class="cf-acoes">'+(cfEditavel(o)&&!o.pago?'<button type="button" onclick="cofreIr(\'editar\',\''+o.key+'\')">✏️ Editar valor</button>':'')+
       '<button type="button" onclick="cofreIr(\'ajuda\',\''+o.tipo+'\')">❓ Como '+(o.pag?'pagar':'fazer')+'</button>'+
       (o.pago?'<button type="button" onclick="cfDesfazerPago(\''+o.key+'\')">↺ Desfazer</button>':'<button type="button" onclick="cofreIr(\'pago\',\''+o.key+'\')">✓ Já '+(o.pag?'paguei':'entreguei')+'</button>')+'</div></div></div>'; });
   html+='</div>';
@@ -4196,7 +4376,7 @@ function cfHtmlMain(){
   return html;
 }
 // ── perguntas iniciais ──
-function cfWizIni(){ var c=cfCfg(),I=CFG.impostos; _cfWiz={passo:1,ss:c.ssResp||(I.usarSS?'sim':'isento'),iva:c.ivaResp||(I.usarIVA?'sim':'isento'),regime:c.ivaRegime||'trimestral',aviso:c.avisoDias||5}; _cfView='wiz'; }
+function cfWizIni(){ if(CFG.pais==='BR'){ brWizIni(); return; } var c=cfCfg(),I=CFG.impostos; _cfWiz={passo:1,ss:c.ssResp||(I.usarSS?'sim':'isento'),iva:c.ivaResp||(I.usarIVA?'sim':'isento'),regime:c.ivaRegime||'trimestral',aviso:c.avisoDias||5}; _cfView='wiz'; }
 function cfOp(on,fn,tit,sub){ return '<button type="button" class="cf-op'+(on?' on':'')+'" onclick="'+fn+'"><span class="r"></span><span><b>'+tit+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span></button>'; }
 function cfWizSet(k,v){ _cfWiz[k]=v; cofreRender(); }
 function cfHtmlWiz(){
@@ -4231,10 +4411,10 @@ function cfWizConcluir(){
 }
 // ── guardar dinheiro ──
 function cfHtmlGuardar(){
-  var c=cfCfg(),R=cfResumoMes(cfMapaImp()),lst=(c.guardado[R.ym]||[]);
-  var h='<div class="cf-q">Quanto puseste de lado?</div><div class="cf-sub" style="margin-bottom:10px">Transfere para uma poupança no banco e regista aqui. O Finance Drive não mexe no teu dinheiro.</div>'+
-    '<div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValGuardar" value="'+(R.falta>0?cfEur(R.falta):'')+'"></div>'+
-    '<div class="cf-sub" style="margin-top:6px">Sugestão: o que falta guardar este mês ('+moeda(R.falta)+').</div>'+
+  var c=cfCfg(),R=CFG.pais==='BR'?brResumoMes():cfResumoMes(cfMapaImp()),lst=(c.guardado[R.ym]||[]);
+  var h='<div class="cf-q">'+cfT('Quanto puseste de lado?','Quanto você separou?')+'</div><div class="cf-sub" style="margin-bottom:10px">'+cfT('Transfere para uma poupança no banco e regista aqui. O Finance Drive não mexe no teu dinheiro.','Transfira para uma poupança no banco e registre aqui. O Finance Drive não mexe no seu dinheiro.')+'</div>'+
+    '<div class="iw"><div class="ipfx">'+sim()+'</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValGuardar" value="'+(R.falta>0?cfEur(R.falta):'')+'"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">'+cfT('Sugestão: o que falta guardar este mês','Sugestão: o que falta guardar este mês')+' ('+moeda(R.falta)+').</div>'+
     '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfGuardar()">Guardar</button>';
   if(lst.length){ h+='<div class="cf-h" style="margin-top:16px">Este mês</div>';
     lst.forEach(function(e,i){ h+='<div class="cf-hist"><span>'+fmtDataMs(e.ts)+'</span><span style="margin-left:auto;font-weight:700">'+moeda(+e.v)+'</span><button type="button" aria-label="Apagar" onclick="cfApagarGuardado('+i+')">🗑</button></div>'; }); }
@@ -4242,38 +4422,39 @@ function cfHtmlGuardar(){
 }
 function cfEur(v){ return (Math.round(v*100)/100).toFixed(2).replace('.',','); }
 function cfLerEuro(id){ var el=document.getElementById(id); var v=lerPct(el?el.value:''); return (v===null||isNaN(v))?null:v; }
-function cfGuardar(){ var v=cfLerEuro('cfValGuardar'); if(v===null||v<=0){ toast('Escreve um valor, por exemplo 45,27','er'); return; }
+function cfGuardar(){ var v=cfLerEuro('cfValGuardar'); if(v===null||v<=0){ toast(cfT('Escreve um valor, por exemplo 45,27','Digite um valor, por exemplo 45,27'),'er'); return; }
   var c=cfCfg(),ym=hoje().slice(0,7); (c.guardado[ym]=c.guardado[ym]||[]).push({v:v,ts:Date.now()}); salvarLocal(); trackEvent('cofre_guardar',{});
   toast('Guardado: '+moeda(v),'ok'); cofreIr('main'); }
 function cfApagarGuardado(i){ var c=cfCfg(),ym=hoje().slice(0,7),l=c.guardado[ym]||[]; l.splice(i,1); if(!l.length)delete c.guardado[ym]; salvarLocal(); cofreRender(); }
 // ── marcar pago / entregue ──
 function cfAchar(key){ var l=cfObrigacoes(cfMapaImp()); for(var i=0;i<l.length;i++)if(l[i].key===key)return l[i]; return null; }
-function cfHtmlPago(){ var o=cfAchar(_cfArg); if(!o)return cfHtmlMain();
+function cfHtmlPago(){ var o=cfAchar(_cfArg); if(!o)return cofreMainHtml();
   var h='<div class="cf-q">'+escHtml(o.tit)+'</div><div class="cf-sub" style="margin-bottom:10px">'+escHtml(o.per)+' · até '+cfDataTxt(o.data)+'</div>';
-  if(o.pag){ h+='<div class="fld-lbl">Quanto pagaste?</div><div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValPago" value="'+(o.valor!=null?cfEur(o.valor):'')+'"></div>'+
-    '<div class="cf-sub" style="margin-top:6px">Este valor sai do teu cofre.</div>'; }
-  else h+='<div class="cf-sub">Marca como entregue. Não sai dinheiro do cofre.</div>';
+  if(o.pag){ h+='<div class="fld-lbl">'+cfT('Quanto pagaste?','Quanto você pagou?')+'</div><div class="iw"><div class="ipfx">'+sim()+'</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValPago" value="'+(o.valor!=null?cfEur(o.valor):'')+'"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">'+cfT('Este valor sai do teu cofre.','Este valor sai do seu cofre.')+'</div>'; }
+  else h+='<div class="cf-sub">'+cfT('Marca como entregue. Não sai dinheiro do cofre.','Marque como entregue. Não sai dinheiro do cofre.')+'</div>';
   return h+'<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfMarcarPago(\''+o.key+'\')">✓ Confirmar</button>'+cfVoltar(); }
 function cfMarcarPago(key){ var o=cfAchar(key); if(!o)return; var v=0;
-  if(o.pag){ v=cfLerEuro('cfValPago'); if(v===null||v<0){ toast('Escreve o valor que pagaste','er'); return; } }
+  if(o.pag){ v=cfLerEuro('cfValPago'); if(v===null||v<0){ toast(cfT('Escreve o valor que pagaste','Digite o valor que você pagou'),'er'); return; } }
   cfCfg().pagos[key]={ts:Date.now(),v:v}; salvarLocal(); trackEvent('cofre_pago',{tipo:o.tipo}); toast(o.pag?'Marcado como pago':'Marcado como entregue','ok'); cofreIr('main'); }
 function cfDesfazerPago(key){ delete cfCfg().pagos[key]; salvarLocal(); cofreRender(); }
 // ── editar valor ──
 var _cfSempre=true;
-function cfHtmlEditar(){ var o=cfAchar(_cfArg); if(!o)return cfHtmlMain(); var c=cfCfg(),v=c.valores[o.key]||c.valores[o.tipo+'_sempre']||{};
-  _cfSempre=!c.valores[o.key];
+function cfHtmlEditar(){ var o=cfAchar(_cfArg); if(!o)return cofreMainHtml(); var c=cfCfg(),ch=cfChave(o),v=c.valores[ch.k]||c.valores[ch.t+'_sempre']||{};
+  _cfSempre=!c.valores[ch.k];
   return '<div class="cf-q">✏️ '+escHtml(o.tit)+'</div><div class="cf-sub" style="margin-bottom:10px">Estimativa do Finance Drive: '+(o.est!=null?moeda(o.est):'sem dados')+'</div>'+
-    '<div class="fld-lbl">Quanto pagas de facto?</div><div class="iw"><div class="ipfx">€</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValEditar" value="'+(o.teu&&o.valor!=null?cfEur(o.valor):'')+'" placeholder="ex.: 96,40"></div>'+
-    '<div class="cf-sub" style="margin-top:6px">Vê o valor na '+(o.tipo.indexOf('ss_')===0?'Segurança Social Direta':'tua declaração / Portal das Finanças')+' ou pergunta ao contabilista.</div>'+
-    '<div class="fld-lbl" style="margin-top:12px">Usar este valor</div><div class="seg"><label class="seg-opt"><input type="radio" name="cfSempre" '+(!_cfSempre?'checked':'')+' onchange="_cfSempre=false"> Só desta vez</label><label class="seg-opt"><input type="radio" name="cfSempre" '+(_cfSempre?'checked':'')+' onchange="_cfSempre=true"> Sempre, até mudar</label></div>'+
-    '<div class="fld-lbl" style="margin-top:12px">Nota (opcional)</div><div class="iw"><input type="text" id="cfNotaEditar" maxlength="80" value="'+escHtml(v.nota||'')+'" placeholder="ex.: indicado pela contabilista" style="padding-left:12px"></div>'+
+    '<div class="fld-lbl">'+cfT(o.tipo==='iva_ent'?'Quanto vais pagar de IVA?':'Quanto pagas de facto?','Quanto você paga de fato?')+'</div><div class="iw"><div class="ipfx">'+sim()+'</div><input type="text" inputmode="decimal" autocomplete="off" id="cfValEditar" value="'+(o.teu&&o.valor!=null?cfEur(o.valor):'')+'" placeholder="ex.: 96,40"></div>'+
+    '<div class="cf-sub" style="margin-top:6px">'+(CFG.pais==='BR'?'Veja o valor na guia ou pergunte ao seu contador.':'Vê o valor na '+(o.tipo.indexOf('ss_')===0?'Segurança Social Direta':'tua declaração / Portal das Finanças')+' ou pergunta ao contabilista.')+'</div>'+
+    (o.tipo==='iva_ent'?'<div class="cf-sub" style="margin-top:4px">O mesmo valor fica no pagamento do IVA deste período.</div>':'')+
+    '<div class="fld-lbl" style="margin-top:12px">'+cfT('Usar este valor','Usar este valor')+'</div><div class="seg"><label class="seg-opt"><input type="radio" name="cfSempre" '+(!_cfSempre?'checked':'')+' onchange="_cfSempre=false"> '+cfT('Só desta vez','Só desta vez')+'</label><label class="seg-opt"><input type="radio" name="cfSempre" '+(_cfSempre?'checked':'')+' onchange="_cfSempre=true"> '+cfT('Sempre, até mudar','Sempre, até mudar')+'</label></div>'+
+    '<div class="fld-lbl" style="margin-top:12px">Nota (opcional)</div><div class="iw"><input type="text" id="cfNotaEditar" maxlength="80" value="'+escHtml(v.nota||'')+'" placeholder="'+cfT('ex.: indicado pela contabilista','ex.: valor da guia')+'" style="padding-left:12px"></div>'+
     '<button class="btn btn-green" type="button" style="margin-top:12px" onclick="cfGuardarEditar(\''+o.key+'\')">Guardar</button>'+
     (o.teu?'<button class="btn btn-outline" type="button" style="margin-top:8px" onclick="cfVoltarEstimativa(\''+o.key+'\')">Voltar à estimativa</button>':'')+cfVoltar(); }
-function cfGuardarEditar(key){ var o=cfAchar(key); if(!o)return; var v=cfLerEuro('cfValEditar'); if(v===null||v<0){ toast('Escreve um valor, por exemplo 96,40','er'); return; }
-  var c=cfCfg(),n=((document.getElementById('cfNotaEditar')||{}).value||'').trim().slice(0,80),reg={valor:v,nota:n};
-  if(_cfSempre){ c.valores[o.tipo+'_sempre']=reg; delete c.valores[key]; } else c.valores[key]=reg;
+function cfGuardarEditar(key){ var o=cfAchar(key); if(!o)return; var v=cfLerEuro('cfValEditar'); if(v===null||v<0){ toast(cfT('Escreve um valor, por exemplo 96,40','Digite um valor, por exemplo 96,40'),'er'); return; }
+  var c=cfCfg(),ch=cfChave(o),n=((document.getElementById('cfNotaEditar')||{}).value||'').trim().slice(0,80),reg={valor:v,nota:n};
+  if(_cfSempre){ c.valores[ch.t+'_sempre']=reg; delete c.valores[ch.k]; } else c.valores[ch.k]=reg;
   salvarLocal(); trackEvent('cofre_editar',{tipo:o.tipo,sempre:_cfSempre}); toast('Valor guardado','ok'); cofreIr('main'); }
-function cfVoltarEstimativa(key){ var o=cfAchar(key); if(!o)return; var c=cfCfg(); if(c.valores[key])delete c.valores[key]; else delete c.valores[o.tipo+'_sempre']; salvarLocal(); cofreIr('main'); }
+function cfVoltarEstimativa(key){ var o=cfAchar(key); if(!o)return; var c=cfCfg(),ch=cfChave(o); if(c.valores[ch.k])delete c.valores[ch.k]; else delete c.valores[ch.t+'_sempre']; salvarLocal(); cofreIr('main'); }
 // ── tutoriais curtos ──
 var CF_AJUDA={
   ss_pag:{t:'Como pagar a Segurança Social',s:['Pelo <b>Multibanco</b> ou pela <b>app do banco</b>: vai a <b>Pagamentos ao Estado</b> → <b>Segurança Social</b>.','Escolhe <b>Trabalhador independente</b>.','Põe o teu <b>NISS</b> (11 números; está na Segurança Social Direta e no cartão de cidadão de quem o tem).','Põe o <b>valor</b> e confirma. Paga até dia 20.','<b>Guarda o comprovativo</b> e marca aqui “✓ Já paguei”.'],x:'Preferes não te lembrar? Na Segurança Social Direta podes ativar o <b>débito direto</b>.'},
@@ -4282,23 +4463,29 @@ var CF_AJUDA={
   iva_pag:{t:'Como pagar o IVA',s:['Depois de entregar a declaração, o Portal das Finanças dá-te uma <b>referência de pagamento</b>.','No <b>Multibanco</b> ou na <b>app do banco</b>: Pagamentos ao Estado → põe a referência e o valor.','Paga até <b>dia 25</b>.','Guarda o comprovativo e marca aqui “✓ Já paguei”.'],x:''},
   irs:{t:'Como entregar o IRS',s:['Entre <b>1 de abril e 30 de junho</b>, entra no <b>Portal das Finanças</b> → IRS → Entregar declaração.','Os recibos verdes vão no <b>anexo B</b>. Confirma os valores com o contabilista.','Se houver imposto a pagar, a AT envia a nota de cobrança com o prazo de pagamento.','Paga com a referência no Multibanco ou na app do banco e marca aqui “✓ Já paguei”.'],x:''}
 };
+// tutoriais curtos (Brasil)
+CF_AJUDA.das={t:'Como pagar o DAS do MEI',s:['Abra o <b>app MEI</b> ou o <b>Portal do Empreendedor</b> (gov.br) e entre com a sua conta gov.br.','Vá em <b>Pagamento de contribuição mensal (DAS)</b>.','Escolha o mês e gere a guia (boleto ou <b>Pix</b>).','Pague até o <b>dia 20</b>.','Guarde o comprovante e marque aqui “✓ Já paguei”.'],x:'Dá para ativar o <b>débito automático</b> do DAS no app do seu banco.'};
+CF_AJUDA.dasn={t:'Como fazer a declaração anual do MEI',s:['No <b>Portal do Empreendedor</b> (gov.br), entre em <b>Declaração Anual (DASN-SIMEI)</b>.','Informe o faturamento do ano anterior. O Finance Drive mostra uma estimativa.','Envie até <b>31 de maio</b>.','Marque aqui “✓ Já entreguei”.'],x:''};
+CF_AJUDA.gps={t:'Como pagar o INSS (GPS)',s:['Entre no <b>SAL</b> (sal.rfb.gov.br) ou no <b>Meu INSS</b> e escolha <b>Contribuinte individual</b>.','Use o código <b>1163</b> (plano simplificado, 11%) ou <b>1007</b> (20%).','Escolha o mês (competência) e o valor, e gere a guia.','Pague até o <b>dia 15</b> do mês seguinte.','Guarde o comprovante e marque aqui “✓ Já paguei”.'],x:''};
+CF_AJUDA.cl={t:'Como pagar o carnê-leão',s:['Entre no <b>e-CAC</b> da Receita Federal com a sua conta gov.br e abra o <b>Carnê-Leão Web</b>.','Lance o que recebeu no mês (Uber e 99). Para transporte de passageiros, <b>60%</b> é tributável.','Lance o INSS pago, que reduz o imposto.','Se houver imposto, gere o <b>DARF</b> (código 0190) e pague até o <b>último dia útil</b> do mês seguinte.','Marque aqui “✓ Já paguei”.'],x:'Desde 2026, quem tem até R$ 5.000 tributáveis por mês fica isento.'};
+CF_AJUDA.irpf={t:'Como fazer a declaração do IR',s:['Baixe o programa ou use o <b>Meu Imposto de Renda</b> no site/app da Receita.','Importe os dados do <b>Carnê-Leão Web</b> do ano.','Confira os rendimentos e o INSS pago.','Entregue até o <b>fim de maio</b>.','Marque aqui “✓ Já entreguei”.'],x:''};
 function cfHtmlAjuda(){ var a=CF_AJUDA[_cfArg]||CF_AJUDA.ss_pag,lk=cfLinkTipo(_cfArg||'ss_pag');
   return '<div class="cf-q">❓ '+a.t+'</div><div class="cf-c">'+a.s.map(function(x,i){ return '<div class="cf-stp"><span class="n">'+(i+1)+'</span><span>'+x+'</span></div>'; }).join('')+(a.x?'<div class="cf-sub" style="margin-top:6px">'+a.x+'</div>':'')+'</div>'+
     '<a class="btn btn-outline cf-lnk" href="'+lk.u+'" target="_blank" rel="noopener">'+lk.t+'</a>'+
-    '<div class="cf-cont">👩‍💼 <b>Dúvidas? Pergunta ao teu contabilista.</b> Os menus mudam de banco para banco e o valor certo depende do teu caso.</div>'+cfVoltar(); }
+    '<div class="cf-cont">'+cfT('👩‍💼 <b>Dúvidas? Pergunta ao teu contabilista.</b> Os menus mudam de banco para banco e o valor certo depende do teu caso.','👩‍💼 <b>Dúvidas? Pergunte ao seu contador.</b> Os menus mudam de banco para banco e o valor certo depende do seu caso.')+'</div>'+cfVoltar(); }
 // ── calendário (.ics) ──
 function cfEventosCalendario(){ var h=hoje(),lim=new Date(); lim.setFullYear(lim.getFullYear()+1); var limISO=lim.getFullYear()+'-'+pad(lim.getMonth()+1)+'-'+pad(lim.getDate());
-  return cfObrigacoes(cfMapaImp()).filter(function(o){ return o.data>=h&&o.data<limISO&&!o.pago; }); }
+  return cfObrigacoes(cfMapaImp()).filter(function(o){ return o.data>=h&&o.data<limISO&&!o.pago&&!o.isento; }); }
 function cfIcsTxt(t){ return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
 function cfIcsDobrar(l){ var out=[],cur='',b=0,lim=75; Array.from(l).forEach(function(ch){ var n=unescape(encodeURIComponent(ch)).length; if(b+n>lim){ out.push(cur); cur=' '; b=1; lim=75; } cur+=ch; b+=n; }); out.push(cur); return out.join('\r\n'); }
 function cfGerarIcs(){
   var c=cfCfg(),ev=cfEventosCalendario(),n=c.avisoDias,stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
   var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Finance Drive//Cofre dos impostos//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Finance Drive · Impostos'];
   ev.forEach(function(o){ var d=o.data.replace(/-/g,''),dn=new Date(o.data+'T12:00:00'); dn.setDate(dn.getDate()+1); var d2=dn.getFullYear()+pad(dn.getMonth()+1)+pad(dn.getDate());
-    var val=o.tipo==='ss_decl'?'':(o.valor!=null?' · '+(o.teu?'':'≈ ')+moeda(o.valor):''),lk=cfLinkTipo(o.tipo);
+    var val=(o.tipo==='ss_decl'||(!o.pag&&o.tipo!=='iva_ent'))?'':(o.valor!=null?' · '+(o.teu||o.fixo?'':'≈ ')+moeda(o.valor):''),lk=cfLinkTipo(o.tipo);
     L.push('BEGIN:VEVENT','UID:fd-'+o.key.replace(/[^a-zA-Z0-9-]/g,'-')+'@financedrive.pt','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+d,'DTEND;VALUE=DATE:'+d2,
       cfIcsDobrar('SUMMARY:'+cfIcsTxt(o.ic+' '+o.tit+val)),
-      cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.per+'. Prazo: '+cfDataTxt(o.data)+'. Valores estimados pelo Finance Drive, confirma com o teu contabilista. '+lk.u)),
+      cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.per+'. Prazo: '+cfDataTxt(o.data)+'. '+cfT('Valores estimados pelo Finance Drive, confirma com o teu contabilista. ','Valores estimados pelo Finance Drive, confirme com o seu contador. ')+lk.u)),
       'TRANSP:TRANSPARENT');
     if(n>0)L.push('BEGIN:VALARM','ACTION:DISPLAY',cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.tit+' daqui a '+n+' dia'+(n>1?'s':''))),'TRIGGER:-P'+(n-1)+'DT15H','END:VALARM');
     L.push('BEGIN:VALARM','ACTION:DISPLAY',cfIcsDobrar('DESCRIPTION:'+cfIcsTxt(o.tit+' · último dia')),'TRIGGER:PT9H','END:VALARM','END:VEVENT'); });
