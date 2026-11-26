@@ -678,6 +678,9 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .imp-cfg .seg-opt input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
 .imp-man{margin-top:8px}
 .imp-dica{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:5px}
+.imp-info{font-size:12px;color:var(--sub);line-height:1.5;background:#eef5ff;border-radius:10px;padding:9px 11px;margin-top:8px}.imp-info b{color:var(--text)}
+.imp-lei{display:block;width:max-content;max-width:100%;margin-top:5px;background:#e7f6ee;color:#1f7a45;font-weight:700;font-size:11px;padding:2px 7px;border-radius:6px}
+.imp-sublbl{font-size:12px;font-weight:600;color:var(--sub);margin:4px 0 6px}
 .imp-dica.erro{color:var(--red,#C2362F);font-weight:600}
 .imp-chips{display:flex;flex-wrap:wrap;gap:6px}
 .imp-chips button{border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 10px;font:600 12.5px var(--fd-head,inherit);cursor:pointer}
@@ -1042,17 +1045,29 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
                   <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iSsManual" placeholder="ex.: 11,2" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
                   <div class="imp-dica" id="impDicaSS">A percentagem que pagas de facto. Se est&aacute;s isento, p&otilde;e 0.</div>
                 </div>
+                <div class="imp-info"><b>Como funciona:</b> pagas 21,4% sobre 70% do que faturas (sem IVA), o que d&aacute; cerca de 15%. No 1.&ordm; ano de atividade est&aacute;s isento.<span class="imp-lei">C&oacute;digo Contributivo, art. 162.&ordm; e 168.&ordm;</span></div>
               </div>
             </div>
             <div class="imp-bloco">
               <label class="login-check"><input type="checkbox" id="chkImpIRS" onchange="salvarImpostosCfg()"><span>IRS</span></label>
               <div class="imp-cfg" id="impCfgIRS">
+                <div id="impCoefBloco" style="display:none">
+                  <div class="imp-sublbl">Parte do que faturas que paga IRS</div>
+                  <div class="seg"><label class="seg-opt"><input type="radio" name="impCoef" id="impCoefAuto" onchange="salvarCoefIRS()"> Autom&aacute;tico &middot; 35%</label><label class="seg-opt"><input type="radio" name="impCoef" id="impCoefMan" onchange="salvarCoefIRS()"> &#9998; Personalizar</label></div>
+                  <div class="imp-man" id="impCoefManW" style="display:none">
+                    <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iCoefIRS" placeholder="ex.: 75" oninput="salvarCoefIRS()" onchange="salvarCoefIRS(true)"></div>
+                    <div class="imp-dica" id="impCoefDica">35% para o c&oacute;digo 1519 ou transporte, 75% para as profiss&otilde;es da tabela. Confirma com o teu contabilista.</div>
+                  </div>
+                  <div class="imp-info"><b>Como funciona:</b> no regime simplificado, quem tem o c&oacute;digo 1519 ou atividade de transporte s&oacute; paga IRS sobre 35% do que fatura. Ex.: faturas 100 &euro; &rarr; 35 &euro; pagam IRS. As profiss&otilde;es da tabela (ex.: engenheiro) usam 75%. Tens de ter despesas de pelo menos 15% do que faturas (a SS e o aluguer do carro com o teu NIF contam).<span class="imp-lei">CIRS, art. 31.&ordm; n.&ordm; 1 c) e n.&ordm; 13</span></div>
+                  <div class="imp-sublbl" id="impTaxaLbl" style="display:none;margin-top:12px">Taxa (escal&atilde;o)</div>
+                </div>
                 <div class="seg"><label class="seg-opt"><input type="radio" name="impModoIRS" id="impModoIRSauto" onchange="salvarImpostosCfg()"> Autom&aacute;tico &middot; <span id="impIrsAutoTxt">escal&atilde;o</span></label><label class="seg-opt"><input type="radio" name="impModoIRS" id="impModoIRSman" onchange="salvarImpostosCfg()"> &#9998; Personalizar <span class="pro-tag" id="impProIRS" style="font-size:9px;padding:1px 5px">PRO</span></label></div>
                 <div class="imp-man" id="impManIRS">
                   <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iIrsManual" placeholder="ex.: 23" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
                   <div class="imp-dica" id="impDicaIRS">A taxa que o teu contabilista indicou (conta com rendimentos de outros anos que a app n&atilde;o conhece).</div>
                   <div class="imp-escaloes"><div class="imp-dica" style="margin:8px 0 4px">Ou toca no teu escal&atilde;o:</div><div class="imp-chips" id="impIrsChips"></div></div>
                 </div>
+                <div class="imp-info"><b>Como funciona:</b> a app estima o teu escal&atilde;o pelo que j&aacute; ganhaste este ano (tabela de 2026).<span class="imp-lei">CIRS, art. 68.&ordm;</span></div>
               </div>
             </div>
             <div class="imp-bloco">
@@ -1063,6 +1078,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
                   <div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="iIvaManual" placeholder="ex.: 6" oninput="salvarImpostosCfg()" onchange="salvarImpostosCfg(true)"></div>
                   <div class="imp-dica" id="impDicaIVA">A taxa que cobras nas tuas faturas.</div>
                 </div>
+                <div class="imp-info"><b>Como funciona:</b> o transporte de passageiros paga 6%. Se faturaste at&eacute; 15.000 &euro; no ano passado podes estar isento.<span class="imp-lei">CIVA, Lista I, verba 2.14 &middot; art. 53.&ordm;</span></div>
               </div>
             </div>
             <button class="btn btn-outline" type="button" onclick="restaurarImpostosPadrao()" style="margin-top:8px;padding:10px"> Restaurar padr&atilde;o</button>
@@ -1193,7 +1209,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.23.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.23.1 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1327,9 +1343,23 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="nov-header">
       <img class="onboard-logo" src="icon.png" alt="" onerror="this.style.display='none'">
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.23.0</div>
+      <div class="nov-versao">Finance Drive v3.23.1</div>
     </div>
     <div class="nov-lista">
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>IRS mais certo <span class="pro-tag">PRO</span></strong>
+          <span>No regime &quot;o que faturo&quot;, o IRS conta s&oacute; 35% do que faturas, como diz a lei (art. 31.&ordm; CIRS). Se o teu caso for outro, personalizas.</span>
+        </div>
+      </div>
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>Cada imposto explica-se</strong>
+          <span>SS, IRS e IVA mostram como funcionam e de que artigo da lei v&ecirc;m. O autom&aacute;tico &eacute; o habitual; o personalizar &eacute; o teu.</span>
+        </div>
+      </div>
       <div class="nov-item nov-pt">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
@@ -1432,7 +1462,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-var APP_VERSION='3.23.0';
+var APP_VERSION='3.23.1';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} agendarSync(); }
@@ -1825,6 +1855,7 @@ function baseFiscalSemTransfer(r,iso,tipo){
     if(tipo==='IVA')return bIVA;
     var b=rg.base==='bruto'?bIVA:Math.max(0,saldo(r,iso)+aj);
     if(rg.ivaIncl&&ivaAtivoDia())b=Math.max(0,b-bIVA*ivaFator());
+    if(tipo==='IRS')b=b*coefIRS(); // v3.23.1: art. 31.º CIRS
     return b;
   }
   var base=(tipo==='IVA')?ganhosAposOperador(r,iso):saldo(r,iso);
@@ -1835,8 +1866,9 @@ function transferBaseFiscalPorImposto(r,tipo,iso){
   if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
   var transferLiquido=(r.outroG||0)-taxaOperadorTransfer(r,iso);
   var rg=impRegime(); // v3.23: com IVA incluído, a SS e o IRS do transfer contam sem a parte do IVA
-  if(rg&&rg.ivaIncl&&tipo!=='IVA'&&transferTemImposto(r,'IVA')&&ivaTransferCobrado())return Math.max(0,transferLiquido-Math.max(0,transferLiquido)*ivaFator());
-  return Math.max(0,transferLiquido);
+  var k=(rg&&tipo==='IRS')?coefIRS():1; // v3.23.1: art. 31.º CIRS
+  if(rg&&rg.ivaIncl&&tipo!=='IVA'&&transferTemImposto(r,'IVA')&&ivaTransferCobrado())return Math.max(0,transferLiquido-Math.max(0,transferLiquido)*ivaFator())*k;
+  return Math.max(0,transferLiquido)*k;
 }
 function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso,tipo)+transferBaseFiscalPorImposto(r,tipo,iso); }
 function baseFiscalAplicada(r,iso,tipo){ return (CFG.impostos&&CFG.impostos.ativo?baseFiscalSemTransfer(r,iso,tipo):0)+transferBaseFiscalPorImposto(r,tipo,iso); }
@@ -1924,10 +1956,17 @@ function ivaTransferCobrado(){ normalizarImpostosCfg(); return (CFG.impostos.ati
 function ivaAtivoDia(){ normalizarImpostosCfg(); return !!(CFG.impostos.ativo&&CFG.impostos.usarIVA&&taxaIVAef()>0); }
 // operador com licença: o IVA e a faturação contam a partir do valor antes da comissão da plataforma
 function brutoPlataformaExtra(r){ var g=impRegime(); if(!g||g.modelo!=='operador'||!r)return 0; var c=rgComissao(g),p=(r.uber||0)+(r.bolt||0); return (c>0&&p>0)?p/(1-c/100)-p:0; }
+// v3.23.1: regime simplificado (art. 31.º CIRS): com "o que faturo", só uma parte do que faturas paga IRS.
+// Habitual do motorista TVDE (código 1519 / transporte): 35%. Profissões da tabela do art. 151.º: 75%. Editável (PRO).
+var IRS_COEF_PADRAO=35;
+function coefIRSAtivo(){ var g=impRegime(); return !!(g&&g.base==='bruto'); }
+function coefIRSEhManual(){ var g=impRegime(); return !!(g&&g.coefModo==='manual'&&_impNum(g.coefManual)); }
+function coefIRSPct(){ return coefIRSEhManual()?impRegime().coefManual:IRS_COEF_PADRAO; }
+function coefIRS(){ return coefIRSAtivo()?coefIRSPct()/100:1; }
 function rgResumo(g){
   if(!g)return 'Não definido · as contas ficam como antes (sobre o que sobra, IVA por fora).';
   var iva=!CFG.impostos.usarIVA?'IVA isento':('IVA '+fmtPct(taxaIVAef())+'% '+(g.ivaIncl?'incluído':'por fora'));
-  return (g.modelo==='operador'?'Operador TVDE · comissão '+fmtPct(rgComissao(g))+'%':'Motorista com frota')+' · '+iva+' · SS e IRS sobre '+(g.base==='bruto'?'o que faturas':'o que sobra');
+  return (g.modelo==='operador'?'Operador TVDE · comissão '+fmtPct(rgComissao(g))+'%':'Motorista com frota')+' · '+iva+' · SS e IRS sobre '+(g.base==='bruto'?'o que faturas (IRS só sobre '+fmtPct(coefIRSPct())+'%)':'o que sobra');
 }
 // ── janela ──
 var _rg=null;
@@ -1950,7 +1989,8 @@ function rgSimular(fn){
 }
 function rgAplicarRascunho(){
   var i=CFG.impostos,t=rgTaxaRascunho();
-  i.regime={modelo:_rg.modelo,comissao:rgComissao({comissao:_rg.comissao}),ivaIncl:!!_rg.ivaIncl,base:_rg.base};
+  var ant=i.regime||{}; i.regime={modelo:_rg.modelo,comissao:rgComissao({comissao:_rg.comissao}),ivaIncl:!!_rg.ivaIncl,base:_rg.base};
+  if(ant.coefModo){ i.regime.coefModo=ant.coefModo; i.regime.coefManual=_impNum(ant.coefManual)?ant.coefManual:null; }
   if(_rg.iva==='isento'){ i.usarIVA=false; }
   else { i.usarIVA=true; if(_rg.iva==='6'){ i.ivaModo='auto'; } else { i.ivaModo='manual'; i.ivaManual=t; } }
   i.ativo=true;
@@ -1984,7 +2024,7 @@ function rgRender(){
       (t>0?'<div class="cf-explica" style="margin-top:10px"><b>Como fica a conta (100 € registados, '+fmtPct(t)+'%)</b><br>• Já incluem: 100 × '+fmtPct(t)+' ÷ '+fmtPct(100+t)+' = <b>'+moeda(r2(v*t/(100+t)))+'</b><br>• Sem IVA: 100 × '+fmtPct(t)+'% = <b>'+moeda(r2(v*t/100))+'</b></div>':''):
       '<div class="cf-explica" style="margin-top:10px">Se passares os <b>15.000 €</b> num ano, deixas de estar isento no ano seguinte. Se passares os <b>18.750 €</b>, passas a cobrar IVA logo a partir da fatura que ultrapassa esse valor.</div>'); }
   if(p===3){ h+='<div class="cf-q">Sobre que valor calculo a SS e o IRS?</div><div class="cf-sub" style="margin-bottom:12px">A Segurança Social olha para o que faturas, não para o que te sobra.</div>'+
-    cfOp(w.base==='bruto',"rgSet('base','bruto')",'O que faturo'+(w.ivaIncl&&w.iva!=='isento'?' (sem IVA)':''),'Como a Segurança Social calcula · recomendado')+
+    cfOp(w.base==='bruto',"rgSet('base','bruto')",'O que faturo'+(w.ivaIncl&&w.iva!=='isento'?' (sem IVA)':''),'Como a Segurança Social calcula. O IRS conta só '+fmtPct(rgCoefRascunho())+'% (art. 31.º) · recomendado')+
     cfOp(w.base==='liquido',"rgSet('base','liquido')",'O que sobra (depois do aluguer e da energia)','Como a app fazia até agora')+
     rgExemplo(); }
   var ult=p===3;
@@ -1994,6 +2034,7 @@ function rgRender(){
   h+='<div class="cf-aviso" style="margin-top:12px"><b>ⓘ Valores estimados.</b> Cada caso é um caso: confirma estas escolhas com o teu contabilista.</div>';
   el.innerHTML=h; var b=el.closest('.modal'); if(b)b.scrollTop=0;
 }
+function rgCoefRascunho(){ var g=CFG.impostos.regime; return (g&&g.coefModo==='manual'&&_impNum(g.coefManual))?g.coefManual:IRS_COEF_PADRAO; }
 function rgSeguinte(){
   if(_rg.passo===1&&_rg.modelo==='operador'){ var e=document.getElementById('rgComissao'),v=e?lerPct(e.value):_rg.comissao; if(v===null||isNaN(v)||v<0||v>60){ toast('Escreve a comissão, por exemplo 25','er'); return; } _rg.comissao=v; }
   if(_rg.passo===2&&_rg.iva==='outra'){ var o=document.getElementById('rgIvaOutra'),x=o?lerPct(o.value):null; if(x===null||isNaN(x)||x<0||x>23){ toast('Escreve a taxa de IVA, de 0 a 23','er'); return; } _rg.ivaOutra=x; }
@@ -2002,7 +2043,30 @@ function rgSeguinte(){
 function rgDepois(){ salvarLocal(); try{ mostrarImpostosCfg(); }catch(e){} renderHoje(); renderSemana(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist(); try{ var co=document.getElementById('pg-cofre'); if(co&&co.classList.contains('on'))cofreRender(); }catch(e){} rgResumoUI(); }
 function rgGuardar(){ normalizarImpostosCfg(); rgAplicarRascunho(); trackEvent('regime_guardar',{modelo:_rg.modelo,iva:_rg.iva,incl:!!_rg.ivaIncl,base:_rg.base}); fecharRegime(); rgDepois(); toast('Regime de impostos guardado','ok'); }
 function rgRemover(){ delete CFG.impostos.regime; trackEvent('regime_remover'); fecharRegime(); rgDepois(); toast('Voltaste ao cálculo de antes','ok'); }
-function rgResumoUI(){ var e=document.getElementById('rgResumoCfg'); if(e)e.textContent=isPro()?rgResumo(impRegime()):'Escolhe como trabalhas, o teu IVA e a base da SS e do IRS.'; var n=document.getElementById('impNotaBase'); if(n){ var g=impRegime(); n.innerHTML=g?(g.base==='bruto'?'Calculado sobre o que faturas':'Calculado sobre o saldo operacional (o que sobra)')+'. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.':'Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.'; } }
+function rgResumoUI(){ try{ atualizarCoefUI(); }catch(e){} var e=document.getElementById('rgResumoCfg'); if(e)e.textContent=isPro()?rgResumo(impRegime()):'Escolhe como trabalhas, o teu IVA e a base da SS e do IRS.'; var n=document.getElementById('impNotaBase'); if(n){ var g=impRegime(); n.innerHTML=g?(g.base==='bruto'?'Calculado sobre o que faturas':'Calculado sobre o saldo operacional (o que sobra)')+'. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.':'Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.'; } }
+
+function salvarCoefIRS(reescrever){
+  var g=CFG.impostos&&CFG.impostos.regime; if(!g||!isPro())return;
+  var man=document.getElementById('impCoefMan'),inp=document.getElementById('iCoefIRS'),dica=document.getElementById('impCoefDica');
+  g.coefModo=(man&&man.checked)?'manual':'auto';
+  if(inp){ var v=lerPct(inp.value),erro='';
+    if(v!==null&&isNaN(v)){ erro='Escreve só números, por exemplo 35.'; v=_impNum(g.coefManual)?g.coefManual:null; }
+    else if(v!==null&&v<1){ erro='O mínimo é 1%. Ficou 1%.'; v=1; }
+    else if(v!==null&&v>100){ erro='O máximo é 100%. Ficou 100%.'; v=100; }
+    g.coefManual=v;
+    if(dica){ dica.className='imp-dica'+(erro?' erro':''); dica.innerHTML=erro||(g.coefModo==='manual'&&v===null?'Sem valor, continua a usar 35%.':'35% para o código 1519 ou transporte, 75% para as profissões da tabela. Confirma com o teu contabilista.'); }
+    if(reescrever===true&&v!==null)inp.value=fmtPct(v);
+  }
+  salvarLocal(); atualizarCoefUI(); try{ atualizarVisImpostos(); }catch(e){} renderHoje(); renderSemana(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist(); rgResumoUI();
+}
+function atualizarCoefUI(){
+  var b=document.getElementById('impCoefBloco'),t=document.getElementById('impTaxaLbl'); var on=coefIRSAtivo();
+  if(b)b.style.display=on?'':'none'; if(t)t.style.display=on?'':'none';
+  if(!on)return; var g=impRegime(),man=g.coefModo==='manual';
+  var a=document.getElementById('impCoefAuto'),m=document.getElementById('impCoefMan'),w=document.getElementById('impCoefManW'),inp=document.getElementById('iCoefIRS');
+  if(a)a.checked=!man; if(m)m.checked=man; if(w)w.style.display=man?'':'none';
+  if(inp&&document.activeElement!==inp)inp.value=_impNum(g.coefManual)?fmtPct(g.coefManual):'';
+}
 function calcImpostos(r,iso){
   normalizarImpostosCfg();
   if(CFG.pais!=='PT')return null;
