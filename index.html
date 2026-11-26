@@ -724,6 +724,10 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 .cf-banner b{display:block;font-size:14.5px}
 .cf-explica{background:#eef4ff;border:1px solid #cfdcf5;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.55;color:var(--text);margin:6px 0 10px}
 .cf-row{display:flex;gap:8px;margin-top:9px}
+.rg-btn{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;margin:0 0 12px;cursor:pointer;font-family:inherit;color:var(--text)}
+.rg-btn b{display:block;font:800 14px var(--fd-head)}.rg-btn small{display:block;font-size:12px;color:var(--sub);line-height:1.4;margin-top:2px}.rg-ic{font-size:22px}.rg-seta{font-size:22px;color:var(--sub)}
+#regimeOverlay .cf-row .btn{flex:1}
+.rg-l{display:grid;grid-template-columns:1fr 74px 84px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}.rg-l>:nth-child(n+2){text-align:right;white-space:nowrap}
 .cf-row .btn{margin:0;padding:10px 8px;font-size:13px}
 .cf-lnk{display:block;text-align:center;text-decoration:none}
 .cf-banner .cf-vers{text-align:center}
@@ -1026,7 +1030,8 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
           <button class="toggle" id="toggleImp" aria-label="Ativar estimativa de impostos"></button>
         </div>
         <div id="impostosDetalhes" style="display:none">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
+          <div id="impNotaBase" style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.</div>
+          <button type="button" class="rg-btn" onclick="abrirRegime()"><span class="rg-ic">&#129534;</span><span style="flex:1;min-width:0"><b>Regime de impostos <span class="pro-tag">PRO</span></b><small id="rgResumoCfg">Escolhe como trabalhas, o teu IVA e a base da SS e do IRS.</small></span><span class="rg-seta">&rsaquo;</span></button>
           <div class="fld">
             <div class="fld-lbl">Impostos a considerar</div>
             <div class="imp-bloco">
@@ -1188,7 +1193,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.22.0 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.23.0 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1218,6 +1223,13 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="rel-seg" id="relTipo"><button type="button" data-t="mes">M&ecirc;s</button><button type="button" data-t="trimestre">Trimestre</button><button type="button" data-t="ano">Ano</button></div>
     <div class="periodo-sel" style="margin-top:8px"><button class="periodo-arr" type="button" onclick="relMudar(-1)" aria-label="Anterior">&#8249;</button><div class="periodo-label" id="relLabel"></div><button class="periodo-arr" type="button" onclick="relMudar(1)" aria-label="Seguinte">&#8250;</button></div>
     <div class="rel-wrap" id="relWrap"><div id="relCorpo"></div><div class="rel-cadeado" id="relCadeado" hidden></div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="regimeOverlay">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">&#129534; Regime de impostos <span class="pro-tag">PRO</span></div><button class="modal-close" type="button" onclick="fecharRegime()" aria-label="Fechar">&#10005;</button></div>
+    <div id="rgCorpo"></div>
   </div>
 </div>
 
@@ -1315,35 +1327,42 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="nov-header">
       <img class="onboard-logo" src="icon.png" alt="" onerror="this.style.display='none'">
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.12.0</div>
+      <div class="nov-versao">Finance Drive v3.23.0</div>
     </div>
     <div class="nov-lista">
-      <div class="nov-item">
+      <div class="nov-item nov-pt">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>Conta e nuvem</strong>
-          <span>Cria uma conta e os teus registos ficam guardados na nuvem. Trocaste de telem&oacute;vel? Entras e est&aacute; tudo l&aacute;.</span>
+          <strong>Novo: Regime de impostos <span class="pro-tag">PRO</span></strong>
+          <span>Em Configura&ccedil;&otilde;es &rsaquo; Impostos, diz como trabalhas (frota ou operador), o teu IVA (isento, 6%, 23%) e se a SS e o IRS contam sobre o que faturas ou sobre o que sobra.</span>
+        </div>
+      </div>
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>IVA inclu&iacute;do ou por fora</strong>
+          <span>Se os valores que registas j&aacute; t&ecirc;m IVA, a app tira a parte certa (ex.: 100 &euro; com 6% = 5,66 &euro; de IVA, e n&atilde;o 6 &euro;).</span>
+        </div>
+      </div>
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>As tuas contas n&atilde;o mudam sozinhas</strong>
+          <span>Enquanto n&atilde;o escolheres o regime, tudo fica calculado como at&eacute; agora.</span>
+        </div>
+      </div>
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>Cofre: editar o IVA</strong>
+          <span>Podes acertar o valor do IVA tamb&eacute;m na entrega da declara&ccedil;&atilde;o.</span>
         </div>
       </div>
       <div class="nov-item">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
-          <strong>V&aacute;rios aparelhos</strong>
-          <span>Regista no telem&oacute;vel e consulta no tablet: tudo sincroniza sozinho.</span>
-        </div>
-      </div>
-      <div class="nov-item">
-        <div class="nov-item-ic"><span class="nov-dot"></span></div>
-        <div class="nov-item-txt">
-          <strong>Os teus dados passam para a conta</strong>
-          <span>Ao criares conta, os registos que j&aacute; tens neste telem&oacute;vel sobem automaticamente. N&atilde;o perdes nada.</span>
-        </div>
-      </div>
-      <div class="nov-item">
-        <div class="nov-item-ic"><span class="nov-dot"></span></div>
-        <div class="nov-item-txt">
-          <strong>Privacidade</strong>
-          <span>Nova Pol&iacute;tica de Privacidade e as estat&iacute;sticas de utiliza&ccedil;&atilde;o s&oacute; ligam se aceitares.</span>
+          <strong>Brasil</strong>
+          <span>Modo Brasil com MEI e Aut&ocirc;nomo, e valores em R$ nos relat&oacute;rios.</span>
         </div>
       </div>
     </div>
@@ -1413,7 +1432,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-var APP_VERSION='3.12.0';
+var APP_VERSION='3.23.0';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} agendarSync(); }
@@ -1799,6 +1818,15 @@ function saldo(r,iso){
 // serviço, não sobre o lucro operacional. SS e IRS continuam sobre o saldo líquido.
 function baseFiscalSemTransfer(r,iso,tipo){
   if(!r)return 0;
+  var rg=impRegime();
+  if(rg){ // v3.23: regime de impostos escolhido pelo motorista
+    var aj=-(r.outroG||0)-trajetoAutoValor(r)+taxaOperadorTransfer(r,iso);
+    var bIVA=Math.max(0,ganhosAposOperador(r,iso)+brutoPlataformaExtra(r)+aj);
+    if(tipo==='IVA')return bIVA;
+    var b=rg.base==='bruto'?bIVA:Math.max(0,saldo(r,iso)+aj);
+    if(rg.ivaIncl&&ivaAtivoDia())b=Math.max(0,b-bIVA*ivaFator());
+    return b;
+  }
   var base=(tipo==='IVA')?ganhosAposOperador(r,iso):saldo(r,iso);
   // v3.16: a parte da taxa que é do Transfer fica com o Transfer (antes saía também daqui)
   return Math.max(0,base-(r.outroG||0)-trajetoAutoValor(r)+taxaOperadorTransfer(r,iso));
@@ -1806,6 +1834,8 @@ function baseFiscalSemTransfer(r,iso,tipo){
 function transferBaseFiscalPorImposto(r,tipo,iso){
   if(!r||!(r.outroG>0)||!transferTemImposto(r,tipo))return 0;
   var transferLiquido=(r.outroG||0)-taxaOperadorTransfer(r,iso);
+  var rg=impRegime(); // v3.23: com IVA incluído, a SS e o IRS do transfer contam sem a parte do IVA
+  if(rg&&rg.ivaIncl&&tipo!=='IVA'&&transferTemImposto(r,'IVA')&&ivaTransferCobrado())return Math.max(0,transferLiquido-Math.max(0,transferLiquido)*ivaFator());
   return Math.max(0,transferLiquido);
 }
 function baseFiscalPorImposto(r,iso,tipo){ return baseFiscalSemTransfer(r,iso,tipo)+transferBaseFiscalPorImposto(r,tipo,iso); }
@@ -1856,7 +1886,7 @@ function impEhManual(t){ normalizarImpostosCfg(); var i=CFG.impostos; if(!impPod
 function taxaSSef(){ return impEhManual('SS')?CFG.impostos.ssManual:IMP_PADRAO.SS; }
 function taxaIVAef(){ return impEhManual('IVA')?CFG.impostos.ivaManual:IMP_PADRAO.IVA; }
 function taxaIRSef(){ return impEhManual('IRS')?CFG.impostos.irsManual:calcEscalaoIRS(projetarRendimentoAnual()); }
-function rotTaxa(t){ return fmtPct(t==='SS'?taxaSSef():taxaIVAef())+'%'+(impEhManual(t)?' ✏️':''); }
+function rotTaxa(t){ var g=t==='IVA'&&impRegime(); return fmtPct(t==='SS'?taxaSSef():taxaIVAef())+'%'+(g&&g.ivaIncl?' incl.':'')+(impEhManual(t)?' ✏️':''); }
 function normalizarImpostosCfg(){
   if(!CFG.impostos)CFG.impostos={ativo:false,irsManual:null,usarSS:true,usarIRS:true,usarIVA:true};
   var _i=CFG.impostos;
@@ -1882,13 +1912,104 @@ function impostosSelecionadosLabel(){
   return arr.length?arr.join(', '):'nenhum imposto';
 }
 // calcImpostos: calcula impostos gerais e, separadamente, os impostos escolhidos no Transfer.
+// ══ v3.23: Regime de impostos (PRO) ══
+// Sem regime escolhido (ou sem PRO, ou fora de Portugal) as contas ficam EXATAMENTE como antes.
+// CFG.impostos.regime = { modelo:'frota'|'operador', comissao:25, ivaIncl:true|false, base:'bruto'|'liquido' }
+function impRegime(){ var g=CFG.impostos&&CFG.impostos.regime; if(!g||typeof g!=='object'||CFG.pais!=='PT'||!isPro())return null; return g; }
+function rgComissao(g){ var c=parseFloat(g&&g.comissao); return isNaN(c)?25:Math.min(60,Math.max(0,c)); }
+// fator do IVA: "por fora" (base × t%) ou "por dentro" (valor com IVA × t ÷ (100+t))
+function ivaFator(){ var t=taxaIVAef(),g=impRegime(); return (g&&g.ivaIncl)?t/(100+t):t/100; }
+// o IVA do transfer só é cobrado se o IVA estiver ligado (com impostos desligados, conta o que o registo marcar)
+function ivaTransferCobrado(){ normalizarImpostosCfg(); return (CFG.impostos.ativo?!!CFG.impostos.usarIVA:true)&&taxaIVAef()>0; }
+function ivaAtivoDia(){ normalizarImpostosCfg(); return !!(CFG.impostos.ativo&&CFG.impostos.usarIVA&&taxaIVAef()>0); }
+// operador com licença: o IVA e a faturação contam a partir do valor antes da comissão da plataforma
+function brutoPlataformaExtra(r){ var g=impRegime(); if(!g||g.modelo!=='operador'||!r)return 0; var c=rgComissao(g),p=(r.uber||0)+(r.bolt||0); return (c>0&&p>0)?p/(1-c/100)-p:0; }
+function rgResumo(g){
+  if(!g)return 'Não definido · as contas ficam como antes (sobre o que sobra, IVA por fora).';
+  var iva=!CFG.impostos.usarIVA?'IVA isento':('IVA '+fmtPct(taxaIVAef())+'% '+(g.ivaIncl?'incluído':'por fora'));
+  return (g.modelo==='operador'?'Operador TVDE · comissão '+fmtPct(rgComissao(g))+'%':'Motorista com frota')+' · '+iva+' · SS e IRS sobre '+(g.base==='bruto'?'o que faturas':'o que sobra');
+}
+// ── janela ──
+var _rg=null;
+function abrirRegime(){
+  if(!isPro()){ abrirPro('regime_impostos'); return; }
+  normalizarImpostosCfg(); var g=CFG.impostos.regime||{},i=CFG.impostos;
+  var m=i.ivaModo==='manual'&&_impNum(i.ivaManual)?i.ivaManual:null;
+  var iva=!i.usarIVA?'isento':(m===null?'6':(m===0?'isento':(m===6?'6':(m===23?'23':'outra'))));
+  _rg={passo:1,modelo:g.modelo||'frota',comissao:rgComissao(g),iva:iva,ivaOutra:(iva==='outra'?m:null),ivaIncl:CFG.impostos.regime?!!g.ivaIncl:true,base:g.base||'bruto'};
+  rgRender(); document.getElementById('regimeOverlay').classList.add('show'); trackEvent('regime_abrir',{tem:!!CFG.impostos.regime});
+}
+function fecharRegime(){ document.getElementById('regimeOverlay').classList.remove('show'); _rg=null; }
+function rgSet(k,v){ _rg[k]=v; rgRender(); }
+function rgTaxaRascunho(){ return _rg.iva==='isento'?0:_rg.iva==='23'?23:_rg.iva==='outra'?(_impNum(_rg.ivaOutra)?_rg.ivaOutra:0):6; }
+// aplica o rascunho só durante a conta e repõe tudo (o que está gravado não muda)
+function rgSimular(fn){
+  var antes=JSON.stringify(CFG.impostos);
+  try{ rgAplicarRascunho(); return fn(); }
+  finally{ CFG.impostos=JSON.parse(antes); }
+}
+function rgAplicarRascunho(){
+  var i=CFG.impostos,t=rgTaxaRascunho();
+  i.regime={modelo:_rg.modelo,comissao:rgComissao({comissao:_rg.comissao}),ivaIncl:!!_rg.ivaIncl,base:_rg.base};
+  if(_rg.iva==='isento'){ i.usarIVA=false; }
+  else { i.usarIVA=true; if(_rg.iva==='6'){ i.ivaModo='auto'; } else { i.ivaModo='manual'; i.ivaManual=t; } }
+  i.ativo=true;
+}
+function rgDiaExemplo(){ var h=hoje(); if(DB[h]&&ganhos(DB[h])>0)return h; var ks=Object.keys(DB).filter(function(k){ return /^\d{4}-\d{2}-\d{2}$/.test(k)&&ganhos(DB[k]||{})>0; }).sort(); return ks.length?ks[ks.length-1]:null; }
+function rgExemplo(){
+  var d=rgDiaExemplo(); if(!d)return '<div class="cf-sub" style="margin-top:8px">Regista um dia para veres aqui o exemplo com os teus números.</div>';
+  var r=DB[d],antes=calcImpostos(r,d)||{ss:0,irs:0,iva:0,real:saldoReal(r,d)},dep=rgSimular(function(){ return calcImpostos(r,d); })||{ss:0,irs:0,iva:0,real:saldoReal(r,d)};
+  var lin=function(n,a,b){ return '<div class="rg-l"><span>'+n+'</span><span style="color:var(--sub)">'+moeda(a)+'</span><b>'+moeda(b)+'</b></div>'; };
+  return '<div class="cf-c" style="margin-top:10px"><div class="cf-h">📊 O teu dia '+d.split('-').reverse().slice(0,2).join('/')+' · ganhos '+moeda(ganhos(r))+'</div>'+
+    '<div class="rg-l" style="font-size:11.5px;color:var(--sub)"><span></span><span>agora</span><span>com isto</span></div>'+
+    lin('Segurança Social',antes.ss,dep.ss)+lin('IRS',antes.irs,dep.irs)+lin('IVA',antes.iva,dep.iva)+
+    '<div class="rg-l" style="border-bottom:none"><span><b>Saldo real</b></span><span style="color:var(--sub)">'+moeda(antes.real)+'</span><b>'+moeda(dep.real)+'</b></div></div>';
+}
+function rgRender(){
+  var w=_rg,p=w.passo,el=document.getElementById('rgCorpo');
+  var h='<div class="cf-dots">'+[1,2,3].map(function(i){ return '<i class="'+(i<=p?'on':'')+'"></i>'; }).join('')+'</div>';
+  if(p===1){ h+='<div class="cf-q">Como trabalhas?</div><div class="cf-sub" style="margin-bottom:12px">Assim a app sabe que impostos são teus. Podes mudar quando quiseres.</div>'+
+    cfOp(w.modelo==='frota',"rgSet('modelo','frota')",'Motorista com operador (frota)','Passo recibo/fatura à frota')+
+    cfOp(w.modelo==='operador',"rgSet('modelo','operador')",'Sou o operador TVDE','Tenho licença e faturo as viagens')+
+    (w.modelo==='operador'?'<div class="cf-c" style="border-style:dashed"><div class="fld-lbl">Comissão da plataforma (Uber/Bolt)</div><div class="iw"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="rgComissao" value="'+fmtPct(w.comissao)+'" oninput="var v=lerPct(this.value);if(v!==null&&!isNaN(v))_rg.comissao=Math.min(60,v)"></div><div class="cf-sub" style="margin-top:6px">Os teus impostos contam a partir do valor da viagem, antes da comissão. Ex.: registas 75 € com 25% → viagem de 100 €.</div></div>':'')+
+    '<div class="cf-explica"><b>🤔 Qual é o meu caso?</b><br>• Passas recibo/fatura a uma <b>frota</b> que tem a licença TVDE → <b>Motorista com operador</b><br>• Tens a tua própria <b>licença de operador TVDE</b> e és tu que faturas as viagens → <b>Sou o operador</b><br><span style="color:var(--sub)">Na dúvida, pergunta à tua frota ou ao teu contabilista.</span></div>'; }
+  if(p===2){ var t=rgTaxaRascunho(),v=100;
+    h+='<div class="cf-q">O teu IVA</div><div class="cf-sub" style="margin-bottom:12px">O IVA que tu entregas ao Estado.'+(w.modelo==='frota'?' Os 6% das viagens são da frota, não teus.':'')+'</div>'+
+    cfOp(w.iva==='isento',"rgSet('iva','isento')",'Isento (art. 53.º)','Faturaste até 15.000 € no ano passado')+
+    cfOp(w.iva==='6',"rgSet('iva','6')",'6% · transporte de passageiros','A taxa mais comum no TVDE')+
+    cfOp(w.iva==='23',"rgSet('iva','23')",'23%','Se o teu contabilista te disser')+
+    cfOp(w.iva==='outra',"rgSet('iva','outra')",'Outra taxa','')+
+    (w.iva==='outra'?'<div class="iw" style="margin:-2px 0 10px"><div class="ipfx">%</div><input type="text" inputmode="decimal" autocomplete="off" id="rgIvaOutra" value="'+(_impNum(w.ivaOutra)?fmtPct(w.ivaOutra):'')+'" placeholder="ex.: 13" oninput="var v=lerPct(this.value);_rg.ivaOutra=(v!==null&&!isNaN(v))?Math.min(23,v):null"></div>':'')+
+    (w.iva!=='isento'?'<div class="fld-lbl" style="margin-top:10px">Os valores que registas já incluem o IVA?</div><div class="seg"><label class="seg-opt"><input type="radio" name="rgIncl" '+(w.ivaIncl?'checked':'')+' onchange="rgSet(\'ivaIncl\',true)"> Sim, já incluem</label><label class="seg-opt"><input type="radio" name="rgIncl" '+(!w.ivaIncl?'checked':'')+' onchange="rgSet(\'ivaIncl\',false)"> Não, é sem IVA</label></div>'+
+      (t>0?'<div class="cf-explica" style="margin-top:10px"><b>Como fica a conta (100 € registados, '+fmtPct(t)+'%)</b><br>• Já incluem: 100 × '+fmtPct(t)+' ÷ '+fmtPct(100+t)+' = <b>'+moeda(r2(v*t/(100+t)))+'</b><br>• Sem IVA: 100 × '+fmtPct(t)+'% = <b>'+moeda(r2(v*t/100))+'</b></div>':''):
+      '<div class="cf-explica" style="margin-top:10px">Se passares os <b>15.000 €</b> num ano, deixas de estar isento no ano seguinte. Se passares os <b>18.750 €</b>, passas a cobrar IVA logo a partir da fatura que ultrapassa esse valor.</div>'); }
+  if(p===3){ h+='<div class="cf-q">Sobre que valor calculo a SS e o IRS?</div><div class="cf-sub" style="margin-bottom:12px">A Segurança Social olha para o que faturas, não para o que te sobra.</div>'+
+    cfOp(w.base==='bruto',"rgSet('base','bruto')",'O que faturo'+(w.ivaIncl&&w.iva!=='isento'?' (sem IVA)':''),'Como a Segurança Social calcula · recomendado')+
+    cfOp(w.base==='liquido',"rgSet('base','liquido')",'O que sobra (depois do aluguer e da energia)','Como a app fazia até agora')+
+    rgExemplo(); }
+  var ult=p===3;
+  h+='<div class="cf-row" style="margin-top:14px">'+(p>1?'<button class="btn btn-outline" type="button" onclick="_rg.passo--;rgRender()">‹ Voltar</button>':'')+
+    '<button class="btn btn-green" type="button" onclick="'+(ult?'rgGuardar()':'rgSeguinte()')+'">'+(ult?'Guardar ✓':'Seguinte →')+'</button></div>';
+  if(CFG.impostos.regime)h+='<button type="button" class="cf-ver" onclick="rgRemover()">Voltar ao cálculo de antes</button>';
+  h+='<div class="cf-aviso" style="margin-top:12px"><b>ⓘ Valores estimados.</b> Cada caso é um caso: confirma estas escolhas com o teu contabilista.</div>';
+  el.innerHTML=h; var b=el.closest('.modal'); if(b)b.scrollTop=0;
+}
+function rgSeguinte(){
+  if(_rg.passo===1&&_rg.modelo==='operador'){ var e=document.getElementById('rgComissao'),v=e?lerPct(e.value):_rg.comissao; if(v===null||isNaN(v)||v<0||v>60){ toast('Escreve a comissão, por exemplo 25','er'); return; } _rg.comissao=v; }
+  if(_rg.passo===2&&_rg.iva==='outra'){ var o=document.getElementById('rgIvaOutra'),x=o?lerPct(o.value):null; if(x===null||isNaN(x)||x<0||x>23){ toast('Escreve a taxa de IVA, de 0 a 23','er'); return; } _rg.ivaOutra=x; }
+  _rg.passo++; rgRender();
+}
+function rgDepois(){ salvarLocal(); try{ mostrarImpostosCfg(); }catch(e){} renderHoje(); renderSemana(); if(document.getElementById('pg-hist').classList.contains('on'))renderHist(); try{ var co=document.getElementById('pg-cofre'); if(co&&co.classList.contains('on'))cofreRender(); }catch(e){} rgResumoUI(); }
+function rgGuardar(){ normalizarImpostosCfg(); rgAplicarRascunho(); trackEvent('regime_guardar',{modelo:_rg.modelo,iva:_rg.iva,incl:!!_rg.ivaIncl,base:_rg.base}); fecharRegime(); rgDepois(); toast('Regime de impostos guardado','ok'); }
+function rgRemover(){ delete CFG.impostos.regime; trackEvent('regime_remover'); fecharRegime(); rgDepois(); toast('Voltaste ao cálculo de antes','ok'); }
+function rgResumoUI(){ var e=document.getElementById('rgResumoCfg'); if(e)e.textContent=isPro()?rgResumo(impRegime()):'Escolhe como trabalhas, o teu IVA e a base da SS e do IRS.'; var n=document.getElementById('impNotaBase'); if(n){ var g=impRegime(); n.innerHTML=g?(g.base==='bruto'?'Calculado sobre o que faturas':'Calculado sobre o saldo operacional (o que sobra)')+'. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.':'Calculado sobre o saldo operacional. Transfers s&oacute; entram nos impostos quando forem marcados como tribut&aacute;veis no pr&oacute;prio registo.'; } }
 function calcImpostos(r,iso){
   normalizarImpostosCfg();
   if(CFG.pais!=='PT')return null;
   var baseSS=baseFiscalPorImposto(r,iso,'SS'),baseIRS=baseFiscalPorImposto(r,iso,'IRS'),baseIVA=baseFiscalPorImposto(r,iso,'IVA');
   var temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
   if(!CFG.impostos.ativo&&!temFiscal)return null;
-  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=taxaIVAef()/100;
+  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=ivaFator();
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
   var ss=usarSS?baseSS*tSS:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*tIVA:0;
   if(!CFG.impostos.ativo){ ss=transferTemImposto(r,'SS')?baseSS*tSS:0; irs=transferTemImposto(r,'IRS')?baseIRS*(taxa/100):0; iva=transferTemImposto(r,'IVA')?baseIVA*tIVA:0; }
@@ -1902,7 +2023,7 @@ function calcImpostosValores(sl,bases,bolso,energiaRecuperar){
   if(CFG.pais!=='PT'||!bases)return null;
   var baseSS=bases.SS||0,baseIRS=bases.IRS||0,baseIVA=bases.IVA||0,temFiscal=baseSS>0||baseIRS>0||baseIVA>0;
   if(!CFG.impostos.ativo&&!temFiscal)return null;
-  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=taxaIVAef()/100;
+  var taxa=taxaIRSef(),tSS=taxaSSef()/100,tIVA=ivaFator();
   var usarSS=CFG.impostos.ativo&&CFG.impostos.usarSS,usarIRS=CFG.impostos.ativo&&CFG.impostos.usarIRS,usarIVA=CFG.impostos.ativo&&CFG.impostos.usarIVA;
   var ss=usarSS?baseSS*tSS:0,irs=usarIRS?baseIRS*(taxa/100):0,iva=usarIVA?baseIVA*tIVA:0;
   if(!CFG.impostos.ativo){ ss=baseSS*tSS; irs=baseIRS*(taxa/100); iva=baseIVA*tIVA; }
@@ -2002,7 +2123,7 @@ function mostrarImpostosCfg(){
     if(a)a.checked=!m; if(mm)mm.checked=m;
     if(el&&document.activeElement!==el)el.value=_impNum(CFG.impostos[c.val])?fmtPct(CFG.impostos[c.val]):'';
   });
-  atualizarVisImpostos();
+  atualizarVisImpostos(); try{ rgResumoUI(); }catch(e){}
 }
 
 // ── Comparativo semanal ───────────────────────────────────────────────
@@ -2934,7 +3055,7 @@ function limpar(){
 }
 function mostrarOnboarding(){ trackEvent('mostrar_onboarding'); document.getElementById('onboardOverlay').classList.add('show'); }
 function fecharOnboarding(irConfig){ trackEvent('fechar_onboarding',{ir_config:!!irConfig}); document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
-function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.add('show'); }
+function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); try{ document.querySelectorAll('#novidadesOverlay .nov-pt').forEach(function(e){ e.style.display=CFG.pais==='BR'?'none':''; }); }catch(e){} document.getElementById('novidadesOverlay').classList.add('show'); }
 function fecharNovidades(){ trackEvent('fechar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
 
 // ── Confirmação no estilo da app (substitui confirm/prompt) ───────────
@@ -3722,7 +3843,7 @@ function relLinhas(t){
     L.push(['__Estimativa fiscal']);
     if(t.imp.ss>0)L.push(['Segurança Social ('+fmtPct(taxaSSef())+'%)','-'+moeda(t.imp.ss),'']);
     if(t.imp.irs>0)L.push(['IRS ('+t.imp.taxaIRS.toFixed(1)+'%)','-'+moeda(t.imp.irs),'']);
-    if(t.imp.iva>0)L.push(['IVA ('+fmtPct(taxaIVAef())+'%)','-'+moeda(t.imp.iva),'']);
+    if(t.imp.iva>0)L.push(['IVA ('+rotTaxa('IVA').replace(' ✏️','')+')','-'+moeda(t.imp.iva),'']);
   }
   if(t.energiaBolso>0||t.comida>0||t.outrosGastos>0){ L.push(['__Gastos do bolso']); if(t.energiaBolso>0)L.push(['Energia paga do bolso','-'+moeda(t.energiaBolso),'']); if(t.comida>0)L.push(['Alimentação','-'+moeda(t.comida),'']); if(t.outrosGastos>0)L.push(['Outros gastos','-'+moeda(t.outrosGastos),'']); }
   L.push(['@TOT']);
