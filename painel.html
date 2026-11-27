@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do dono · Finance Drive</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--n:#0B1F3A;--g:#2E8B57;--gl:#E4F2EA;--mut:#5E6B7A;--ln:#E3E8EE;--bg:#F5F7F9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--n);font:15px/1.5 Inter,-apple-system,"Helvetica Neue",Arial,sans-serif}
+h1,h2,b.t{font-family:Poppins,Inter,sans-serif}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lg{width:100%;max-width:360px;background:#fff;border-radius:20px;padding:26px;box-shadow:0 10px 30px rgba(11,31,58,.1)}
+.lg h1{font-size:22px;margin:0}.lg p{color:var(--mut);font-size:13.5px;margin:4px 0 14px}
+.lg input{display:block;width:100%;padding:12px;border:1.5px solid var(--ln);border-radius:11px;font:15px Inter,sans-serif;margin-top:10px}
+.btn{display:block;width:100%;border:none;background:var(--g);color:#fff;font:700 15px Poppins,sans-serif;border-radius:12px;padding:12px;margin-top:12px;cursor:pointer}
+.btn.esc{background:var(--n);width:auto;display:inline-block;padding:10px 16px;margin:0;font-size:13.5px}
+.btn.cl{background:#fff;color:var(--n);border:1.5px solid var(--ln);width:auto;display:inline-block;padding:9px 14px;margin:0;font-size:13px}
+.err{background:#fbe5e3;color:#a02f24;border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px}
+#app{display:none;min-height:100vh}
+.side{position:fixed;left:0;top:0;bottom:0;width:210px;background:var(--n);color:#c9d6e6;padding:22px 14px}
+.side b.t{display:block;color:#fff;font-size:19px;margin:0 6px 22px}.side b.t span{color:#5BD38A}
+.side button{display:block;width:100%;text-align:left;background:none;border:none;color:#c9d6e6;font:500 14px Inter,sans-serif;padding:9px 10px;border-radius:9px;cursor:pointer;margin-bottom:3px}
+.side button.on{background:rgba(255,255,255,.12);color:#fff;font-weight:700}
+.side .sair{position:absolute;bottom:20px;left:14px;right:14px;width:auto;opacity:.75}
+.main{margin-left:210px;padding:24px 28px 60px;max-width:1200px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}.top h2{margin:0;font-size:24px}
+.sub{color:var(--mut);font-size:13px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{background:#fff;border:1px solid #EAEDF1;border-radius:14px;padding:15px;min-width:0}
+.k small{display:block;font-size:12.5px;color:var(--mut)}.k b{display:block;font:800 30px Poppins,sans-serif;line-height:1.2}.k b i{font:600 13px Inter,sans-serif;font-style:normal;color:var(--mut)}
+.k span{font-size:12px;color:var(--mut)}.k .up{color:var(--g);font-weight:700}
+.g2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-top:12px}
+.ch{display:flex;gap:10px;align-items:flex-end;height:190px;margin-top:12px}
+.ch div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative;padding-bottom:20px}
+.ch i{display:block;border-radius:4px 4px 0 0}.ch span{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:11px;color:var(--mut)}
+.ch em{position:absolute;left:0;right:0;text-align:center;font:700 11px Inter,sans-serif;font-style:normal;color:var(--n)}
+.ba{background:var(--g)}.bb{background:#BFE3CD}
+.leg{font-size:12px;color:var(--mut);margin-top:6px}.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px -1px 10px}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:9px 0;border-top:1px solid #F0F2F5}.row:first-of-type{border-top:none}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-top:1px solid #F0F2F5}th{color:var(--mut);font-size:12px;font-weight:600;border-top:none}
+.tag{font:700 11px Inter,sans-serif;padding:2px 8px;border-radius:7px;background:#EEF1F7}.tag.ok{background:var(--gl);color:#1f7a45}.tag.no{background:#fbe5e3;color:#a02f24}
+.tot{display:flex;gap:8px;align-items:center;margin-top:8px}.tot input{width:120px;padding:9px;border:1.5px solid var(--ln);border-radius:10px;font:15px Inter,sans-serif}
+#cartaoImg{max-width:100%;width:420px;border-radius:16px;box-shadow:0 10px 30px rgba(11,31,58,.2);display:block}
+.pane{display:none}.pane.on{display:block}
+@media (max-width:820px){
+  .side{position:static;width:auto;display:flex;flex-wrap:wrap;gap:4px;padding:12px 16px}
+  .side b.t{width:100%;margin:0 0 6px}.side button{width:auto;margin:0}.side .sair{position:static}
+  .main{margin-left:0;padding:16px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="login"><div class="lg">
+  <h1>🔒 Painel do dono</h1><p>Finance Drive · acesso restrito</p>
+  <form id="lgForm"><input type="email" id="lgEmail" placeholder="Email" autocomplete="username" required><input type="password" id="lgSenha" placeholder="Palavra-passe" autocomplete="current-password" required><button class="btn" type="submit" id="lgBtn">Entrar</button></form>
+  <div class="err" id="lgErr" hidden></div>
+  <p style="margin-top:14px;font-size:12px">Usa a mesma conta do Finance Drive.</p>
+</div></div>
+<div id="app">
+  <div class="side"><b class="t">Finance <span>Drive</span></b>
+    <button type="button" class="on" data-p="geral">📊 Visão geral</button>
+    <button type="button" data-p="users">👥 Utilizadores</button>
+    <button type="button" data-p="parc">🤝 Resumo parceiros</button>
+    <button type="button" class="sair" id="sair">Sair</button></div>
+  <div class="main">
+    <div class="top"><div><h2 id="tit">Visão geral</h2><div class="sub" id="atual"></div></div><div><button class="btn cl" type="button" id="recar">↻ Atualizar</button> <button class="btn esc" type="button" id="baixar">⬇ Resumo para parceiros (imagem)</button></div></div>
+    <div class="pane on" id="p-geral"></div>
+    <div class="pane" id="p-users"></div>
+    <div class="pane" id="p-parc"></div>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// ══ v3.24: Estatísticas de uso (só contagens, nunca valores em euros) ══
+// Cada conta envia para estatisticas/{uid} um resumo: em que dias trabalhou (só a contagem por semana e por mês),
+// país, se é PRO e quando se registou. Só o administrador consegue ler (regra do Firebase).
+var ESTAT_ADMIN='leonardosf.tvde@gmail.com';
+function estIso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function estDia(iso){ var p=String(iso).split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+// semana ISO (segunda a domingo): "2026-W48"
+function estSemana(dt){ var d=new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate())); var n=d.getUTCDay()||7; d.setUTCDate(d.getUTCDate()+4-n); var a=new Date(Date.UTC(d.getUTCFullYear(),0,1)); var w=Math.ceil(((d-a)/86400000+1)/7); return d.getUTCFullYear()+'-W'+String(w).padStart(2,'0'); }
+// resumo desta conta a partir dos registos locais. diaTrabalho(r) diz se o dia conta (ganhos > 0).
+function estResumo(DB,diaTrabalho,extra,agora){
+  agora=agora||new Date();
+  var hoje=estIso(agora),meses={},semanas={},ultimo='',total=0;
+  var limMes=new Date(agora.getFullYear(),agora.getMonth()-12,1),limSem=new Date(agora.getTime()-12*7*86400000);
+  Object.keys(DB||{}).forEach(function(iso){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)||iso>hoje)return;
+    var r=DB[iso]; if(!r||!diaTrabalho(r))return;
+    total++; if(iso>ultimo)ultimo=iso;
+    var dt=estDia(iso);
+    if(dt>=limMes){ var m=iso.slice(0,7),o=meses[m]||(meses[m]={d:0,u:0,b:0}); o.d++; if((r.uber||0)>0)o.u++; if((r.bolt||0)>0)o.b++; }
+    if(dt>=limSem){ var w=estSemana(dt); semanas[w]=(semanas[w]||0)+1; }
+  });
+  return { v:1, total:total, ultimoDia:ultimo||null, meses:meses, semanas:semanas,
+    pais:(extra&&extra.pais)||'PT', pro:!!(extra&&extra.pro), admin:!!(extra&&extra.admin), criado:(extra&&extra.criado)||null };
+}
+// junta os resumos de todas as contas → números do painel
+function estAgregar(docs,totalContas,agora){
+  agora=agora||new Date();
+  var hoje=estIso(agora),d30=estIso(new Date(agora.getTime()-29*86400000)),d7=estIso(new Date(agora.getTime()-6*86400000));
+  var mes=hoje.slice(0,7),inicioMes=new Date(agora.getFullYear(),agora.getMonth(),1).getTime();
+  var us=docs.filter(function(x){ return x&&!x.admin; });
+  var R={ contas:us.length, totalContas:Math.max(us.length,+totalContas||0), novosMes:0, ativos30:0, ativos7:0, muitoAtivos:0,
+    pt:0, br:0, pro:0, diasMes:0, uber:0, bolt:0, retBase:0, retAtivos:0, semanas:[], lista:[] };
+  us.forEach(function(x){
+    var c=x.criado||0, u=x.ultimoDia||'', m=(x.meses&&x.meses[mes])||{d:0,u:0,b:0};
+    if(c>=inicioMes)R.novosMes++;
+    if(u&&u>=d30)R.ativos30++;
+    if(u&&u>=d7)R.ativos7++;
+    if((m.d||0)>=10)R.muitoAtivos++;
+    if(x.pais==='BR')R.br++; else R.pt++;
+    if(x.pro)R.pro++;
+    R.diasMes+=m.d||0; R.uber+=m.u||0; R.bolt+=m.b||0;
+    if(c&&c<agora.getTime()-30*86400000){ R.retBase++; if(u&&u>=d30)R.retAtivos++; }
+    R.lista.push({ pais:x.pais==='BR'?'BR':'PT', pro:!!x.pro, criado:c, ultimoDia:u, diasMes:m.d||0, total:x.total||0, ultimaAbertura:x.ultimaAbertura||0 });
+  });
+  // últimas 8 semanas: quantos registaram pelo menos 1 dia nessa semana, e quantas contas existiam no fim dela
+  for(var i=7;i>=0;i--){
+    var dt=new Date(agora.getTime()-i*7*86400000), w=estSemana(dt);
+    var fim=new Date(dt.getTime()); fim.setDate(fim.getDate()+(7-(fim.getDay()||7))); fim.setHours(23,59,59,999);
+    var at=0,reg=0; us.forEach(function(x){ if(x.semanas&&x.semanas[w]>0)at++; if(!x.criado||x.criado<=fim.getTime())reg++; });
+    R.semanas.push({ s:'S'+w.slice(-2), ativos:at, registados:reg });
+  }
+  R.lista.sort(function(a,b){ return (b.ultimoDia||'').localeCompare(a.ultimoDia||''); });
+  var base=R.totalContas||1;
+  R.pct30=Math.round(R.ativos30*100/base); R.pct7=Math.round(R.ativos7*100/base);
+  R.pctPro=Math.round(R.pro*100/base);
+  R.pctUber=(R.uber+R.bolt)?Math.round(R.uber*100/(R.uber+R.bolt)):0; R.pctBolt=(R.uber+R.bolt)?100-R.pctUber:0;
+  R.retencao=R.retBase?Math.round(R.retAtivos*100/R.retBase):null;
+  R.mesNome=agora.toLocaleDateString('pt-PT',{month:'long',year:'numeric'});
+  return R;
+}
+// cartão para parceiros (1080×1350, PNG) — só totais
+function estCartao(R){
+  var c=document.createElement('canvas'); c.width=1080; c.height=1350; var x=c.getContext('2d');
+  var g=x.createRadialGradient(920,0,50,920,0,1100); g.addColorStop(0,'#16345e'); g.addColorStop(.6,'#0B1F3A'); g.addColorStop(1,'#071528');
+  x.fillStyle=g; x.fillRect(0,0,1080,1350);
+  var F='Poppins, "Helvetica Neue", Arial, sans-serif', I='Inter, "Helvetica Neue", Arial, sans-serif';
+  x.textBaseline='alphabetic';
+  x.font='800 84px '+F; x.fillStyle='#fff'; x.fillText('Finance',90,190); var w=x.measureText('Finance ').width; x.fillStyle='#5BD38A'; x.fillText('Drive',90+w,190);
+  x.font='500 34px '+I; x.fillStyle='#9fb2c8'; x.fillText('A app de finanças do motorista TVDE · '+R.mesNome,90,250);
+  var cx=[90,580], cy=[420,700], v=[[R.totalContas,'Motoristas registados'],[R.pct30+'%','Usam todos os meses'],[R.pct7+'%','Usam todas as semanas'],[R.diasMes,'Dias registados este mês']];
+  v.forEach(function(it,i){ var px=cx[i%2], py=cy[Math.floor(i/2)];
+    x.font='500 32px '+I; x.fillStyle='#9fb2c8'; x.fillText(it[1],px,py-110);
+    x.font='800 120px '+F; x.fillStyle='#fff'; x.fillText(String(it[0]),px,py); });
+  x.strokeStyle='rgba(255,255,255,.12)'; x.lineWidth=2; x.beginPath(); x.moveTo(90,790); x.lineTo(990,790); x.stroke();
+  x.font='500 32px '+I; x.fillStyle='#c9d6e6';
+  var linhas=[R.pt+' em Portugal · '+R.br+' no Brasil'+(R.uber+R.bolt?' · Uber '+R.pctUber+'% · Bolt '+R.pctBolt+'%':''), (R.retencao!==null?R.retencao+'% continuam ativos depois do 1.º mês':'')];
+  linhas.forEach(function(t,i){ if(t)x.fillText(t,90,860+i*52); });
+  x.font='500 27px '+I; x.fillStyle='#8ea3bb';
+  ['“Ativo” = registou pelo menos 1 dia de trabalho no período.','Só totais, sem dados pessoais (RGPD).'].forEach(function(t,i){ x.fillText(t,90,1060+i*40); });
+  x.fillStyle='#2E8B57'; x.beginPath(); if(x.roundRect)x.roundRect(90,1170,400,90,45); else x.rect(90,1170,400,90); x.fill();
+  x.font='700 40px '+F; x.fillStyle='#fff'; x.fillText('financedrive.pt',128,1229);
+  return c;
+}
+
+var CFGFB={apiKey:'AIzaSyDHrFoio_QmOmSZmZtAdQQ7sj0nSXHbEFY',authDomain:'finance-drive-5be99.firebaseapp.com',projectId:'finance-drive-5be99',storageBucket:'finance-drive-5be99.firebasestorage.app',messagingSenderId:'344985921630',appId:'1:344985921630:web:ad41fea683bd964e9caccf'};
+var $=function(id){ return document.getElementById(id); };
+var esc=function(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+var auth=null,db=null,D=null;
+function erroLogin(t){ var e=$('lgErr'); e.hidden=false; e.textContent=t; }
+function iniciar(){
+  if(!window.firebase){ erroLogin('Não foi possível carregar o Firebase. Verifica a ligação.'); return; }
+  firebase.initializeApp(CFGFB); auth=firebase.auth(); db=firebase.firestore();
+  auth.onAuthStateChanged(function(u){
+    if(!u){ $('app').style.display='none'; $('login').style.display='flex'; return; }
+    if(String(u.email||'').toLowerCase()!==ESTAT_ADMIN){ erroLogin('Sem acesso. Esta página é só para o dono do Finance Drive.'); auth.signOut(); return; }
+    $('login').style.display='none'; $('app').style.display='block'; carregar();
+  });
+}
+$('lgForm').addEventListener('submit',function(ev){ ev.preventDefault(); $('lgErr').hidden=true; $('lgBtn').disabled=true;
+  auth.signInWithEmailAndPassword($('lgEmail').value.trim(),$('lgSenha').value).catch(function(e){ erroLogin(e&&(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'||e.code==='auth/user-not-found')?'Email ou palavra-passe errados.':'Não foi possível entrar ('+(e&&e.code||'erro')+').'); }).then(function(){ $('lgBtn').disabled=false; }); });
+$('sair').onclick=function(){ auth.signOut(); };
+$('recar').onclick=function(){ carregar(); };
+$('baixar').onclick=function(){ if(!D)return; estCartao(estAgregar(D.docs,D.total)).toBlob(function(b){ var u=URL.createObjectURL(b),a=document.createElement('a'); a.href=u; a.download='FinanceDrive_resumo_'+new Date().toISOString().slice(0,7)+'.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(u); },30000); },'image/png'); };
+document.querySelectorAll('.side [data-p]').forEach(function(b){ b.onclick=function(){
+  document.querySelectorAll('.side [data-p]').forEach(function(x){ x.classList.toggle('on',x===b); });
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.toggle('on',p.id==='p-'+b.dataset.p); });
+  $('tit').textContent=b.textContent.replace(/^\S+\s/,''); }; });
+function carregar(){
+  $('p-geral').innerHTML='<p class="sub">A carregar…</p>';
+  db.collection('estatisticas').get().then(function(snap){
+    var docs=[],tot=0; snap.forEach(function(d){ if(d.id==='_admin'){ tot=(d.data()||{}).totalContas||0; return; } docs.push(d.data()||{}); });
+    D={docs:docs,total:tot,em:new Date()}; desenhar();
+  }).catch(function(e){ $('p-geral').innerHTML='<div class="err">Sem acesso aos números: falta colar a regra "estatisticas" no Firebase (Firestore → Regras). ('+esc(e&&e.code)+')</div>'; });
+}
+function dataPt(ms){ return ms?new Date(ms).toLocaleDateString('pt-PT'):'—'; }
+function isoPt(i){ return i?i.split('-').reverse().join('/'):'—'; }
+function desenhar(){
+  var R=estAgregar(D.docs,D.total);
+  $('atual').textContent='Atualizado às '+D.em.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})+' · '+R.mesNome;
+  var k=function(t,v,s,cls){ return '<div class="card k"><small>'+t+'</small><b>'+v+'</b>'+(s?'<span class="'+(cls||'')+'">'+s+'</span>':'')+'</div>'; };
+  var max=Math.max(1,Math.max.apply(null,R.semanas.map(function(s){ return s.registados; })));
+  $('p-geral').innerHTML='<div class="g4">'+k('Registados',R.totalContas,R.novosMes?'+'+R.novosMes+' este mês':'','up')+k('Ativos 30 dias',R.ativos30+' <i>'+R.pct30+'%</i>','registaram 1+ dia de trabalho')+k('Ativos 7 dias',R.ativos7+' <i>'+R.pct7+'%</i>','')+k('Muito ativos',R.muitoAtivos,'10+ dias este mês')+'</div>'+
+   '<div class="g2"><div class="card"><small class="sub">Registados e ativos por semana</small><div class="ch">'+R.semanas.map(function(s){ var a=s.ativos*100/max,t=s.registados*100/max; return '<div title="'+s.ativos+' ativos de '+s.registados+'"><em style="bottom:calc('+t+'% * .86 + 22px)">'+s.ativos+'</em><i class="bb" style="height:'+(t-a)+'%"></i><i class="ba" style="height:'+a+'%"></i><span>'+s.s+'</span></div>'; }).join('')+'</div><div class="leg"><i class="ba"></i>ativos <i class="bb"></i>registados sem uso nessa semana</div></div>'+
+   '<div class="card"><small class="sub">Divisão</small><div class="row"><span>🇵🇹 Portugal</span><b>'+R.pt+'</b></div><div class="row"><span>🇧🇷 Brasil</span><b>'+R.br+'</b></div><div class="row"><span>⭐ PRO</span><b>'+R.pro+' · '+R.pctPro+'%</b></div>'+
+   (R.uber+R.bolt?'<div class="row"><span>Uber · Bolt (dias este mês)</span><b>'+R.pctUber+'% · '+R.pctBolt+'%</b></div>':'')+'<div class="row"><span>Dias registados este mês</span><b>'+R.diasMes+'</b></div>'+(R.retencao!==null?'<div class="row"><span>Ainda ativos após o 1.º mês</span><b>'+R.retencao+'%</b></div>':'')+'</div></div>'+
+   '<div class="card" style="margin-top:12px"><small class="sub">Total de contas no Firebase (Authentication → Users)</small><div class="tot"><input id="tot" inputmode="numeric" value="'+(D.total||'')+'" placeholder="'+R.contas+'"><button class="btn cl" type="button" id="totG">Guardar</button></div><div class="sub" style="margin-top:6px">'+R.contas+' conta'+(R.contas===1?'':'s')+' já enviaram estatísticas (abriram a versão 3.24 ou mais nova). As restantes contam como registadas mas ainda sem uso.</div></div>';
+  $('totG').onclick=function(){ var v=parseInt(String($('tot').value).replace(/\D/g,''),10); if(isNaN(v))return; db.collection('estatisticas').doc('_admin').set({totalContas:v,ts:Date.now()},{merge:true}).then(function(){ D.total=v; desenhar(); }); };
+  $('p-users').innerHTML='<div class="card"><div class="sub" style="margin-bottom:8px">Anónimo: só país, plano e contagem de dias. Nunca nomes, emails nem valores.</div><div class="tw"><table><tr><th>#</th><th>País</th><th>Plano</th><th>Registado</th><th>Último dia de trabalho</th><th>Dias este mês</th><th>Dias no total</th><th>Estado</th></tr>'+
+    R.lista.map(function(u,i){ var ativo=u.ultimoDia&&(Date.now()-new Date(u.ultimoDia+'T12:00').getTime())<30*86400000; return '<tr><td>'+(i+1)+'</td><td>'+(u.pais==='BR'?'🇧🇷':'🇵🇹')+'</td><td>'+(u.pro?'<span class="tag ok">PRO</span>':'Grátis')+'</td><td>'+dataPt(u.criado)+'</td><td>'+isoPt(u.ultimoDia)+'</td><td>'+u.diasMes+'</td><td>'+u.total+'</td><td>'+(ativo?'<span class="tag ok">Ativo</span>':'<span class="tag no">Parado</span>')+'</td></tr>'; }).join('')+'</table></div></div>';
+  var img=estCartao(R).toDataURL('image/png');
+  $('p-parc').innerHTML='<div class="card"><p class="sub" style="margin-top:0">É isto que mostras ao contabilista ou ao dono da frota. Só totais, sem dados de ninguém.</p><img id="cartaoImg" alt="Resumo para parceiros" src="'+img+'"><p class="sub">Usa o botão “Resumo para parceiros” lá em cima para descarregar a imagem.</p></div>';
+}
+iniciar();
+</script>
+</body>
+</html>
