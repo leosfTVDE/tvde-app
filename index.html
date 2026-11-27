@@ -1083,7 +1083,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
             </div>
             <button class="btn btn-outline" type="button" onclick="restaurarImpostosPadrao()" style="margin-top:8px;padding:10px"> Restaurar padr&atilde;o</button>
           </div>
-          <div class="imp-aviso"><b>&#9432; Valores estimados</b><br><b>Autom&aacute;tico</b> = c&aacute;lculo do Finance Drive com as regras gerais. Ele n&atilde;o sabe de isen&ccedil;&otilde;es, redu&ccedil;&otilde;es nem de rendimentos de anos anteriores.<br><b>&#9998; Personalizar</b> = p&otilde;es a taxa que pagas de facto. A taxa vale para todos os teus registos.<br><b>Confirma sempre com o teu contabilista.</b></div>
+          <div class="imp-aviso"><b>⚠️ App em desenvolvimento.</b> O Finance Drive não substitui o contabilista. Os valores são estimativas e só estão certos se configurares a app como trabalhas.<br><b>Autom&aacute;tico</b> = c&aacute;lculo do Finance Drive com as regras gerais. Ele n&atilde;o sabe de isen&ccedil;&otilde;es, redu&ccedil;&otilde;es nem de rendimentos de anos anteriores.<br><b>&#9998; Personalizar</b> = p&otilde;es a taxa que pagas de facto. A taxa vale para todos os teus registos.<br><b>Confirma sempre com o teu contabilista.</b></div>
           <div style="font-size:11px;color:var(--muted);margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.6">
             Seleciona apenas os impostos que queres considerar no c&aacute;lculo. Podes deixar todos ativos ou calcular s&oacute; SS, IRS ou IVA.<br>
             <strong style="color:var(--amber)">N&atilde;o incluem:</strong> energia em &euro; (bolso), alimenta&ccedil;&atilde;o, outros gastos pessoais, ganhos Transfer
@@ -1209,7 +1209,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
         </div>
       </div>
 
-      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.23.1 &middot; <span style="color:var(--violet)">Beta</span></div>
+      <div style="text-align:center;padding:18px;font-size:11px;color:var(--muted)">Finance Drive v3.23.2 &middot; <span style="color:var(--violet)">Beta</span></div>
       <div class="footer-ig">
         <a href="https://instagram.com/financedrive.app" target="_blank">@financedrive.app </a>
         <a href="https://instagram.com/_spinasseleonardo" target="_blank">@_spinasseleonardo</a>
@@ -1343,9 +1343,23 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     <div class="nov-header">
       <img class="onboard-logo" src="icon.png" alt="" onerror="this.style.display='none'">
       <div class="nov-titulo">O que h&aacute; de novo</div>
-      <div class="nov-versao">Finance Drive v3.23.1</div>
+      <div class="nov-versao">Finance Drive v3.23.2</div>
     </div>
     <div class="nov-lista">
+      <div class="nov-item nov-pt">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>⚠️ Lembrete importante</strong>
+          <span>O Finance Drive est&aacute; em desenvolvimento e n&atilde;o substitui o contabilista. Os impostos s&atilde;o estimativas e s&oacute; ficam certos se configurares a app como trabalhas. Confirma sempre o teu caso com o contabilista.</span>
+        </div>
+      </div>
+      <div class="nov-item nov-br">
+        <div class="nov-item-ic"><span class="nov-dot"></span></div>
+        <div class="nov-item-txt">
+          <strong>⚠️ Lembrete importante</strong>
+          <span>O Finance Drive est&aacute; em desenvolvimento e n&atilde;o substitui o contador. Os impostos s&atilde;o estimativas e s&oacute; ficam certos se voc&ecirc; configurar o app do jeito que trabalha. Confirme sempre com o seu contador.</span>
+        </div>
+      </div>
       <div class="nov-item nov-pt">
         <div class="nov-item-ic"><span class="nov-dot"></span></div>
         <div class="nov-item-txt">
@@ -1462,7 +1476,7 @@ body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-var APP_VERSION='3.23.1';
+var APP_VERSION='3.23.2';
 // ── Storage centralizado ──────────────────────────────────────────────
 var STORAGE_KEY='tvde_v3', CFG_KEY='tvde_cfg', VER_KEY='fd_version_seen';
 function saveData(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){console.warn('saveData:',e);} agendarSync(); }
@@ -2031,7 +2045,7 @@ function rgRender(){
   h+='<div class="cf-row" style="margin-top:14px">'+(p>1?'<button class="btn btn-outline" type="button" onclick="_rg.passo--;rgRender()">‹ Voltar</button>':'')+
     '<button class="btn btn-green" type="button" onclick="'+(ult?'rgGuardar()':'rgSeguinte()')+'">'+(ult?'Guardar ✓':'Seguinte →')+'</button></div>';
   if(CFG.impostos.regime)h+='<button type="button" class="cf-ver" onclick="rgRemover()">Voltar ao cálculo de antes</button>';
-  h+='<div class="cf-aviso" style="margin-top:12px"><b>ⓘ Valores estimados.</b> Cada caso é um caso: confirma estas escolhas com o teu contabilista.</div>';
+  h+='<div class="cf-aviso" style="margin-top:12px"><b>⚠️ App em desenvolvimento.</b> O Finance Drive não substitui o contabilista. Os valores são estimativas e só estão certos se configurares a app como trabalhas. Cada caso é um caso: <b>confirma estas escolhas com o teu contabilista.</b></div>';
   el.innerHTML=h; var b=el.closest('.modal'); if(b)b.scrollTop=0;
 }
 function rgCoefRascunho(){ var g=CFG.impostos.regime; return (g&&g.coefModo==='manual'&&_impNum(g.coefManual))?g.coefManual:IRS_COEF_PADRAO; }
@@ -3119,7 +3133,7 @@ function limpar(){
 }
 function mostrarOnboarding(){ trackEvent('mostrar_onboarding'); document.getElementById('onboardOverlay').classList.add('show'); }
 function fecharOnboarding(irConfig){ trackEvent('fechar_onboarding',{ir_config:!!irConfig}); document.getElementById('onboardOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); if(irConfig)navTo('cfg'); }
-function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); try{ document.querySelectorAll('#novidadesOverlay .nov-pt').forEach(function(e){ e.style.display=CFG.pais==='BR'?'none':''; }); }catch(e){} document.getElementById('novidadesOverlay').classList.add('show'); }
+function mostrarNovidades(){ trackEvent('mostrar_novidades',{version:APP_VERSION}); try{ document.querySelectorAll('#novidadesOverlay .nov-pt').forEach(function(e){ e.style.display=CFG.pais==='BR'?'none':''; }); document.querySelectorAll('#novidadesOverlay .nov-br').forEach(function(e){ e.style.display=CFG.pais==='BR'?'':'none'; }); }catch(e){} document.getElementById('novidadesOverlay').classList.add('show'); }
 function fecharNovidades(){ trackEvent('fechar_novidades',{version:APP_VERSION}); document.getElementById('novidadesOverlay').classList.remove('show'); localStorage.setItem(VER_KEY,APP_VERSION); }
 
 // ── Confirmação no estilo da app (substitui confirm/prompt) ───────────
@@ -4492,7 +4506,7 @@ function brHtmlMain(){
   html+='<div class="cf-c" style="text-align:center"><div class="cf-h" style="justify-content:center">'+nEv+' datas nos próximos 12 meses</div><div class="cf-sub">Coloque tudo no calendário do celular. O próprio celular avisa '+c.avisoDias+' dias antes, mesmo com o Finance Drive fechado.</div>'+
     '<button class="btn btn-green" type="button" style="margin-top:10px" onclick="cfBaixarCalendario()">📅 Colocar no meu calendário</button>'+
     (cfPodePartilhar()?'<button class="cf-acoes" type="button" style="border:none;background:none;margin:8px auto 0;font:700 12.5px var(--fd-head);color:#2848a8;cursor:pointer" onclick="cfPartilharCalendario()">Não abriu? Compartilhar o arquivo</button>':'')+'</div>';
-  html+='<div class="cf-aviso"><b>ⓘ Valores estimados.</b> O Finance Drive usa os seus registros e as regras gerais de 2026 (IR sobre 60% do faturado, isenção até R$ 5.000 tributáveis). Não conhece o seu caso completo. Se você paga outro valor, toque em ✏️. <b>Confirme sempre com o seu contador.</b></div>';
+  html+='<div class="cf-aviso"><b>⚠️ App em desenvolvimento.</b> O Finance Drive não substitui o contador. Os valores são estimativas e só estão certos se você configurar o app do jeito que trabalha. Usa os seus registros e as regras gerais de 2026 (IR sobre 60% do faturado, isenção até R$ 5.000 tributáveis). Não conhece o seu caso completo. Se você paga outro valor, toque em ✏️. <b>Confirme sempre com o seu contador.</b></div>';
   html+='<button class="btn btn-outline" type="button" onclick="brWizIni();cofreRender()">⚙ Mudar respostas e avisos</button>';
   return html;
 }
@@ -4556,7 +4570,7 @@ function cfHtmlMain(){
   html+='<div class="cf-c" style="text-align:center"><div class="cf-h" style="justify-content:center">'+nEv+' datas nos próximos 12 meses</div><div class="cf-sub">Põe tudo no calendário do telemóvel. É o próprio telemóvel que te avisa '+c.avisoDias+' dias antes, mesmo com o Finance Drive fechado.</div>'+
     '<button class="btn btn-green" type="button" style="margin-top:10px" onclick="cfBaixarCalendario()">📅 Pôr no meu calendário</button>'+
     (cfPodePartilhar()?'<button class="cf-acoes" type="button" style="border:none;background:none;margin:8px auto 0;font:700 12.5px var(--fd-head);color:#2848a8;cursor:pointer" onclick="cfPartilharCalendario()">Não abriu? Partilhar o ficheiro</button>':'')+'</div>';
-  html+='<div class="cf-aviso"><b>ⓘ Valores estimados.</b> O Finance Drive calcula com base nos teus registos e nas regras gerais. Não sabe de isenções, reduções nem de rendimentos de outros anos. Se pagas outro valor, toca em ✏️. Para mudar o quanto guardar por dia, ajusta as taxas em Config → Impostos. <b>Confirma sempre com o teu contabilista.</b></div>';
+  html+='<div class="cf-aviso"><b>⚠️ App em desenvolvimento.</b> O Finance Drive não substitui o contabilista. Os valores são estimativas e só estão certos se configurares a app como trabalhas. Calcula com base nos teus registos e nas regras gerais. Não sabe de isenções, reduções nem de rendimentos de outros anos. Se pagas outro valor, toca em ✏️. Para mudar o quanto guardar por dia, ajusta as taxas em Config → Impostos. <b>Confirma sempre com o teu contabilista.</b></div>';
   html+='<button class="btn btn-outline" type="button" onclick="cofreIr(\'wiz\');cfWizIni();cofreRender()">⚙ Mudar respostas e avisos</button>';
   return html;
 }
